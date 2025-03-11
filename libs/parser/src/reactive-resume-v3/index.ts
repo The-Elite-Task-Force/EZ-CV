@@ -131,8 +131,7 @@ export class ReactiveResumeV3Parser implements Parser<Json, ReactiveResumeV3> {
           ...defaultSkill,
           id: createId(),
           name: skill.name ?? "",
-          level: Math.floor(skill.levelNum / 2),
-          description: skill.level ?? "",
+          level: skill.level ?? 1,
           keywords: Array.isArray(skill.keywords)
             ? (skill.keywords.filter(Boolean) as string[])
             : [],
@@ -204,8 +203,7 @@ export class ReactiveResumeV3Parser implements Parser<Json, ReactiveResumeV3> {
           ...defaultLanguage,
           id: createId(),
           name: language.name ?? "",
-          description: language.level ?? "",
-          level: Math.floor(language.levelNum / 2),
+          level: language.level ?? 1,
         });
       }
     }

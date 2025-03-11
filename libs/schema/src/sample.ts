@@ -335,7 +335,7 @@ export const sampleResume: ResumeData = {
           id: "hn0keriukh6c0ojktl9gsgjm",
           userId: "ngkjdnfglksjdfnglkjsndfg",
           updatedAt: new Date(),
-          levelNum: 0,
+
           name: "Web Technologies",
           description: "Advanced",
           level: 0,
@@ -345,7 +345,7 @@ export const sampleResume: ResumeData = {
           id: "r8c3y47vykausqrgmzwg5pur",
           userId: "ngkjdnfglksjdfnglkjsndfg",
           updatedAt: new Date(),
-          levelNum: 0,
+
           name: "Web Frameworks",
           description: "Intermediate",
           level: 0,
@@ -355,7 +355,7 @@ export const sampleResume: ResumeData = {
           id: "b5l75aseexqv17quvqgh73fe",
           userId: "ngkjdnfglksjdfnglkjsndfg",
           updatedAt: new Date(),
-          levelNum: 0,
+
           name: "Tools",
           description: "Intermediate",
           level: 0,
