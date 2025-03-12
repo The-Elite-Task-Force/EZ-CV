@@ -11,7 +11,6 @@ import {
 } from "@phosphor-icons/react";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
