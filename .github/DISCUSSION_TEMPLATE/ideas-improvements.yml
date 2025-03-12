@@ -1,0 +1,41 @@
+title: "[New Feature/Idea]"
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Feature Overview
+        **What’s the new feature?**  
+        _Explain the feature you'd like to see added. Be as clear as possible about what it should do and how it should behave._
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description of feature"
+      description: "What should the feature do? How should it work?"
+      placeholder: |
+        I think it would be a great addition to the project if...
+      render: bash
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "How important is this feature?"
+      options:
+        - Low
+        - Medium
+        - High
+        - Must-have
+    validations:
+      required: true
+  - type: textarea
+    id: otherInformation
+    attributes:
+      label: "Anything you wish to descripe in more detail?"
+      description: "Is there anything you wish to say about the feature that doesn't fit in the above sections?"
+      placeholder: |
+        - I think this feature would be great because...
+        - This feature would make the project...
+      render: bash
+    validations:
+      required: false

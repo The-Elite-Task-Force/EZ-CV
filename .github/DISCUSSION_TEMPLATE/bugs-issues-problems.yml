@@ -1,0 +1,120 @@
+title: "[Bug Report]"
+
+labels:
+  - bug
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **What’s the problem?**  
+        _Explain the problem clearly. What’s going wrong or not working?_
+  - type: dropdown
+    id: criticality
+    attributes:
+      label: "How serious is this bug?"
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Detailed steps to reproduce the behavior, so that it can be easily diagnosed."
+      placeholder: |
+        1. I went to...
+        2. Clicked on...
+        3. Scrolled down to...
+        4. ...
+        5. The error occured
+
+        More details = Easier fixing!
+      render: bash
+    validations:
+      required: true
+  - type: textarea
+    id: bugDescription
+    attributes:
+      label: "Description of bug"
+      description: "What happened? Was there an error message?"
+      placeholder: |
+        Examples:
+        - My resumes didn't load and I got a "500 Internal Server Error".
+        - The page didn't load and I got a "404 Not Found" error.
+        - The app froze and I had to restart my phone. No error message was shown.
+        - My computer lit on fire and while looking through the flames, I saw it said "ObjectID is not defined".
+      render: bash
+    validations:
+      required: true
+  - type: dropdown
+    id: systemInfo
+    attributes:
+      label: Which system are you on?
+      description: "If your browser is not listed, please select 'Other' and specify your browser in the next question."
+      options:
+        - Windows 11
+        - Windows 10
+        - MacOS
+        - Linux
+        - IOS
+        - Android
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: otherSystem
+    attributes:
+      label: "Specify unlisted system"
+      description: "If you selected 'Other', please specify your system here."
+      placeholder: "Enter the name of your system"
+    validations:
+      required: false
+  - type: dropdown
+    id: browserInfo
+    attributes:
+      label: Which browser are you on?
+      options:
+        - Chrome
+        - Safari
+        - Edge
+        - Firefox
+        - Opera
+        - Brave
+        - Vivaldi
+        - Tor Browser
+        - Internet Explorer
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: otherBrowser
+    attributes:
+      label: "Specify unlisted browser"
+      description: "If you selected 'Other', please specify your browser here."
+      placeholder: "Enter the name of your browser"
+    validations:
+      required: false
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often does this happen?
+      options:
+        - Every single time
+        - Almost every time
+        - Sometimes
+        - Rarely
+        - Very rarely
+    validations:
+      required: true
+  - type: textarea
+    id: otherInfo
+    attributes:
+      label: "Any other helpful information?"
+      description: "Is there anything else you think could help us understand or fix the problem hasn't been mentioned yet?"
+      render: bash
+    validations:
+      required: false

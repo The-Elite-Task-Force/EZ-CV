@@ -120,6 +120,7 @@ export class SectionItemService {
   async createSectionItem(userId: string, createSectionDto: CreateSectionItemDto) {
     try {
       const { format, data, resumeId } = createSectionDto;
+
       let createdItem;
       switch (format) {
         case SECTION_FORMAT.Basics: {
@@ -429,7 +430,7 @@ export class SectionItemService {
           const parsedData = parseBasicData(data);
           return await this.prisma.basicsItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -437,7 +438,7 @@ export class SectionItemService {
           const parsedData = parseProfileData(data);
           return await this.prisma.profileItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -445,7 +446,7 @@ export class SectionItemService {
           const parsedData = parseExperienceData(data);
           return await this.prisma.workItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -453,7 +454,7 @@ export class SectionItemService {
           const parsedData = parseEducationData(data);
           return await this.prisma.educationItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -461,7 +462,7 @@ export class SectionItemService {
           const parsedData = parseSkillData(data);
           return await this.prisma.skillItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -469,7 +470,7 @@ export class SectionItemService {
           const parsedData = parseLanguageData(data);
           return await this.prisma.languageItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -477,7 +478,7 @@ export class SectionItemService {
           const parsedData = parseAwardData(data);
           return await this.prisma.awardItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -485,7 +486,7 @@ export class SectionItemService {
           const parsedData = parseCertificationData(data);
           return await this.prisma.certificationItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -493,7 +494,7 @@ export class SectionItemService {
           const parsedData = parseInterestData(data);
           return await this.prisma.interestItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -501,7 +502,7 @@ export class SectionItemService {
           const parsedData = parseProjectData(data);
           return await this.prisma.projectItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -509,7 +510,7 @@ export class SectionItemService {
           const parsedData = parsePublicationData(data);
           return await this.prisma.publicationItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -517,7 +518,7 @@ export class SectionItemService {
           const parsedData = parseVolunteerData(data);
           return await this.prisma.volunteerItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
@@ -525,22 +526,22 @@ export class SectionItemService {
           const parsedData = parseReferenceData(data);
           return await this.prisma.referenceItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 
         case SECTION_FORMAT.Summary: {
           const parsedData = parseSummaryData(data);
-          return await this.prisma.referenceItem.update({
+          return await this.prisma.summaryItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
         case SECTION_FORMAT.Custom: {
           const parsedData = parseCustomData(data);
           return await this.prisma.customItem.update({
             data: parsedData,
-            where: { userId_id: { userId, id } },
+            where: { id: id },
           });
         }
 

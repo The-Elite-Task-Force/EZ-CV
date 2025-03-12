@@ -26,7 +26,7 @@ export const SearchPage = () => {
   return (
     <div className="flex flex-col items-center p-4">
       <h1 className="mb-4 text-2xl font-bold">{t`Search`}</h1>
-      <div className="flex w-full max-w-md">
+      <div className="flex w-full max-w-3xl">
         <Input
           type="text"
           value={query}
@@ -39,19 +39,19 @@ export const SearchPage = () => {
         />
         <Button onClick={handleSearch}>{t`Search`}</Button>
       </div>
-      <div className="mt-4 w-full max-w-md">
+      <div className="mt-4 w-full max-w-3xl">
         {isLoading && <p>{t`Loading...`}</p>}
         {error && <p>{t`Error: ${error.message}`}</p>}
-        {data && data.length > 0 ? (
+        {!isLoading && data && data.length > 0 ? (
           <ul>
             {data.map((item: SearchResultDto, index: number) => (
               <li key={index}>
-                <SearchResultItem item={item} />
+                <SearchResultItem searchResult={item} />
               </li>
             ))}
           </ul>
         ) : (
-          <p>{t`No results found`}</p>
+          !isLoading && <p>{t`No results found`}</p>
         )}
       </div>
     </div>

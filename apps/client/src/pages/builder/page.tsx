@@ -1,12 +1,11 @@
 import { t } from "@lingui/macro";
 import type { ResumeDto, SectionMappingDto } from "@reactive-resume/dto";
-import type { SectionWithItem } from "@reactive-resume/schema";
+import type { Sections } from "@reactive-resume/schema";
 import { useCallback, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import type { LoaderFunction } from "react-router";
 import { redirect } from "react-router";
 
-import { useMapSectionsToResume } from "@/client/hooks/use-map-sections-to-resume";
 import { queryClient } from "@/client/libs/query-client";
 import { findResumeById } from "@/client/services/resume";
 import { useSections } from "@/client/services/section/sections";
@@ -15,16 +14,27 @@ import { useBuilderStore } from "@/client/stores/builder";
 import { useResumeStore } from "@/client/stores/resume";
 import { useSectionMappingStore } from "@/client/stores/section-mapping";
 
-export const mapSections = (sections: SectionWithItem, mapping: SectionMappingDto) => {
+export const mapSections = (sections: Sections, mapping: SectionMappingDto) => {
   const result = JSON.parse(JSON.stringify(sections));
 
-  const sectionEntries = Object.entries(sections);
-
-  for (const section of sectionEntries) {
-    const key = section[0] as keyof SectionMappingDto;
-    const value = section[1].items;
-
-    result[key].items = value.filter((s: { id: string }) => mapping[key].includes(s.id));
+  for (const [key, section] of Object.entries(sections)) {
+    if (key === "custom" && typeof section === "object") {
+      result.custom = Object.fromEntries(
+        Object.entries(section).map(([customKey, customSection]) => [
+          customKey,
+          {
+            ...customSection,
+            items: Array.isArray(customSection.items)
+              ? customSection.items.filter((s: { id: string }) => mapping.custom.includes(s.id))
+              : [],
+          },
+        ]),
+      );
+    } else if (Array.isArray(section.items)) {
+      result[key].items = section.items.filter((s: { id: string }) =>
+        mapping[key as keyof SectionMappingDto].includes(s.id),
+      );
+    }
   }
 
   return result;
@@ -71,12 +81,13 @@ export const BuilderPage = () => {
     },
   };
 
-  useMapSectionsToResume();
-
   const syncResumeToArtboard = useCallback(() => {
-    if (Object.values(mappings).length === 0) {
+    const latestMappings = useSectionMappingStore.getState().mappings;
+    if (Object.values(latestMappings).length === 0) {
       return;
     }
+    //It seems useCallback stores the state value of resume when its created and doesnt update it when the value changes, so we get the latest value of resume here
+    const latestResume = useResumeStore.getState().resume;
 
     setImmediate(() => {
       if (!frameRef?.contentWindow) return;
@@ -84,11 +95,11 @@ export const BuilderPage = () => {
         type: "SET_RESUME",
         payload: {
           basics:
-            resume.data.sections.basics.items.length > 0
-              ? resume.data.sections.basics.items[0]
+            latestResume.data.sections.basics.items.length > 0
+              ? latestResume.data.sections.basics.items[0]
               : defaultBasics,
-          sections: mapSections(resume.data.sections as unknown as SectionWithItem, mappings),
-          metadata: resume.data.metadata,
+          sections: mapSections(latestResume.data.sections, latestMappings),
+          metadata: latestResume.data.metadata,
         },
       };
       frameRef.contentWindow.postMessage(message, "*");

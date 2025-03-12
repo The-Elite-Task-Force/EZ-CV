@@ -2,7 +2,7 @@ import { t } from "@lingui/macro";
 import { createId } from "@paralleldrive/cuid2";
 import { CopySimple, PencilSimple, Plus } from "@phosphor-icons/react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { resumeSchema, SECTION_FORMAT } from "@reactive-resume/dto";
+import { getSectionFormat, SECTION_FORMAT } from "@reactive-resume/dto";
 import type { SectionItem, SectionWithItem } from "@reactive-resume/schema";
 import {
   AlertDialog,
@@ -23,7 +23,6 @@ import {
   Form,
   ScrollArea,
 } from "@reactive-resume/ui";
-import { produce } from "immer";
 import get from "lodash.get";
 import { useEffect } from "react";
 import type { UseFormReturn } from "react-hook-form";
@@ -51,11 +50,7 @@ export const SectionDialog = <T extends SectionItem>({
   children,
 }: Props<T>) => {
   const { isOpen, mode, close, payload } = useDialog<T>(id);
-  const { createSectionItem } = useCreateSectionItem();
-  const { deleteSectionItem } = useDeleteSectionItem();
-  const { updateSectionItem } = useUpdateSectionItem();
 
-  const setValue = useResumeStore((state) => state.setValue);
   const section = useResumeStore((state) => {
     return get(state.resume.data.sections, id);
   }) as SectionWithItem<T> | null;
@@ -66,6 +61,10 @@ export const SectionDialog = <T extends SectionItem>({
   const isDuplicate = mode === "duplicate";
   const resumeId = useResumeStore((state) => state.resume.id);
 
+  const { createSectionItem } = useCreateSectionItem(resumeId);
+  const { deleteSectionItem } = useDeleteSectionItem();
+  const { updateSectionItem } = useUpdateSectionItem();
+
   useEffect(() => {
     if (isOpen) onReset();
   }, [isOpen, payload]);
@@ -73,14 +72,10 @@ export const SectionDialog = <T extends SectionItem>({
   const onSubmit = async (values: T) => {
     if (!section) return;
 
-    let sectionName = section.name;
-    if (sectionName === "Custom Section") {
-      // eslint-disable-next-line lingui/no-unlocalized-strings
-      sectionName = "Custom";
-    }
+    const sectionId = section.id;
 
-    const sectionFormat: SECTION_FORMAT =
-      SECTION_FORMAT[sectionName as keyof typeof SECTION_FORMAT];
+    const sectionFormat = getSectionFormat(sectionId);
+    if (!sectionFormat) throw new Error("Invalid section format");
 
     values.updatedAt = new Date();
 
@@ -96,13 +91,6 @@ export const SectionDialog = <T extends SectionItem>({
       if (pendingKeyword && "keywords" in values) {
         values.keywords.push(pendingKeyword);
       }
-
-      setValue(
-        `sections.${id}.items`,
-        produce(section.items, (draft: T[]): void => {
-          draft.push({ ...values, id: dto.id });
-        }),
-      );
     }
 
     if (isUpdate) {
@@ -117,15 +105,6 @@ export const SectionDialog = <T extends SectionItem>({
       if (pendingKeyword && "keywords" in values) {
         values.keywords.push(pendingKeyword);
       }
-
-      setValue(
-        `sections.${id}.items`,
-        produce(section.items, (draft: T[]): void => {
-          const index = draft.findIndex((item) => item.id === payload.item?.id);
-          if (index === -1) return;
-          draft[index] = values;
-        }),
-      );
     }
 
     if (isDelete) {
@@ -135,15 +114,6 @@ export const SectionDialog = <T extends SectionItem>({
         data: { id: values.id },
         format: sectionFormat,
       });
-
-      setValue(
-        `sections.${id}.items`,
-        produce(section.items, (draft: T[]): void => {
-          const index = draft.findIndex((item) => item.id === payload.item?.id);
-          if (index === -1) return;
-          draft.splice(index, 1);
-        }),
-      );
     }
 
     close();

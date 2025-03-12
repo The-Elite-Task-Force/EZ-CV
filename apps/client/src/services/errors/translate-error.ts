@@ -40,7 +40,7 @@ export const translateError = (error: ERROR_MESSAGE) => {
       return t`There was an error connecting to the browser. Please make sure 'chrome' is running and reachable.`;
     }
     case ERROR_MESSAGE.ResumeSlugAlreadyExists: {
-      return t`A resume with this slug already exists, please pick a different unique identifier.`;
+      return t`A resume with this alias already exists, please pick a different unique identifier.`;
     }
     case ERROR_MESSAGE.ResumeNotFound: {
       return t`It looks like the resume you're looking for doesn't exist.`;

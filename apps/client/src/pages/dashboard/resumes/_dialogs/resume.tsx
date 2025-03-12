@@ -221,14 +221,18 @@ export const ResumeDialog = () => {
             />
 
             <FormField
+              disabled
               name="slug"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t`Slug`}</FormLabel>
+                  <FormLabel>{t`Resume alias`}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
+                  <FormDescription>
+                    {t`The alias is a simple and unique identifier for your resume!`}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

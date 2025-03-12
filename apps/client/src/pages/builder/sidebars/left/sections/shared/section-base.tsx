@@ -22,8 +22,6 @@ import { Button } from "@reactive-resume/ui";
 import { cn } from "@reactive-resume/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import get from "lodash.get";
-import { useEffect } from "react";
-import { useState } from "react";
 
 import {
   useCreateSectionMapping,
@@ -67,27 +65,6 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
   const { open } = useDialog(id);
 
   const mappingData = useSectionMappingStore((state) => state.mappings);
-  const [mappings, setMappingData] = useState<SectionMappingDto>({
-    basics: [],
-    summary: [],
-    experience: [],
-    education: [],
-    skills: [],
-    languages: [],
-    awards: [],
-    certifications: [],
-    interests: [],
-    projects: [],
-    profiles: [],
-    publications: [],
-    volunteer: [],
-    references: [],
-    custom: [],
-  });
-
-  useEffect(() => {
-    setMappingData(mappingData ?? {});
-  }, [mappingData]);
 
   const setMappings = useSectionMappingStore((state) => state.setMappings);
 
@@ -108,6 +85,7 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
     }),
   );
 
+  //Should be fixed though, this means we don't actually know what our data is and have typed it incorrectly
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!section) return null;
 
@@ -142,18 +120,16 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
   };
 
   const onToggleVisibility = async (item: T, index: number) => {
-    if (mappings[id as keyof SectionMappingDto].includes(item.id)) {
+    if (mappingData[id as keyof SectionMappingDto].includes(item.id)) {
       await deleteSectionMapping({ resumeId: resumeId, id: item.id, format: id });
-      setMappings(removeFromMapSections(mappings, id, item.id));
+      setMappings(removeFromMapSections(mappingData, id, item.id));
       setValue(`sections.${id}.items[${index}].visible`, false);
     } else {
       const data = await createSectionMapping({ resumeId: resumeId, itemId: item.id, format: id });
-      setMappings(addToMapSections(mappings, id, data));
+      setMappings(addToMapSections(mappingData, id, data));
       setValue(`sections.${id}.items[${index}].visible`, true);
     }
   };
-
-  if (mappings[id as keyof SectionMappingDto] === undefined) return null;
 
   return (
     <motion.section
@@ -205,7 +181,7 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
                   id={item.id}
                   title={title(item as T)}
                   description={description?.(item as T)}
-                  visible={mappings[id as keyof SectionMappingDto].includes(item.id)}
+                  visible={mappingData[id as keyof SectionMappingDto].includes(item.id)}
                   onUpdate={() => {
                     onUpdate(item as T);
                   }}

@@ -23,7 +23,7 @@ export const useSectionMappings = (id: string) => {
     isPending: loading,
     data: mappings,
   } = useQuery({
-    queryKey: [SECTION_MAPPING_KEY, { id }],
+    queryKey: [SECTION_MAPPING_KEY, id],
     queryFn: () => fetchSectionMappings(id),
   });
 

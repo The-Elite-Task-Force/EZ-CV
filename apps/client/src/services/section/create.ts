@@ -2,7 +2,7 @@ import type { CreateSectionItemDto, SectionItemDto } from "@reactive-resume/dto"
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 
-import { SECTIONS_KEY } from "@/client/constants/query-keys";
+import { SECTION_MAPPING_KEY, SECTIONS_KEY } from "@/client/constants/query-keys";
 import { axios } from "@/client/libs/axios";
 
 export const createSectionItem = async (data: CreateSectionItemDto) => {
@@ -14,7 +14,7 @@ export const createSectionItem = async (data: CreateSectionItemDto) => {
   return response.data;
 };
 
-export const useCreateSectionItem = () => {
+export const useCreateSectionItem = (id?: string) => {
   const queryClient = useQueryClient();
 
   const {
@@ -24,7 +24,10 @@ export const useCreateSectionItem = () => {
   } = useMutation({
     mutationFn: createSectionItem,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: SECTIONS_KEY });
+      await Promise.all([
+        ...(id ? [queryClient.invalidateQueries({ queryKey: [SECTION_MAPPING_KEY, id] })] : []),
+        queryClient.invalidateQueries({ queryKey: SECTIONS_KEY }),
+      ]);
     },
   });
 

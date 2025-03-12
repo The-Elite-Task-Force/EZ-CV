@@ -83,5 +83,16 @@ export const jsonSectionsSchema = z.object({
   custom: z.array(customSectionSchema),
 });
 
+//This function is used to get the key of SECTION_FORMAT enum from the value
+export function getSectionFormat(sectionId: string): SECTION_FORMAT | undefined {
+  const enumKey = Object.keys(SECTION_FORMAT).find(
+    (key) => SECTION_FORMAT[key as keyof typeof SECTION_FORMAT] === sectionId,
+  );
+  if (enumKey) {
+    return SECTION_FORMAT[enumKey as keyof typeof SECTION_FORMAT];
+  }
+  return undefined;
+}
+
 export class SectionsDto extends createZodDto(jsonSectionsSchema) {}
 export class SectionItemDto extends createZodDto(sectionSchema) {}
