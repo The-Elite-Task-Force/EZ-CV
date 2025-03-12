@@ -77,23 +77,26 @@ export const SectionListItem = ({
 
         {/* List Item */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div
-              className={cn(
-                "flex w-full cursor-context-menu items-center justify-between p-4 hover:bg-secondary-accent",
-                !visible && "opacity-50",
-              )}
-              onClick={onUpdate}
-            >
+          <div
+            className={cn(
+              "flex w-full cursor-context-menu items-center justify-between p-4 hover:bg-secondary-accent",
+              !visible && "opacity-50",
+            )}
+          >
+            <DropdownMenuTrigger asChild>
               <div className="flex-1">
                 <h4 className="font-medium leading-relaxed">{title}</h4>
                 {description && <p className="text-xs leading-relaxed opacity-50">{description}</p>}
               </div>
-              <div className="flex size-6 items-center justify-center">
-                {visible ? <Eye size={20} /> : <EyeClosed size={20} />}
-              </div>
+            </DropdownMenuTrigger>
+            <div className="flex size-6 items-center justify-center">
+              {visible ? (
+                <Eye size={20} onClick={onToggleVisibility} />
+              ) : (
+                <EyeClosed size={20} onClick={onToggleVisibility} />
+              )}
             </div>
-          </DropdownMenuTrigger>
+          </div>
           <DropdownMenuContent>
             {visible ? (
               <DropdownMenuItem onClick={onToggleVisibility}>
