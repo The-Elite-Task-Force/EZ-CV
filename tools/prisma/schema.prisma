@@ -322,10 +322,9 @@ model ProfileItem {
   network   String?
   url       Json?
   username  String?
+  icon                     String?
   updatedAt DateTime @updatedAt
 
-  icon                     String?
-  description              String?
   ResumeProfileItemMapping ResumeProfileItemMapping[]
 
   @@unique([userId, id])
