@@ -84,7 +84,7 @@ const skillSchema = z
     name: z.string().optional(),
     level: z.coerce.string().optional(),
     keywords: z.array(z.string().nullable()).optional(),
-    levelNum: z.coerce.number(),
+
   })
   .nullable();
 
@@ -127,7 +127,7 @@ const languageSchema = z
     id: z.string().optional(),
     name: z.string().optional(),
     level: z.string().optional(),
-    levelNum: z.coerce.number(),
+
   })
   .nullable();
 
