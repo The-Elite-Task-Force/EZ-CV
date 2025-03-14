@@ -38,7 +38,7 @@ export const CompaniesPage = () => {
     <div>
       <Helmet>
         <title>
-          {t`Companies`} - {t`Reactive Resume`}
+          {t`Companies`} - {t`EzCV`}
         </title>
       </Helmet>
       <Tabs

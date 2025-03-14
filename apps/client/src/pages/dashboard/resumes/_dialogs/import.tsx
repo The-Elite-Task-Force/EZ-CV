@@ -209,7 +209,7 @@ export const ImportDialog = () => {
                 </div>
               </DialogTitle>
               <DialogDescription>
-                {t`Upload a file from one of the accepted sources to parse existing data and import it into Reactive Resume for easier editing.`}
+                {t`Upload a file from one of the accepted sources to parse existing data and import it into EzCV for easier editing.`}
               </DialogDescription>
             </DialogHeader>
 
@@ -226,13 +226,9 @@ export const ImportDialog = () => {
                       </SelectTrigger>
                       <SelectContent>
                         {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
-                        <SelectItem value="reactive-resume-json">
-                          Reactive Resume (.json)
-                        </SelectItem>
+                        <SelectItem value="reactive-resume-json">EzCV (.json)</SelectItem>
                         {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
-                        <SelectItem value="reactive-resume-v3-json">
-                          Reactive Resume v3 (.json)
-                        </SelectItem>
+                        <SelectItem value="reactive-resume-v3-json">EzCV v3 (.json)</SelectItem>
                         {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
                         <SelectItem value="json-resume-json">JSON Resume (.json)</SelectItem>
                         {/* eslint-disable-next-line lingui/no-unlocalized-strings */}

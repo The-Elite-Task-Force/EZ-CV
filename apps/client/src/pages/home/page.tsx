@@ -21,7 +21,7 @@ export const HomePage = () => {
         <html lang={i18n.locale} />
 
         <title>
-          {t`Reactive Resume`} - {t`A free and open-source resume builder`}
+          {t`EzCV`} - {t`A free and open-source resume builder`}
         </title>
 
         <meta
@@ -31,14 +31,14 @@ export const HomePage = () => {
       </Helmet>
 
       <HeroSection />
-      <LogoCloudSection />
-      <StatisticsSection />
+      {/* <LogoCloudSection /> */}
+      {/* <StatisticsSection /> */}
       <FeaturesSection />
       <TemplatesSection />
-      <TestimonialsSection />
-      <SupportSection />
-      <FAQSection />
-      <ContributorsSection />
+      {/* <TestimonialsSection /> */}
+      {/* <SupportSection /> */}
+      {/* <FAQSection /> */}
+      {/* <ContributorsSection /> */}
     </main>
   );
 };

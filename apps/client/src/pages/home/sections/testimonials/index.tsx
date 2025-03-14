@@ -18,7 +18,7 @@ const testimonials: Testimonial[][] = [
     {
       name: "N. Elnour",
       quote:
-        "This is really a thank you for Reactive Resume. Drafting resumes was never a strength of mine, so your app really made the whole process easy and smooth!",
+        "This is really a thank you for EzCV. Drafting resumes was never a strength of mine, so your app really made the whole process easy and smooth!",
     },
     {
       name: "S. Bhaije",
@@ -47,7 +47,7 @@ const testimonials: Testimonial[][] = [
     {
       name: "A. Rehman",
       quote:
-        "Hey Amruth, I have loved your Reactive Resume Website. Thank you so much for making this kind of thing.",
+        "Hey Amruth, I have loved your EzCV Website. Thank you so much for making this kind of thing.",
     },
     {
       name: "S. Innocent",
@@ -68,9 +68,8 @@ export const TestimonialsSection = () => (
       <h1 className="text-4xl font-bold">{t`Testimonials`}</h1>
       <p className="mx-auto max-w-2xl leading-relaxed">
         <Trans>
-          I always love to hear from the users of Reactive Resume with feedback or support. Here are
-          some of the messages I've received. If you have any feedback, feel free to drop me an
-          email at{" "}
+          I always love to hear from the users of EzCV with feedback or support. Here are some of
+          the messages I've received. If you have any feedback, feel free to drop me an email at{" "}
           <a href={email} className="underline">
             {email}
           </a>
