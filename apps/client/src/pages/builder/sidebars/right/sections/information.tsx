@@ -12,6 +12,7 @@ import { cn } from "@reactive-resume/utils";
 
 import { SectionIcon } from "../shared/section-icon";
 
+/* 
 const DonateCard = () => (
   <Card className="space-y-4 bg-info text-info-foreground">
     <CardContent className="space-y-2">
@@ -42,8 +43,9 @@ const DonateCard = () => (
     </CardFooter>
   </Card>
 );
+*/
 
-const IssuesCard = () => (
+const ContactCard = () => (
   <Card className="space-y-4">
     <CardContent className="space-y-2">
       <CardTitle>{t`Found a bug, or have an idea for a new feature?`}</CardTitle>
@@ -60,7 +62,7 @@ const IssuesCard = () => (
     </CardContent>
     <CardFooter className="space-x-4">
       <a
-        href="https://github.com/AmruthPillai/Reactive-Resume/issues/new/choose"
+        href="https://github.com/The-Elite-Task-Force/EZ-CV/discussions/new/choose"
         className={cn(buttonVariants({ size: "sm" }))}
         rel="noopener noreferrer nofollow"
         target="_blank"
@@ -69,14 +71,15 @@ const IssuesCard = () => (
         <span className="line-clamp-1">{t`Raise an issue`}</span>
       </a>
 
-      <a className={cn(buttonVariants({ size: "sm" }))} href="mailto:hello@amruthpillai.com">
+      <a className={cn(buttonVariants({ size: "sm" }))} href="mailto:ezcv.dev@gmail.com">
         <EnvelopeSimpleOpen size={14} weight="bold" className="mr-2" />
-        <span className="line-clamp-1">{t`Send me a message`}</span>
+        <span className="line-clamp-1">{t`Send email`}</span>
       </a>
     </CardFooter>
   </Card>
 );
 
+/*
 const DocumentationCard = () => (
   <Card className="space-y-4">
     <CardContent className="space-y-2">
@@ -107,6 +110,7 @@ const DocumentationCard = () => (
     </CardFooter>
   </Card>
 );
+*/
 
 export const InformationSection = () => {
   return (
@@ -114,14 +118,14 @@ export const InformationSection = () => {
       <header className="flex items-center justify-between">
         <div className="flex items-center gap-x-4">
           <SectionIcon id="information" size={18} name={t`Information`} />
-          <h2 className="line-clamp-1 text-2xl font-bold lg:text-3xl">{t`Information`}</h2>
+          <h2 className="line-clamp-1 text-2xl font-bold lg:text-3xl">{t`Feedback`}</h2>
         </div>
       </header>
 
       <main className="grid gap-y-4">
-        <DonateCard />
-        <DocumentationCard />
-        <IssuesCard />
+        {/* <DonateCard /> */}
+        {/* <DocumentationCard /> */}
+        <ContactCard />
       </main>
     </section>
   );

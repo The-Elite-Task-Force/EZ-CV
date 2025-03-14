@@ -132,7 +132,7 @@ export const RightSidebar = () => {
           />
           <SectionIcon
             id="information"
-            name={t`Information`}
+            name={t`Reach out`}
             onClick={() => {
               scrollIntoView("#information");
             }}
