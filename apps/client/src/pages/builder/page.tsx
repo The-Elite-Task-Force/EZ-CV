@@ -138,7 +138,7 @@ export const BuilderPage = () => {
     <>
       <Helmet>
         <title>
-          {title} - {t`Reactive Resume`}
+          {title} - {t`EzCV`}
         </title>
       </Helmet>
 
