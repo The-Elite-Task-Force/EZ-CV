@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { useLingui } from "@lingui/react";
 import { Helmet } from "react-helmet-async";
@@ -20,9 +21,7 @@ export const HomePage = () => {
       <Helmet prioritizeSeoTags>
         <html lang={i18n.locale} />
 
-        <title>
-          {t`EzCV`} - {t`A free and open-source resume builder`}
-        </title>
+        <title>EzCV - {t`A free and open-source resume builder`}</title>
 
         <meta
           name="description"

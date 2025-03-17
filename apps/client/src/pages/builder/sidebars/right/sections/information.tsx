@@ -69,12 +69,16 @@ const ContactCard = () => (
         target="_blank"
       >
         <GithubLogo size={14} weight="bold" className="mr-2" />
-        <span className="line-clamp-1">{t`Raise an issue`}</span>
+        <span className="line-clamp-1">Start discussion</span>
       </a>
 
-      <a className={cn(buttonVariants({ size: "sm" }))} href="mailto:ezcv.dev@gmail.com">
+      <a
+        className={cn(buttonVariants({ size: "sm" }))}
+        href="mailto:ezcv.dev@gmail.com"
+        title="ezcv.dev@gmail.com"
+      >
         <EnvelopeSimpleOpen size={14} weight="bold" className="mr-2" />
-        <span className="line-clamp-1">{t`Send email`}</span>
+        <span className="line-clamp-1">Send email</span>
       </a>
     </CardFooter>
   </Card>

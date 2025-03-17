@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { List, SquaresFour } from "@phosphor-icons/react";
 import { ScrollArea, Tabs, TabsContent, TabsList, TabsTrigger } from "@reactive-resume/ui";
@@ -20,9 +21,7 @@ export const ResumesPage = () => {
   return (
     <>
       <Helmet>
-        <title>
-          {t`Resumes`} - {t`EzCV`}
-        </title>
+        <title>{t`Resumes`} - EzCV</title>
       </Helmet>
 
       <Tabs
