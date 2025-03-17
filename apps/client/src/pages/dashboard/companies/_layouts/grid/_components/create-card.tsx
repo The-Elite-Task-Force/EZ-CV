@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { Plus } from "@phosphor-icons/react";
 import { KeyboardShortcut } from "@reactive-resume/ui";
@@ -24,12 +25,11 @@ export const CreateCompanyCard = () => {
         )}
       >
         <h4 className="font-medium">
-          {t`Create a new company`}
-          {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
+          Create a new company
           <KeyboardShortcut className="ml-2">^N</KeyboardShortcut>
         </h4>
 
-        <p className="text-xs opacity-75">{t`Start building from scratch`}</p>
+        <p className="text-xs opacity-75">Start building from scratch</p>
       </div>
     </BaseCard>
   );

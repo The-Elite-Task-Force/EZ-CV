@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t, Trans } from "@lingui/macro";
 import { cn } from "@reactive-resume/utils";
 
@@ -25,19 +26,13 @@ export const Copyright = ({ className }: Props) => (
       </Trans>
     </span>
     <span>
-      <Trans>
-        A project made by{" "}
-        <strong>
-          <u>The Elite Task Force</u>
-        </strong>
-      </Trans>
+      A project made by{" "}
+      <strong>
+        <u>The Elite Task Force</u>
+      </strong>
     </span>
-    <span className="text-xs">
-      <Trans>Based on a project by Amruth Pillai</Trans>
-    </span>
+    <span className="text-xs">Based on a project by Amruth Pillai</span>
 
-    <span className="mt-4">
-      {t`EzCV`} {"v" + appVersion}
-    </span>
+    <span className="mt-4">EzCV {"v" + appVersion}</span>
   </div>
 );

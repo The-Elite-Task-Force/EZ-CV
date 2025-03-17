@@ -109,7 +109,7 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
                     >
                       <CompanyLogo company={companyState} />
                       <FormItem className="flex-1">
-                        <FormLabel>{t`Logo`}</FormLabel>
+                        <FormLabel>Logo</FormLabel>
                         <FormControl>
                           <Input placeholder="https://..." {...field} value={field.value ?? ""} />
                         </FormControl>
@@ -137,7 +137,7 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t`Company Name`}</FormLabel>
+                    <FormLabel>Company Name</FormLabel>
                     <FormControl>
                       <Input autoComplete="name" {...field} />
                     </FormControl>

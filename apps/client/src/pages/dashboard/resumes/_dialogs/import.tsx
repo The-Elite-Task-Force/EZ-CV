@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/macro";
 import { Check, DownloadSimple } from "@phosphor-icons/react";
@@ -209,7 +210,8 @@ export const ImportDialog = () => {
                 </div>
               </DialogTitle>
               <DialogDescription>
-                {t`Upload a file from one of the accepted sources to parse existing data and import it into EzCV for easier editing.`}
+                Upload a file from one of the accepted sources to parse existing data and import it
+                into EzCV for easier editing.
               </DialogDescription>
             </DialogHeader>
 

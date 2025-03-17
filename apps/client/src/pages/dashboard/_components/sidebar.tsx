@@ -113,13 +113,15 @@ export const Sidebar = ({ setOpen }: SidebarProps) => {
     },
     {
       path: "/dashboard/search",
-      name: t`Search`,
+      // eslint-disable-next-line lingui/no-unlocalized-strings
+      name: "Search",
       shortcut: "⇧F",
       icon: <MagnifyingGlass />,
     },
     {
       path: "/dashboard/companies",
-      name: t`Companies`,
+      // eslint-disable-next-line lingui/no-unlocalized-strings
+      name: "Companies",
       shortcut: "⇧C",
       icon: <BuildingApartment />,
     },
