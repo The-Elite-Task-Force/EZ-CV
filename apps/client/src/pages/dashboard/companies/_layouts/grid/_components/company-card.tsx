@@ -53,6 +53,11 @@ export const CompanyCard = ({ company }: Props) => {
                 <p className="line-clamp-1 text-xs opacity-75">{t`Last updated ${lastUpdated}`}</p>
               </div>
             </div>
+            <img
+              src={company.picture ?? undefined}
+              alt={company.picture ? "" : "Image not added!"}
+              className="rounded-sm opacity-80"
+            />
           </BaseCard>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
