@@ -4,7 +4,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
 import {
   CreateResumeDto,
   ImportResumeDto,
@@ -33,14 +32,7 @@ export class ResumeService {
   ) {}
 
   async create(userId: string, createResumeDto: CreateResumeDto) {
-    const { name, email, picture } = await this.prisma.user.findUniqueOrThrow({
-      where: { id: userId },
-      select: { name: true, email: true, picture: true },
-    });
-
-    const data = deepmerge(defaultResumeData, {
-      basics: { name, email, picture: { url: picture ?? "" } },
-    } satisfies DeepPartial<ResumeData>);
+    const data = deepmerge(defaultResumeData, {} satisfies DeepPartial<ResumeData>);
 
     return this.prisma.resume.create({
       data: {

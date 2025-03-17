@@ -1,34 +1,6 @@
 import type { ResumeData } from "./index";
 
 export const sampleResume: ResumeData = {
-  basics: {
-    id: "ngkjdnfglksjdfnglkjsndfg",
-    userId: "ngkjdnfglksjdfnglkjsndfg",
-    updatedAt: new Date(),
-    name: "John Doe",
-    headline: "Creative and Innovative Web Developer",
-    email: "john.doe@gmail.com",
-    phone: "(555) 123-4567",
-    location: "Pleasantville, CA 94588",
-    birthdate: "May 11, 1984",
-    summary: "SummeryText",
-    url: {
-      label: "",
-      href: "https://johndoe.me/",
-    },
-    customFields: [],
-    picture: {
-      url: "https://i.imgur.com/HgwyOuJ.jpg",
-      size: 120,
-      aspectRatio: 1,
-      borderRadius: 0,
-      effects: {
-        hidden: false,
-        border: false,
-        grayscale: false,
-      },
-    },
-  },
   sections: {
     basics: {
       name: "Basics",

@@ -34,6 +34,7 @@ export const LeftSidebar = () => {
   const containterRef = useRef<HTMLDivElement | null>(null);
 
   const addSection = useResumeStore((state) => state.addSection);
+  const res = useResumeStore((state) => state.resume);
   const customSections = useResumeStore((state) => state.resume.data.sections.custom);
 
   const scrollIntoView = (selector: string) => {
@@ -42,6 +43,8 @@ export const LeftSidebar = () => {
   };
 
   useMapSectionsToResume();
+
+  console.log(res);
 
   return (
     <div className="flex bg-secondary-accent/30">
