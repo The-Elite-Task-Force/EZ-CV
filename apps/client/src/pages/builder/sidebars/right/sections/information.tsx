@@ -46,7 +46,7 @@ const DonateCard = () => (
 );
 */
 
-const ContactCard = () => (
+export const ContactCard = () => (
   <Card className="space-y-4">
     <CardContent className="space-y-2">
       <CardTitle>{t`Found a bug, or have an idea for a new feature?`}</CardTitle>
@@ -128,8 +128,6 @@ export const InformationSection = () => {
       </header>
 
       <main className="grid gap-y-4">
-        {/* <DonateCard /> */}
-        {/* <DocumentationCard /> */}
         <ContactCard />
       </main>
     </section>
