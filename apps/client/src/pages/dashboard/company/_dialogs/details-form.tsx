@@ -74,7 +74,7 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
     }
   };
 
-  const { setValue, handleSubmit, watch } = form;
+  const { setValue } = form;
 
   const onSelectImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -96,6 +96,7 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
       id: companyState.id,
       picture: null,
     });
+    setValue("picture", null);
   };
 
   return (

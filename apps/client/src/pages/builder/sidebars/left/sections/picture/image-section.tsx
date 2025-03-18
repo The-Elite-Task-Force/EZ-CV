@@ -19,11 +19,11 @@ import { z } from "zod";
 // import { PictureOptions } from "./options";
 
 type Props = {
-  onSelectImage: () => void;
+  onSelectImage: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   clickImage: () => void;
 };
 
-export const ImageSection = ({ onSelectImage, clickImage }) => {
+export const ImageSection = ({ onSelectImage, clickImage }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { setValue, watch } = useFormContext();
@@ -32,12 +32,7 @@ export const ImageSection = ({ onSelectImage, clickImage }) => {
   const isValidUrl = useMemo(() => z.string().url().safeParse(picture).success, [picture]);
 
   const onAvatarClick = () => {
-    if (isValidUrl) {
-      setValue("picture", "");
-      clickImage();
-    } else {
-      inputRef.current?.click();
-    }
+    inputRef.current?.click();
   };
 
   return (
@@ -46,20 +41,25 @@ export const ImageSection = ({ onSelectImage, clickImage }) => {
         <Avatar className="size-14 bg-secondary">
           <AvatarImage src={picture} />
         </Avatar>
-
-        {isValidUrl ? (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-background/30 opacity-0 transition-opacity group-hover:opacity-100">
-            <Trash size={16} weight="bold" />
-          </div>
-        ) : (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-background/30 opacity-0 transition-opacity group-hover:opacity-100">
-            <UploadSimple size={16} weight="bold" />
-          </div>
-        )}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-background/30 opacity-0 transition-opacity group-hover:opacity-100">
+          <UploadSimple size={16} weight="bold" />
+        </div>
       </div>
 
       <div className="flex w-full flex-col gap-y-1.5">
-        <Label htmlFor="picture">Picture</Label>
+        <div className="flex gap-x-2">
+          <Label htmlFor="picture">Picture</Label>
+          {isValidUrl && (
+            <div
+              onClick={() => {
+                clickImage();
+                setValue("picture", "");
+              }}
+            >
+              <Trash size={16} weight="bold" />
+            </div>
+          )}
+        </div>
         <div className="flex items-center gap-x-2">
           <input ref={inputRef} hidden type="file" onChange={onSelectImage} />
 
