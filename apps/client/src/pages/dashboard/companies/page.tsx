@@ -37,9 +37,7 @@ export const CompaniesPage = () => {
   return (
     <div>
       <Helmet>
-        <title>
-          {t`Companies`} - {t`Reactive Resume`}
-        </title>
+        <title>{t`Companies`} - EzCV</title>
       </Helmet>
       <Tabs
         value={layout}
@@ -54,7 +52,7 @@ export const CompaniesPage = () => {
             animate={{ opacity: 1, x: 0 }}
             className="text-4xl font-bold tracking-tight"
           >
-            {t`Companies`}
+            Companies
           </motion.h1>
 
           <TabsList>

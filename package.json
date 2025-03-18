@@ -19,7 +19,6 @@
     "testCov": "pnpm vitest --config ./vitest.config.ts --coverage.enabled=true run",
     "prebuild": "pnpm prisma:generate",
     "build": "nx run-many -t build",
-    "prestart": "pnpm prisma:migrate",
     "start": "node dist/apps/server/main",
     "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint --fix",

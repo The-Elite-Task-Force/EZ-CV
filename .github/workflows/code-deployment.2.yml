@@ -1,0 +1,95 @@
+name: "Manual Deploy to Azure Web App - EzCV-webapp-2"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read    # for actions/checkout
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          # match or approximate your Azure Web App's Node version
+          node-version: "22.x"
+
+      # Install dependencies (including Prisma), run build steps, etc.
+      - name: Install, Generate, Migrate, Build
+        env:
+          DATABASE_URL: ${{ secrets.POSTGRES_CONNECTION_STRING }}
+        run: |
+          # Install PNPM globally (if your project uses PNPM)
+          npm install -g pnpm
+
+          # 1) Install all dependencies, including dev
+          pnpm install
+          
+          # 2) (Optional) Generate Prisma client
+          pnpm prisma generate
+
+          # 3) (Optional) Run migrations here in CI
+          #    Note: only works if your DB is accessible from CI
+          pnpm prisma migrate deploy
+
+          # 4) Compile NestJS to dist/
+          pnpm run build
+          
+      # Prune dev dependencies so node_modules is production-only
+      - name: Prune dev dependencies
+        run: |
+          pnpm prune --prod
+
+      # Zip the minimal artifact (dist/, node_modules, package.json, lockfile)
+      - name: Zip artifact for deployment
+        run: |
+          zip -r release.zip \
+            dist \
+            node_modules \
+            package.json \
+            pnpm-lock.yaml
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-app
+          path: release.zip
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    # If you use an environment in GitHub (for environment protection rules, etc.)
+    environment:
+      name: "Production"
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: node-app
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.__clientidsecretname__ }}
+          tenant-id: ${{ secrets.__tenantidsecretname__ }}
+          subscription-id: ${{ secrets.__subscriptionidsecretname__ }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: "EzCV-webapp-2"
+          package: "release.zip"

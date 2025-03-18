@@ -1,9 +1,11 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import {
-  Brain,
+  BuildingOffice,
+  // Brain,
   Cloud,
   CloudSun,
-  CurrencyDollarSimple,
+  // CurrencyDollarSimple,
   EnvelopeSimple,
   Eye,
   File,
@@ -20,10 +22,10 @@ import {
   Prohibit,
   Scales,
   StackSimple,
-  Star,
+  // Star,
   Swatches,
   TextAa,
-  Translate,
+  // Translate,
 } from "@phosphor-icons/react";
 import { cn, languages, templatesList } from "@reactive-resume/utils";
 import { motion } from "framer-motion";
@@ -43,13 +45,14 @@ export const FeaturesSection = () => {
   const templatesCount = templatesList.length;
 
   const features: Feature[] = [
-    { icon: <CurrencyDollarSimple />, title: t`Free, forever` },
+    // { icon: <CurrencyDollarSimple />, title: t`Free, forever` },
     { icon: <GitBranch />, title: t`Open Source` },
     { icon: <Scales />, title: t`MIT License` },
     { icon: <Prohibit />, title: t`No user tracking or advertising` },
     { icon: <Cloud />, title: t`Self-host with Docker` },
-    { icon: <Translate />, title: t`Available in ${languagesCount} languages` },
-    { icon: <Brain />, title: t`OpenAI Integration` },
+    // { icon: <Translate />, title: t`Available in ${languagesCount} languages` },
+    // { icon: <Brain />, title: t`OpenAI Integration` },
+    { icon: <BuildingOffice />, title: "Create and manage companies" },
     { icon: <GithubLogo />, title: t`Sign in with GitHub` },
     { icon: <GoogleLogo />, title: t`Sign in with Google` },
     { icon: <EnvelopeSimple />, title: t`Sign in with Email` },
@@ -59,7 +62,7 @@ export const FeaturesSection = () => {
     { icon: <Folder />, title: t`Manage multiple resumes` },
     { icon: <Swatches />, title: t`Customisable colour palettes` },
     { icon: <Layout />, title: t`Customisable layouts` },
-    { icon: <Star />, title: t`Custom resume sections` },
+    // { icon: <Star />, title: t`Custom resume sections` },
     { icon: <Note />, title: t`Personal notes for each resume` },
     { icon: <Lock />, title: t`Lock a resume to prevent editing` },
     { icon: <File />, title: t`Supports A4/Letter page formats` },
@@ -102,10 +105,10 @@ export const FeaturesSection = () => {
     <section id="features" className="relative bg-secondary-accent py-24 sm:py-32">
       <div className="container">
         <div className="space-y-6 leading-loose">
-          <h2 className="text-4xl font-bold">{t`Rich in features, not in pricing.`}</h2>
-          <p className="max-w-4xl text-base leading-relaxed">
-            {t`Reactive Resume is a passion project of over 3 years of hard work, and with that comes a number of re-iterated ideas and features that have been built to (near) perfection.`}
-          </p>
+          <h2 className="text-4xl font-bold">Features and Qualities</h2>
+          {/* <p className="max-w-4xl text-base leading-relaxed">
+            {t`EzCV is a passion project of over 3 years of hard work, and with that comes a number of re-iterated ideas and features that have been built to (near) perfection.`}
+          </p> */}
 
           <IconContext.Provider value={{ size: 14, weight: "bold" }}>
             <div className="!mt-12 flex flex-wrap items-center gap-4">

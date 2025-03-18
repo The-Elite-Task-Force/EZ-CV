@@ -46,7 +46,7 @@ services:
       PROXY_SSL: "false"
 
   app:
-    image: amruthpillai/reactive-resume:latest
+    image: mfknudsen/ez-cv:latest
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -87,6 +87,8 @@ services:
       STORAGE_SECRET_KEY: minioadmin
       STORAGE_USE_SSL: "false"
       STORAGE_SKIP_BUCKET_CHECK: "false"
+
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
 
       # -- Crowdin (Optional) --
       # CROWDIN_PROJECT_ID:

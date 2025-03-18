@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import type { SearchResultDto } from "@reactive-resume/dto";
 import { Button, Input } from "@reactive-resume/ui";
@@ -25,23 +26,23 @@ export const SearchPage = () => {
 
   return (
     <div className="flex flex-col items-center p-4">
-      <h1 className="mb-4 text-2xl font-bold">{t`Search`}</h1>
+      <h1 className="mb-4 text-2xl font-bold">Search</h1>
       <div className="flex w-full max-w-3xl">
         <Input
           type="text"
           value={query}
           placeholder={t`Enter your search query`}
-          className="mr-2 flex-grow"
+          className="mr-2 grow"
           onChange={(e) => {
             setQuery(e.target.value);
           }}
           onKeyUp={handleKeyPress}
         />
-        <Button onClick={handleSearch}>{t`Search`}</Button>
+        <Button onClick={handleSearch}>Search</Button>
       </div>
       <div className="mt-4 w-full max-w-3xl">
-        {isLoading && <p>{t`Loading...`}</p>}
-        {error && <p>{t`Error: ${error.message}`}</p>}
+        {isLoading && <p>Loading...</p>}
+        {error && <p>Error: ${error.message}</p>}
         {!isLoading && data && data.length > 0 ? (
           <ul>
             {data.map((item: SearchResultDto, index: number) => (

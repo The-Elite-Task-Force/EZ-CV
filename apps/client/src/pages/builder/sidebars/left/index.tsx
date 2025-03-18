@@ -1,10 +1,10 @@
 import { t } from "@lingui/macro";
-import { Plus, PlusCircle } from "@phosphor-icons/react";
+//import { Plus, PlusCircle } from "@phosphor-icons/react";
 import type {
   Award,
   Basics,
   Certification,
-  CustomSection,
+  //CustomSection,
   Education,
   Experience,
   Interest,
@@ -18,7 +18,7 @@ import type {
   Volunteer,
 } from "@reactive-resume/schema";
 import { Button, ScrollArea, Separator } from "@reactive-resume/ui";
-import { Fragment, useRef } from "react";
+import { useRef } from "react";
 import { Link } from "react-router";
 
 import { Icon } from "@/client/components/icon";
@@ -33,9 +33,10 @@ import { SectionIcon } from "./sections/shared/section-icon";
 export const LeftSidebar = () => {
   const containterRef = useRef<HTMLDivElement | null>(null);
 
-  const addSection = useResumeStore((state) => state.addSection);
+  //const addSection = useResumeStore((state) => state.addSection);
+  //const customSections = useResumeStore((state) => state.resume.data.sections.custom);
   const res = useResumeStore((state) => state.resume);
-  const customSections = useResumeStore((state) => state.resume.data.sections.custom);
+
 
   const scrollIntoView = (selector: string) => {
     const section = containterRef.current?.querySelector(selector);
@@ -145,18 +146,19 @@ export const LeftSidebar = () => {
               scrollIntoView("#references");
             }}
           />
-
-          <SectionIcon
-            id="custom"
-            variant="outline"
-            name={t`Add a new section`}
-            icon={<Plus size={14} />}
-            onClick={() => {
-              addSection();
-              // eslint-disable-next-line lingui/no-unlocalized-strings
-              scrollIntoView("& > sectionItem:last-of-type");
-            }}
-          />
+          {/*
+<SectionIcon
+  id="custom"
+  variant="outline"
+  name={t`Add a new section`}
+  icon={<Plus size={14} />}
+  onClick={() => {
+    addSection();
+    // eslint-disable-next-line lingui/no-unlocalized-strings
+    scrollIntoView("& > sectionItem:last-of-type");
+  }}
+/>
+*/}
         </div>
 
         <UserOptions>
@@ -258,7 +260,7 @@ export const LeftSidebar = () => {
           />
 
           {/* Custom Sections */}
-          {Object.values(customSections).map((section) => (
+          {/*{Object.values(customSections).map((section) => (
             <Fragment key={section.id}>
               <Separator />
 
@@ -271,11 +273,12 @@ export const LeftSidebar = () => {
           ))}
 
           <Separator />
-
-          <Button size="lg" variant="outline" onClick={addSection}>
-            <PlusCircle />
-            <span className="ml-2">{t`Add a new section`}</span>
-          </Button>
+          
+<Button size="lg" variant="outline" onClick={addSection}>
+  <PlusCircle />
+  <span className="ml-2">{t`Add a new section`}</span>
+</Button>
+*/}
         </div>
       </ScrollArea>
     </div>

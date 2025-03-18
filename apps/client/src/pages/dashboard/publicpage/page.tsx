@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { CircleNotch, FilePdf } from "@phosphor-icons/react";
 import { Button } from "@reactive-resume/ui";
@@ -67,9 +68,7 @@ export const PublicResumePage = () => {
   return (
     <div>
       <Helmet>
-        <title>
-          {title} - {t`Reactive Resume`}
-        </title>
+        <title>{title} - EzCV</title>
       </Helmet>
 
       <div
@@ -89,7 +88,7 @@ export const PublicResumePage = () => {
           <Button size="sm" variant="ghost" className="space-x-1.5 text-xs font-normal">
             <span>{t`Built with`}</span>
             <Icon size={12} />
-            <span>{t`Reactive Resume`}</span>
+            <span>EzCV</span>
           </Button>
         </Link>
       </div>

@@ -1,3 +1,5 @@
+/* eslint-disable lingui/no-unlocalized-strings */
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t, Trans } from "@lingui/macro";
 import { ArrowRight } from "@phosphor-icons/react";
@@ -60,9 +62,7 @@ export const RegisterPage = () => {
   return (
     <div className="space-y-8">
       <Helmet>
-        <title>
-          {t`Create a new account`} - {t`Reactive Resume`}
-        </title>
+        <title>{t`Create a new account`} - EzCV</title>
       </Helmet>
 
       <div className="space-y-1.5">

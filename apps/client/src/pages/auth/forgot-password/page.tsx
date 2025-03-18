@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/macro";
 import { ArrowLeft } from "@phosphor-icons/react";
@@ -45,9 +46,7 @@ export const ForgotPasswordPage = () => {
     return (
       <div className="space-y-8">
         <Helmet>
-          <title>
-            {t`You've got mail!`} - {t`Reactive Resume`}
-          </title>
+          <title>{t`You've got mail!`} - EzCV</title>
         </Helmet>
 
         <div className="space-y-4">
@@ -101,7 +100,7 @@ export const ForgotPasswordPage = () => {
               </Button>
 
               <Button type="submit" disabled={loading} className="w-full">
-                {t`Send Email`}
+                Send Email
               </Button>
             </div>
           </form>

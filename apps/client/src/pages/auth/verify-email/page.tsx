@@ -1,3 +1,5 @@
+/* eslint-disable lingui/no-unlocalized-strings */
+
 import { t, Trans } from "@lingui/macro";
 import { ArrowRight, Info, SealCheck } from "@phosphor-icons/react";
 import { Alert, AlertDescription, AlertTitle, Button } from "@reactive-resume/ui";
@@ -39,17 +41,15 @@ export const VerifyEmailPage = () => {
   return (
     <div className="space-y-6">
       <Helmet>
-        <title>
-          {t`Verify your email address`} - {t`Reactive Resume`}
-        </title>
+        <title>{t`Verify your email address`} - EzCV</title>
       </Helmet>
 
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold tracking-tight">{t`Verify your email address`}</h2>
         <p className="leading-relaxed opacity-75">
           <Trans>
-            You should have received an email from <strong>Reactive Resume</strong> with a link to
-            verify your account.
+            You should have received an email from <strong>EzCV</strong> with a link to verify your
+            account.
           </Trans>
         </p>
       </div>

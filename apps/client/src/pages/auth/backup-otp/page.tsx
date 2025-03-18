@@ -48,9 +48,7 @@ export const BackupOtpPage = () => {
   return (
     <div className="space-y-8">
       <Helmet>
-        <title>
-          {t`Use your backup code`} - {t`Reactive Resume`}
-        </title>
+        <title>{t`Use your backup code`} - EzCV</title>
       </Helmet>
 
       <div className="space-y-1.5">

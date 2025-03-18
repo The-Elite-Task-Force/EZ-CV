@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { templatesList } from "@reactive-resume/utils";
 import { motion } from "framer-motion";
@@ -9,7 +10,8 @@ export const TemplatesSection = () => (
         <h2 className="text-4xl font-bold">{t`Templates`}</h2>
 
         <p className="leading-relaxed">
-          {t`Explore the templates available in Reactive Resume and view the resumes crafted with them. They could also serve as examples to help guide the creation of your next resume.`}
+          Explore the templates available in EzCV and view the resumes crafted with them. They could
+          also serve as examples to help guide the creation of your next resume.
         </p>
       </div>
 

@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import type { ResumeDto, SectionMappingDto } from "@reactive-resume/dto";
 import type { Sections } from "@reactive-resume/schema";
@@ -137,9 +138,7 @@ export const BuilderPage = () => {
   return (
     <>
       <Helmet>
-        <title>
-          {title} - {t`Reactive Resume`}
-        </title>
+        <title>{title} - EzCV</title>
       </Helmet>
 
       <iframe

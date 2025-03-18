@@ -166,7 +166,6 @@ model SkillItem {
   description String?
   level       Int?
   keywords    Json?
-  levelNum    Int?
   updatedAt   DateTime @updatedAt
 
   ResumeSkillItemMapping ResumeSkillItemMapping[]
@@ -235,7 +234,6 @@ model LanguageItem {
   name        String?
   description String?
   level       Int?
-  levelNum    Int?
   updatedAt   DateTime @updatedAt
 
   ResumeLanguageItemMapping ResumeLanguageItemMapping[]
@@ -322,10 +320,9 @@ model ProfileItem {
   network   String?
   url       Json?
   username  String?
+  icon                     String?
   updatedAt DateTime @updatedAt
 
-  icon                     String?
-  description              String?
   ResumeProfileItemMapping ResumeProfileItemMapping[]
 
   @@unique([userId, id])

@@ -1,3 +1,5 @@
+/* eslint-disable lingui/no-unlocalized-strings */
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t, Trans } from "@lingui/macro";
 import { resetPasswordSchema } from "@reactive-resume/dto";
@@ -56,9 +58,7 @@ export const ResetPasswordPage = () => {
   return (
     <div className="space-y-8">
       <Helmet>
-        <title>
-          {t`Reset your password`} - {t`Reactive Resume`}
-        </title>
+        <title>{t`Reset your password`} - EzCV</title>
       </Helmet>
 
       <div className="space-y-1.5">

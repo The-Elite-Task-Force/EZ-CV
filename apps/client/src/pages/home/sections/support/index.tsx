@@ -1,5 +1,4 @@
 import { t } from "@lingui/macro";
-
 export const SupportSection = () => (
   <section
     id="support"

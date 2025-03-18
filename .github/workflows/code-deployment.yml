@@ -23,22 +23,29 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: "22.x"
+          node-version: "22.13.1"
 
-      - name: Install dependencies, build, and test
+      - name: Install dependencies
         run: |
           npm install -g pnpm
           pnpm install
-          pnpm run build
-          pnpm run test
+          pnpm list
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
 
       # Zip ONLY what's needed: dist/ + package.json + lockfile
       - name: Zip artifact for deployment
         run: |
+          pnpm install --production
           zip -r release.zip \
             dist \
             package.json \
-            package-lock.json
+            package-lock.json \
+            pnpm-lock.yaml 
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -76,4 +83,4 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: "EzCV"
-          package: "release.zip"
+          package: release.zip

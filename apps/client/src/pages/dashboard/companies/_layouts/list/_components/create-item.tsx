@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { Plus } from "@phosphor-icons/react";
 import type { CompanyDto } from "@reactive-resume/dto";
@@ -14,7 +15,7 @@ export const CreateCompanyListItem = () => {
       start={<Plus size={18} />}
       title={
         <>
-          <span>{t`Create a new company`}</span>
+          <span>Create a new company</span>
           {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
           <KeyboardShortcut className="ml-2">^N</KeyboardShortcut>
         </>

@@ -6,7 +6,6 @@ import { defaultItem, defaultUrl, itemSchema, urlSchema } from "../shared";
 export const profileSchema = itemSchema.extend({
   network: z.string().min(1),
   username: z.string().min(1),
-  description: z.string(),
   icon: z
     .string()
     .describe(
@@ -25,5 +24,4 @@ export const defaultProfile: Profile = {
   username: "",
   icon: "",
   url: defaultUrl,
-  description: "",
 };

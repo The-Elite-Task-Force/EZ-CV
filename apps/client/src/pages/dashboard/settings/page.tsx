@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { ScrollArea, Separator } from "@reactive-resume/ui";
 import { motion } from "framer-motion";
@@ -12,9 +13,7 @@ import { SecuritySettings } from "./_sections/security";
 export const SettingsPage = () => (
   <>
     <Helmet>
-      <title>
-        {t`Settings`} - {t`Reactive Resume`}
-      </title>
+      <title>{t`Settings`} - EzCV</title>
     </Helmet>
 
     <div className="max-w-2xl space-y-4">

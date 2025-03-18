@@ -23,12 +23,6 @@ export const Logo = ({ size = 32, className }: Props) => {
   }
 
   return (
-    <img
-      src={src}
-      width={size}
-      height={size}
-      alt="Reactive Resume"
-      className={cn("rounded-sm", className)}
-    />
+    <img src={src} width={size} height={size} alt="EzCV" className={cn("rounded-sm", className)} />
   );
 };
