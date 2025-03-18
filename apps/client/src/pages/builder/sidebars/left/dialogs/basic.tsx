@@ -28,6 +28,8 @@ export const BasicDialog = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const id = form.watch("id");
+
   return (
     <SectionDialog<FormValues> id="basics" form={form} defaultValues={defaultBasics}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -162,7 +164,7 @@ export const BasicDialog = () => {
           />
         </main>
 
-        <CustomFieldsSection className="sm:col-span-2" />
+        <CustomFieldsSection id={id} className="sm:col-span-2" />
       </div>
     </SectionDialog>
   );

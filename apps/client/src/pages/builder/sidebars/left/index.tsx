@@ -25,7 +25,6 @@ import { Icon } from "@/client/components/icon";
 import { UserAvatar } from "@/client/components/user-avatar";
 import { UserOptions } from "@/client/components/user-options";
 import { useMapSectionsToResume } from "@/client/hooks/use-map-sections-to-resume";
-import { useResumeStore } from "@/client/stores/resume";
 
 import { SectionBase } from "./sections/shared/section-base";
 import { SectionIcon } from "./sections/shared/section-icon";
@@ -35,8 +34,6 @@ export const LeftSidebar = () => {
 
   //const addSection = useResumeStore((state) => state.addSection);
   //const customSections = useResumeStore((state) => state.resume.data.sections.custom);
-  const res = useResumeStore((state) => state.resume);
-
 
   const scrollIntoView = (selector: string) => {
     const section = containterRef.current?.querySelector(selector);
@@ -44,8 +41,6 @@ export const LeftSidebar = () => {
   };
 
   useMapSectionsToResume();
-
-  console.log(res);
 
   return (
     <div className="flex bg-secondary-accent/30">
