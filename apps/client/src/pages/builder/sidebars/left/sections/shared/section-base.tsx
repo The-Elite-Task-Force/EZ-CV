@@ -120,7 +120,10 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
   };
 
   const onToggleVisibility = async (item: T, index: number) => {
-    if (mappingData[id as keyof SectionMappingDto].includes(item.id)) {
+    if (id === "basics") {
+      return; //await setBasicsItem
+    }
+    else if (mappingData[id as keyof SectionMappingDto].includes(item.id)) {
       await deleteSectionMapping({ resumeId: resumeId, id: item.id, format: id });
       setMappings(removeFromMapSections(mappingData, id, item.id));
       setValue(`sections.${id}.items[${index}].visible`, false);
