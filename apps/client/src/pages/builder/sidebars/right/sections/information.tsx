@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t, Trans } from "@lingui/macro";
 import { Book, EnvelopeSimpleOpen, GithubLogo, HandHeart } from "@phosphor-icons/react";
 import {
@@ -68,12 +69,16 @@ const ContactCard = () => (
         target="_blank"
       >
         <GithubLogo size={14} weight="bold" className="mr-2" />
-        <span className="line-clamp-1">{t`Raise an issue`}</span>
+        <span className="line-clamp-1">Start discussion</span>
       </a>
 
-      <a className={cn(buttonVariants({ size: "sm" }))} href="mailto:ezcv.dev@gmail.com">
+      <a
+        className={cn(buttonVariants({ size: "sm" }))}
+        href="mailto:ezcv.dev@gmail.com"
+        title="ezcv.dev@gmail.com"
+      >
         <EnvelopeSimpleOpen size={14} weight="bold" className="mr-2" />
-        <span className="line-clamp-1">{t`Send email`}</span>
+        <span className="line-clamp-1">Send email</span>
       </a>
     </CardFooter>
   </Card>
@@ -118,7 +123,7 @@ export const InformationSection = () => {
       <header className="flex items-center justify-between">
         <div className="flex items-center gap-x-4">
           <SectionIcon id="information" size={18} name={t`Information`} />
-          <h2 className="line-clamp-1 text-2xl font-bold lg:text-3xl">{t`Feedback`}</h2>
+          <h2 className="line-clamp-1 text-2xl font-bold lg:text-3xl">Feedback</h2>
         </div>
       </header>
 

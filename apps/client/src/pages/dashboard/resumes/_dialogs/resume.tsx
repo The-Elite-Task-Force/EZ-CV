@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/macro";
 import { CaretDown, Flask, MagicWand, Plus } from "@phosphor-icons/react";
@@ -226,12 +227,12 @@ export const ResumeDialog = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t`Resume alias`}</FormLabel>
+                  <FormLabel>Resume alias</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
                   <FormDescription>
-                    {t`The alias is a simple and unique identifier for your resume!`}
+                    The alias is a simple and unique identifier for your resume!
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

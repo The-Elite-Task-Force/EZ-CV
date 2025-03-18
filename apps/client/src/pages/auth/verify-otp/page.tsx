@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/macro";
 import { ArrowRight } from "@phosphor-icons/react";
@@ -48,9 +49,7 @@ export const VerifyOtpPage = () => {
   return (
     <div className="space-y-8">
       <Helmet>
-        <title>
-          {t`Two-Factor Authentication`} - {t`EzCV`}
-        </title>
+        <title>{t`Two-Factor Authentication`} - EzCV</title>
       </Helmet>
 
       <div className="space-y-1.5">

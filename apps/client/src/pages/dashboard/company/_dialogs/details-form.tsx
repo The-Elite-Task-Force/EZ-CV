@@ -142,6 +142,28 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
                           <UploadSimple size={16} weight="bold" />
                         </div>
                       )}
+                    >
+                      <CompanyLogo company={companyState} />
+                      <FormItem className="flex-1">
+                        <FormLabel>Logo</FormLabel>
+                        <FormControl>
+                          <Input placeholder="https://..." {...field} value={field.value ?? ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+
+                      <input ref={inputRef} hidden type="file" onChange={onSelectImage} />
+
+                      <motion.button
+                        disabled={isUploading}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className={cn(buttonVariants({ size: "icon", variant: "ghost" }))}
+                        onClick={() => inputRef.current?.click()}
+                      >
+                        <UploadSimple />
+                      </motion.button>
                     </div>
                     <div className="flex w-full flex-col gap-y-1.5">
                       <Label htmlFor="picture.url">{t`Picture`}</Label>
@@ -179,7 +201,7 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t`Company Name`}</FormLabel>
+                    <FormLabel>Company Name</FormLabel>
                     <FormControl>
                       <Input autoComplete="name" {...field} />
                     </FormControl>

@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import {
   CopySimple,
@@ -91,7 +92,7 @@ export const ResumeCard = ({ resume }: Props) => {
           >
             {resume.id === user?.profileResumeId && (
               <div className="absolute right-1 top-6 rounded border border-gray-700 bg-black px-2 py-1 text-xs font-bold text-white shadow-md">
-                {t`★ Profile`}
+                ★ Profile
               </div>
             )}
             <h4 className="line-clamp-2 font-medium">{resume.title}</h4>
@@ -121,7 +122,7 @@ export const ResumeCard = ({ resume }: Props) => {
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onSetDefault}>
           <FolderOpen size={14} className="mr-2" />
-          {t`Set as profile`}
+          Set as profile
         </DropdownMenuItem>
         {resume.locked ? (
           <DropdownMenuItem onClick={onLockChange}>

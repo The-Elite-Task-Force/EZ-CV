@@ -1,3 +1,5 @@
+/* eslint-disable lingui/no-unlocalized-strings */
+
 import { t, Trans } from "@lingui/macro";
 import { ArrowRight, Info, SealCheck } from "@phosphor-icons/react";
 import { Alert, AlertDescription, AlertTitle, Button } from "@reactive-resume/ui";
@@ -39,9 +41,7 @@ export const VerifyEmailPage = () => {
   return (
     <div className="space-y-6">
       <Helmet>
-        <title>
-          {t`Verify your email address`} - {t`EzCV`}
-        </title>
+        <title>{t`Verify your email address`} - EzCV</title>
       </Helmet>
 
       <div className="space-y-2">

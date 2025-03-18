@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import {
   BuildingOffice,
@@ -51,7 +52,7 @@ export const FeaturesSection = () => {
     { icon: <Cloud />, title: t`Self-host with Docker` },
     // { icon: <Translate />, title: t`Available in ${languagesCount} languages` },
     // { icon: <Brain />, title: t`OpenAI Integration` },
-    { icon: <BuildingOffice />, title: t`Create and manage companies` },
+    { icon: <BuildingOffice />, title: "Create and manage companies" },
     { icon: <GithubLogo />, title: t`Sign in with GitHub` },
     { icon: <GoogleLogo />, title: t`Sign in with Google` },
     { icon: <EnvelopeSimple />, title: t`Sign in with Email` },
@@ -104,7 +105,7 @@ export const FeaturesSection = () => {
     <section id="features" className="relative bg-secondary-accent py-24 sm:py-32">
       <div className="container">
         <div className="space-y-6 leading-loose">
-          <h2 className="text-4xl font-bold">{t`Features and Qualities`}</h2>
+          <h2 className="text-4xl font-bold">Features and Qualities</h2>
           {/* <p className="max-w-4xl text-base leading-relaxed">
             {t`EzCV is a passion project of over 3 years of hard work, and with that comes a number of re-iterated ideas and features that have been built to (near) perfection.`}
           </p> */}

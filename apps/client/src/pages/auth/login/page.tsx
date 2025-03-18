@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t, Trans } from "@lingui/macro";
 import { ArrowRight } from "@phosphor-icons/react";
@@ -51,9 +52,7 @@ export const LoginPage = () => {
   return (
     <div className="space-y-8">
       <Helmet>
-        <title>
-          {t`Sign in to your account`} - {t`EzCV`}
-        </title>
+        <title>{t`Sign in to your account`} - EzCV</title>
       </Helmet>
 
       <div className="space-y-1.5">
