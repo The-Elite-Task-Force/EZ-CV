@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/macro";
 import { Aperture, Trash, UploadSimple } from "@phosphor-icons/react";
@@ -29,6 +30,7 @@ import { z } from "zod";
 
 import { AiActions } from "@/client/components/ai-actions";
 import { PictureOptions } from "@/client/pages/builder/sidebars/left/sections/picture/options";
+import { CompanyLogo } from "@/client/pages/dashboard/company/company-logo";
 import { useUpdateCompany } from "@/client/services/company";
 import { useUploadImage } from "@/client/services/storage";
 
@@ -142,7 +144,6 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
                           <UploadSimple size={16} weight="bold" />
                         </div>
                       )}
-                    >
                       <CompanyLogo company={companyState} />
                       <FormItem className="flex-1">
                         <FormLabel>Logo</FormLabel>
