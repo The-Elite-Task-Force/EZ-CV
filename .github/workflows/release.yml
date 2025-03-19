@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - "*"
+      - main
 
 jobs:
   release:
@@ -61,7 +61,3 @@ jobs:
           git add package.json
           git commit -m "chore: set version to $LATEST_TAG"
           git push
-
-      - name: Verify the updated version
-        run: |
-          cat package.json
