@@ -72,6 +72,8 @@ export const ImageSection = ({ onSelectImage, clickImage }: Props) => {
             }}
           />
 
+          {/* This allows for images to be edited by the user. It currently doesn't work, but should be fixed instead of removed */}
+
           {/* {isValidUrl && (
             <Popover>
               <PopoverTrigger asChild>
