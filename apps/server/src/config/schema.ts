@@ -33,6 +33,12 @@ export const configSchema = z.object({
     .refine((url) => url.startsWith("smtp://") || url.startsWith("smtps://"))
     .optional(),
 
+  // Azure Blob Storage
+
+  AZURE_ACCOUNT_NAME: z.string(),
+  AZURE_ACCOUNT_KEY: z.string(),
+  AZURE_STORAGE_CONTAINER: z.string(),
+
   // Storage
   STORAGE_ENDPOINT: z.string(),
   STORAGE_PORT: z.coerce.number(),
