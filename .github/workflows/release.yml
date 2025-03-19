@@ -37,3 +37,31 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
+
+      - name: Get the latest tag
+        id: get_tag
+        run: |
+          # Fetch all tags from the repository
+          git fetch --tags
+          # Get the most recent tag
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+          echo "::set-output name=latest_tag::$LATEST_TAG"
+
+      - name: Set version in package.json to latest tag
+        run: |
+          echo "Updating version in package.json to $LATEST_TAG"
+          # Use jq to replace the version in package.json
+          jq --arg tag "$LATEST_TAG" '.version = $tag' package.json > temp.json && mv temp.json package.json
+
+      - name: Commit updated package.json
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add package.json
+          git commit -m "chore: set version to $LATEST_TAG"
+          git push
+
+      - name: Verify the updated version
+        run: |
+          cat package.json
