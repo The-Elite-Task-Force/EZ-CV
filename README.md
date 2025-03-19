@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-  <img src ="apps/client/public/logo/light.svg" width="500" alt="Eample Image">
+  <img src ="apps/client/public/logo/light.svg" width="500" alt="EzCV">
 </div>
 
 ![App Version](https://img.shields.io/github/package-json/version/The-Elite-Task-Force/EZ-CV?label=version)
@@ -19,14 +19,11 @@ The project is made in part of an internship at [The Tech Collective EU](https:/
 [Mfknudsen](https://github.com/Mfknudsen) and
 [SMerved](https://github.com/SMerved).
 
-We aim to expand upon the already existing project by introducing more functionalities such as the option to create and maintain companies which then allow for the elevation of employees to the position of bid-manager,
-and by providing more quality of life updates to already existing features, such as improving the import functionality to provide the user with more options.
-
 The bid-manager role aim to allow companies to bid on projects created by other companies using a collection of cvs created by users on our platform.
 
 We also aim to separate the data so that a user can maintain ownership over their own data and so that they decide who can access it and in what manner they can.
 
-With the control of data, we hope to provide an API for integration with already existing systems, so that a user only needs to maintain their cv ones and have it reflected on the other platforms they may use.
+With the control of data, we hope to provide an API for integration with already existing systems, so that a user only needs to maintain their cv once and have it reflected on the other platforms they may use.
 
 ### [Go to App](https://dev.ezcv.thetechcollective.dev/)
 
@@ -61,7 +58,7 @@ Start creating your standout resume with EZ CV today!
 - You can self-host the application in less than 30 seconds.
 - **Available in multiple languages**.
 - Use your email address (or a throw-away address, no problem) to create an account.
-- You can also sign in with your GitHub or Google account, and even set up two-factor authentication for extra security.
+- You can also sign in with your GitHub, Google and Microsoft account, and even set up two-factor authentication for extra security.
 - Create as many resumes as you like under a single account, optimising each resume for every job application based on its description for a higher ATS score.
 - **Bring your own OpenAI API key** and unlock features such as improving your writing, fixing spelling and grammar or changing the tone of your text in one-click.
 - Translate your resume into any language using ChatGPT and import it back for easier editing.
@@ -79,7 +76,7 @@ Start creating your standout resume with EZ CV today!
 - You can track the number of views or downloads your public resume has received.
 - Built with state-of-the-art (at the moment) and dependable technologies that's battle tested and peer reviewed by the open-source community on GitHub.
 - **MIT License**, so do what you like with the code as long as you credit the original authors.
-- Create and maintain a company.
+- Create and maintain a companies.
 - Search for other users who have created and selected a resume for their public page.
 - Create building blocks using your experiences, educations and more, and use them to create multiple resumes.
 - And yes, there’s a dark mode too 🌓
