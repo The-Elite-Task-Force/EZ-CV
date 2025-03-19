@@ -117,6 +117,7 @@
     "postcss-nested": "^6.2.0",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "semantic-release": "^24.2.3",
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
     "ts-jest": "^29.2.5",
