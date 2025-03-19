@@ -14,7 +14,7 @@
     "url": "https://github.com/AmruthPillai/Reactive-Resume.git"
   },
   "release": {
-    "branches": ["main", "201-semantic-versioning"]
+    "branches": ["201-semantic-versioning", "main"]
   },
   "plugins": [
     "@semantic-release/commit-analyzer",
