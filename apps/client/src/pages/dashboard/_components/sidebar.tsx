@@ -18,6 +18,8 @@ import { UserAvatar } from "@/client/components/user-avatar";
 import { UserOptions } from "@/client/components/user-options";
 import { useUser } from "@/client/services/user";
 
+import { ContactCard } from "../../builder/sidebars/right/sections/information";
+
 type Props = {
   className?: string;
 };
@@ -157,6 +159,7 @@ export const Sidebar = ({ setOpen }: SidebarProps) => {
         ))}
       </div>
       <div className="flex-1" />
+
       <Separator className="opacity-50" />
       <Button
         className="w-full justify-start px-3"
