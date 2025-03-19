@@ -83,6 +83,15 @@ export const configSchema = z.object({
   OPENID_SCOPE: z.string().optional(),
   OPENID_TOKEN_URL: z.string().url().optional(),
   OPENID_USER_INFO_URL: z.string().url().optional(),
+
+  // Microsoft (Optional)
+  MICROSOFT_CLIENT_ID: z.string().optional(),
+  MICROSOFT_CLIENT_SECRET: z.string().optional(),
+  MICROSOFT_CALLBACK_URL: z.string().optional(),
+  MICROSOFT_AUTHORIZATION_URL: z.string().optional(),
+  MICROSOFT_TOKEN_URL: z.string().optional(),
+  MICROSOFT_USER_INFO_URL: z.string().optional(),
+  MICROSOFT_SCOPE: z.string().optional(),
 });
 
 export type Config = z.infer<typeof configSchema>;

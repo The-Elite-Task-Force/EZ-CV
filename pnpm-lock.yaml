@@ -188,6 +188,9 @@ importers:
       '@types/passport-jwt':
         specifier: ^4.0.1
         version: 4.0.1
+      '@types/passport-microsoft':
+        specifier: ^1.0.3
+        version: 1.0.3
       '@types/react-router-dom':
         specifier: ^5.3.3
         version: 5.3.3
@@ -296,6 +299,9 @@ importers:
       passport-local:
         specifier: ^1.0.0
         version: 1.0.0
+      passport-microsoft:
+        specifier: ^2.1.0
+        version: 2.1.0
       passport-openidconnect:
         specifier: ^0.1.2
         version: 0.1.2
@@ -4547,6 +4553,9 @@ packages:
 
   '@types/passport-local@1.0.38':
     resolution: {integrity: sha512-nsrW4A963lYE7lNTv9cr5WmiUD1ibYJvWrpE13oxApFsRt77b0RdtZvKbCdNIY4v/QZ6TRQWaDDEwV1kCTmcXg==}
+
+  '@types/passport-microsoft@1.0.3':
+    resolution: {integrity: sha512-Mqm/iTWEhnlS7RcgVlQMyMcXoqt51NbHtXZFAqcjSCZj4iUBu1MTlpw65X3xZ974K2WrlLQhOm3UMmLoUkMaMA==}
 
   '@types/passport-oauth2@1.4.17':
     resolution: {integrity: sha512-ODiAHvso6JcWJ6ZkHHroVp05EHGhqQN533PtFNBkg8Fy5mERDqsr030AX81M0D69ZcaMvhF92SRckEk2B0HYYg==}
@@ -8863,6 +8872,10 @@ packages:
 
   passport-local@1.0.0:
     resolution: {integrity: sha512-9wCE6qKznvf9mQYYbgJ3sVOHmCWoUNMVFoZzNoznmISbhnNNPhN9xfY3sLmScHMetEJeoY7CXwfhCe7argfQow==}
+    engines: {node: '>= 0.4.0'}
+
+  passport-microsoft@2.1.0:
+    resolution: {integrity: sha512-7bOcjEmZCHg5qD55iHaMD/mgBxPtXLbqAwmKox5IsqOSEU50WJk5nQKK4lxKdBHLZ0hf+gzrFgDsTybJP18/JA==}
     engines: {node: '>= 0.4.0'}
 
   passport-oauth2@1.8.0:
@@ -16160,6 +16173,10 @@ snapshots:
       '@types/passport': 1.0.17
       '@types/passport-strategy': 0.2.38
 
+  '@types/passport-microsoft@1.0.3':
+    dependencies:
+      '@types/passport-oauth2': 1.4.17
+
   '@types/passport-oauth2@1.4.17':
     dependencies:
       '@types/express': 4.17.21
@@ -21627,6 +21644,10 @@ snapshots:
   passport-local@1.0.0:
     dependencies:
       passport-strategy: 1.0.0
+
+  passport-microsoft@2.1.0:
+    dependencies:
+      passport-oauth2: 1.8.0
 
   passport-oauth2@1.8.0:
     dependencies:

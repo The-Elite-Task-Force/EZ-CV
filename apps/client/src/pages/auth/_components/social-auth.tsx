@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { Fingerprint, GithubLogo, GoogleLogo } from "@phosphor-icons/react";
 import { Button } from "@reactive-resume/ui";
@@ -21,13 +22,9 @@ export const SocialAuth = () => {
       )}
 
       {providers.includes("google") && (
-        <Button
-          asChild
-          size="lg"
-          className="w-full !bg-[#4285F4] !text-white hover:!bg-[#4285F4]/80"
-        >
+        <Button asChild size="lg" className="w-full !bg-[#222] !text-white hover:!bg-[#222]/80">
           <a href="/api/auth/google">
-            <GoogleLogo className="mr-3 size-4" />
+            <img src="/assets/google.svg" alt="Google" className="mr-3 size-4" />
             {t`Google`}
           </a>
         </Button>
@@ -42,6 +39,15 @@ export const SocialAuth = () => {
           <a href="/api/auth/openid">
             <Fingerprint className="mr-3 size-4" />
             {import.meta.env.VITE_OPENID_NAME}
+          </a>
+        </Button>
+      )}
+
+      {providers.includes("microsoft") && (
+        <Button asChild size="lg" className="w-full !bg-[#222] !text-white hover:!bg-[#222]/80">
+          <a href="/api/auth/microsoft">
+            <img src="/assets/microsoft.svg" alt="Microsoft" className="mr-3 size-4" />
+            Microsoft
           </a>
         </Button>
       )}
