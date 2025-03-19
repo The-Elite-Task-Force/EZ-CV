@@ -39,17 +39,7 @@ export const configSchema = z.object({
   AZURE_ACCOUNT_KEY: z.string(),
   AZURE_STORAGE_CONTAINER: z.string(),
 
-  // Storage
-  STORAGE_ENDPOINT: z.string(),
-  STORAGE_PORT: z.coerce.number(),
-  STORAGE_REGION: z.string().default("us-east-1"),
-  STORAGE_BUCKET: z.string(),
-  STORAGE_ACCESS_KEY: z.string(),
-  STORAGE_SECRET_KEY: z.string(),
-  STORAGE_USE_SSL: z
-    .string()
-    .default("false")
-    .transform((s) => s !== "false" && s !== "0"),
+  // Storage (minio)
   STORAGE_SKIP_BUCKET_CHECK: z
     .string()
     .default("false")
