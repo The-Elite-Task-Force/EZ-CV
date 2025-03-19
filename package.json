@@ -1,13 +1,13 @@
 {
-  "name": "@reactive-resume/source",
+  "name": "@ez-cv/source",
   "description": "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.",
   "version": "4.4.6",
   "license": "MIT",
   "private": true,
   "author": {
-    "name": "Amruth Pillai",
-    "url": "https://amruthpillai.com",
-    "email": "hello@amruthpillai.com"
+    "name": "The Elite Task Force",
+    "url": "https://github.com/The-Elite-Task-Force",
+    "email": "ezcv.dev@gmail.com"
   },
   "repository": {
     "type": "git",
