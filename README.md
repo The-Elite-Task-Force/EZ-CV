@@ -1,3 +1,6 @@
+<div style="text-align: center;">
+  <img src ="apps/client/public/logo/light.svg" width="500" alt="Eample Image">
+</div>
 
 ![App Version](https://img.shields.io/github/package-json/version/The-Elite-Task-Force/EZ-CV?label=version)
 [![Docker Pulls](https://img.shields.io/docker/pulls/mfknudsen/ez-cv)](https://hub.docker.com/repository/docker/mfknudsen/ez-cv)
@@ -10,13 +13,13 @@ A free and open-source resume builder that simplifies the process of creating, u
 
 Our work is built upon a fork of [Reactive Resume](https://github.com/AmruthPillai/Reactive-Resume) by [Amruth Pillai](https://www.amruthpillai.com/). Please check out his work.
 
-The project is made in part of an internship at [The Tech Collective EU](https://github.com/thetechcollective) by 
-[KurisuDaNoda](https://github.com/KurisuDaNoda), 
-[MagicalGlove](https://github.com/MagicalGlove), 
+The project is made in part of an internship at [The Tech Collective EU](https://github.com/thetechcollective) by
+[KurisuDaNoda](https://github.com/KurisuDaNoda),
+[MagicalGlove](https://github.com/MagicalGlove),
 [Mfknudsen](https://github.com/Mfknudsen) and
 [SMerved](https://github.com/SMerved).
 
-We aim to expand upon the already existing project by introducing more functionalities such as the option to create and maintain companies which then allow for the elevation of employees to the position of bid-manager, 
+We aim to expand upon the already existing project by introducing more functionalities such as the option to create and maintain companies which then allow for the elevation of employees to the position of bid-manager,
 and by providing more quality of life updates to already existing features, such as improving the import functionality to provide the user with more options.
 
 The bid-manager role aim to allow companies to bid on projects created by other companies using a collection of cvs created by users on our platform.
@@ -40,15 +43,15 @@ Start creating your standout resume with EZ CV today!
 ## Templates
 
 | Azurill                                                      | Bronzor                                                     | Chikorita                                                   |
-| ------------------------------------------------------------ | ----------------------------------------------------------- | ----------------------------------------------------------- |
+|--------------------------------------------------------------|-------------------------------------------------------------|-------------------------------------------------------------|
 | <img src="https://i.imgur.com/jKgo04C.jpeg" width="200px" /> | <img src="https://i.imgur.com/DFNQZP2.jpg" width="200px" /> | <img src="https://i.imgur.com/Dwv8Y7f.jpg" width="200px" /> |
 
 | Ditto                                                       | Kakuna                                                      | Nosepass                                                    |
-| ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+|-------------------------------------------------------------|-------------------------------------------------------------|-------------------------------------------------------------|
 | <img src="https://i.imgur.com/6c5lASL.jpg" width="200px" /> | <img src="https://i.imgur.com/268ML3t.jpg" width="200px" /> | <img src="https://i.imgur.com/npRLsPS.jpg" width="200px" /> |
 
 | Onyx                                                        | Pikachu                                                     | Rhyhorn                                                     |
-| ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+|-------------------------------------------------------------|-------------------------------------------------------------|-------------------------------------------------------------|
 | <img src="https://i.imgur.com/cxplXOW.jpg" width="200px" /> | <img src="https://i.imgur.com/Y9f7qsh.jpg" width="200px" /> | <img src="https://i.imgur.com/h4kQxy2.jpg" width="200px" /> |
 
 ## Features
