@@ -3,7 +3,8 @@ name: Release
 on:
   push:
     branches:
-      - '*'
+      - main
+      - 201-semantic-versioning
 
 jobs:
   release:
