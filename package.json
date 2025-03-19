@@ -14,7 +14,7 @@
     "url": "https://github.com/The-Elite-Task-Force/EZ-CV.git"
   },
   "release": {
-    "branches": ["201-semantic-versioning", "main"]
+    "branches": ["main"]
   },
   "scripts": {
     "dev": "nx run-many -t serve",
