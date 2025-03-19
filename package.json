@@ -16,11 +16,6 @@
   "release": {
     "branches": ["201-semantic-versioning", "main"]
   },
-  "plugins": [
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
-    "@semantic-release/npm",
-    "@semantic-release/git"],
   "scripts": {
     "dev": "nx run-many -t serve",
     "test": "pnpm vitest --config ./vitest.config.ts run",
