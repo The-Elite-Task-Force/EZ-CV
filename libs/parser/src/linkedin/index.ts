@@ -173,6 +173,8 @@ export class LinkedInParser implements Parser<JSZip, LinkedIn> {
       }
     }
 
+    delete result.basics.id;
+
     return resumeDataSchema.parse(result);
   }
 }

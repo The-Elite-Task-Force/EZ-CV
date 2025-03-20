@@ -3,6 +3,7 @@ import {
   CreateSectionItemDto,
   CreateSectionMappingDto,
   DeleteMappingDto,
+  ImportSectionsSchema,
   SECTION_FORMAT,
   SectionMappingDto,
   UpdateSectionItemDto,
@@ -1018,6 +1019,126 @@ export class SectionItemService {
           throw new InternalServerErrorException(`Unknown format for ${data.format}`);
         }
       }
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async import(userId: string, sections: ImportSectionsSchema) {
+    console.log("sectionImportFunction");
+
+    try {
+      // skills
+      if (sections.skills) {
+        await this.prisma.skillItem.create({
+          data: {
+            userId,
+            ...sections.skills,
+          },
+        });
+      }
+      // works
+      if (sections.work) {
+        await this.prisma.workItem.create({
+          data: {
+            userId,
+            ...sections.work,
+          },
+        });
+      }
+
+      // // awards
+      // if (sections.awards) {
+      //   await this.prisma.awardItem.create({
+      //     data: {
+      //       userId,
+      //       ...sections.awards,
+      //     },
+      //   });
+      // }
+
+      // projects
+      if (sections.projects) {
+        await this.prisma.projectItem.create({
+          data: {
+            userId,
+            ...sections.projects,
+          },
+        });
+      }
+
+      // education
+      if (sections.education) {
+        await this.prisma.educationItem.create({
+          data: {
+            userId,
+            ...sections.education,
+          },
+        });
+      }
+
+      // // interests
+      // if (sections.interests) {
+      //   await this.prisma.interestItem.create({
+      //     data: {
+      //       userId,
+      //       ...sections.interests,
+      //     },
+      //   });
+      // }
+
+      // languages
+      if (sections.languages) {
+        await this.prisma.languageItem.create({
+          data: {
+            userId,
+            ...sections.languages,
+          },
+        });
+      }
+
+      // // volunteer
+      // if (sections.volunteer) {
+      //   await this.prisma.volunteerItem.create({
+      //     data: {
+      //       userId,
+      //       ...sections.volunteer,
+      //     },
+      //   });
+      // }
+
+      // // references
+      // if (sections.references) {
+      //   await this.prisma.referenceItem.create({
+      //     data: {
+      //       userId,
+      //       ...sections.references,
+      //     },
+      //   });
+      // }
+
+      // // publications
+      // if (sections.publications) {
+      //   await this.prisma.publicationItem.create({
+      //     data: {
+      //       userId,
+      //       ...sections.publications,
+      //     },
+      //   });
+      // }
+
+      // certifications
+      if (sections.certifications) {
+        await this.prisma.certificationItem.create({
+          data: {
+            userId,
+            ...sections.certifications,
+          },
+        });
+      }
+
+      return { message: "Import successful" };
     } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException(error);

@@ -42,6 +42,7 @@ import { z, ZodError } from "zod";
 import { useToast } from "@/client/hooks/use-toast";
 import { useImportResume } from "@/client/services/resume/import";
 import { useDialog } from "@/client/stores/dialog";
+import { importSections } from "@/client/services/section/import";
 
 enum ImportType {
   "reactive-resume-json" = "reactive-resume-json",
@@ -176,10 +177,18 @@ export const ImportDialog = () => {
       }
 
       if (type === ImportType["linkedin-data-export-zip"]) {
+        console.log("Valida---------");
+        console.log(validationResult.result);
+        console.log("---------------");
+
         const parser = new LinkedInParser();
         const data = parser.convert(validationResult.result as LinkedIn);
 
-        await importResume({ data });
+        console.log("Data-------------");
+        console.log(data);
+        console.log("---------------");
+
+        await importSections(data);
       }
 
       close();
