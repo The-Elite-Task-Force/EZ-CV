@@ -19,8 +19,6 @@ export const importSections = async (data: ResumeData) => {
 };
 
 export const useImportSections = () => {
-  console.log("Hej");
-
   const {
     error,
     isPending: loading,
@@ -28,12 +26,11 @@ export const useImportSections = () => {
   } = useMutation({
     mutationFn: importSections,
     onSuccess: (data) => {
-      // queryClient.setQueryData<LinkedInImportSections>(["sections", { id: data.id }], data);
-      // queryClient.setQueryData<LinkedInImportSections>(["sections"], data);
-      // queryClient.setQueryData<LinkedInImportSections[]>(["sections"], (cache) => {
-      //   if (!cache) return [data];
-      //   return [...cache, data];
-      // });
+      queryClient.setQueryData<LinkedInImportSections>(["sections"], data);
+      queryClient.setQueryData<LinkedInImportSections[]>(["sections"], (cache) => {
+        if (!cache) return [data];
+        return [...cache, data];
+      });
     },
   });
 

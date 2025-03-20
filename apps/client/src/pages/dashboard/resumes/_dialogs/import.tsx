@@ -177,16 +177,8 @@ export const ImportDialog = () => {
       }
 
       if (type === ImportType["linkedin-data-export-zip"]) {
-        console.log("Valida---------");
-        console.log(validationResult.result);
-        console.log("---------------");
-
         const parser = new LinkedInParser();
         const data = parser.convert(validationResult.result as LinkedIn);
-
-        console.log("Data-------------");
-        console.log(data);
-        console.log("---------------");
 
         await importSections(data);
       }
