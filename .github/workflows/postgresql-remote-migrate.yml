@@ -23,7 +23,7 @@ jobs:
 
       - name: Set up migration files
         run: |
-          del-cli tools/prisma/migrations/*/
+          rmdir -r tools/prisma/migrations/*/
           pnpm exec prisma generate
           pnpm exec prisma migrate reset --force
           pnpm exec prisma migrate dev -n action --create-only
