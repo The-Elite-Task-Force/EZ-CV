@@ -1,9 +1,10 @@
 name: Deploy
 on:
   push:
+    paths:
+      - tools/prisma/schema.prisma
     branches:
       - main
-      - 205-database-ci
 
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
