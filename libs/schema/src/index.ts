@@ -1,11 +1,13 @@
 import { z } from "zod";
 
+import { basicsSchema, defaultBasics } from "./basics";
 import { defaultMetadata, metadataSchema } from "./metadata";
 import { defaultSections, sectionsSchema } from "./sections";
 
 // Schema
 export const resumeDataSchema = z.object({
-  sections: sectionsSchema,
+  basics: basicsSchema.default(defaultBasics),
+  sections: sectionsSchema.default(defaultSections),
   metadata: metadataSchema,
 });
 
@@ -14,6 +16,7 @@ export type ResumeData = z.infer<typeof resumeDataSchema>;
 
 // Defaults
 export const defaultResumeData: ResumeData = {
+  basics: defaultBasics,
   sections: defaultSections,
   metadata: defaultMetadata,
 };

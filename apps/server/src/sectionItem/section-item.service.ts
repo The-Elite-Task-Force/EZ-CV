@@ -132,12 +132,9 @@ export class SectionItemService {
             },
           });
           if (resumeId) {
-            await this.prisma.resumeBasicsItemMapping.create({
-              data: {
-                resumeId,
-                basicsItemId: createdItem.id,
-                order: 0, // Set the order as needed
-              },
+            await this.prisma.resume.update({
+              where: { id: resumeId },
+              data: { basicsItemId: createdItem.id },
             });
           }
           break;
@@ -617,9 +614,6 @@ export class SectionItemService {
     try {
       const result: SectionMappingDto = new SectionMappingDto();
 
-      const basics = await this.prisma.resumeBasicsItemMapping.findMany({ where: { resumeId } });
-      result.basics = basics.map((t) => t.basicsItemId);
-
       const summary = await this.prisma.resumeSummaryItemMapping.findMany({ where: { resumeId } });
       result.summary = summary.map((t) => t.summaryItemId);
 
@@ -687,14 +681,11 @@ export class SectionItemService {
     try {
       switch (data.format) {
         case "basics": {
-          const item = await this.prisma.resumeBasicsItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              basicsItemId: data.itemId,
-              order: 0,
-            },
+          await this.prisma.resume.update({
+            where: { id: data.resumeId },
+            data: { basicsItemId: data.itemId },
           });
-          return { resumeId: item.resumeId, itemId: item.basicsItemId };
+          return { resumeId: data.resumeId, itemId: data.itemId };
         }
         case "summary": {
           const item = await this.prisma.resumeSummaryItemMapping.create({
@@ -850,12 +841,13 @@ export class SectionItemService {
     try {
       switch (data.format) {
         case "basics": {
-          await this.prisma.resumeBasicsItemMapping.delete({
+          await this.prisma.resume.update({
             where: {
-              resumeId_basicsItemId: {
-                resumeId: data.resumeId,
-                basicsItemId: data.id,
-              },
+              id: data.resumeId,
+              basicsItemId: data.id,
+            },
+            data: {
+              basicsItemId: null,
             },
           });
           break;

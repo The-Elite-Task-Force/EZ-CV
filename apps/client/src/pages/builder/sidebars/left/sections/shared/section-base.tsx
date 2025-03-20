@@ -73,7 +73,8 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
     get(state.resume.data.sections, id),
   ) as SectionWithItem<T>;
 
-  const resumeId = useResumeStore((state) => state.resume.id);
+  const resume = useResumeStore((state) => state.resume);
+  const { id: resumeId } = resume;
 
   const { createSectionMapping } = useCreateSectionMapping(resumeId);
   const { deleteSectionMapping } = useDeleteSectionMapping(resumeId);
@@ -84,6 +85,8 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  console.log(resume)
 
   //Should be fixed though, this means we don't actually know what our data is and have typed it incorrectly
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -121,9 +124,10 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
 
   const onToggleVisibility = async (item: T, index: number) => {
     if (id === "basics") {
-      return; //await setBasicsItem
-    }
-    else if (mappingData[id as keyof SectionMappingDto].includes(item.id)) {
+      await (item.id === resume.data.basics.id
+        ? deleteSectionMapping({ resumeId: resumeId, id: item.id, format: id })
+        : createSectionMapping({ resumeId: resumeId, itemId: item.id, format: id }));
+    } else if (mappingData[id as keyof SectionMappingDto].includes(item.id)) {
       await deleteSectionMapping({ resumeId: resumeId, id: item.id, format: id });
       setMappings(removeFromMapSections(mappingData, id, item.id));
       setValue(`sections.${id}.items[${index}].visible`, false);
@@ -184,7 +188,11 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
                   id={item.id}
                   title={title(item as T)}
                   description={description?.(item as T)}
-                  visible={mappingData[id as keyof SectionMappingDto].includes(item.id)}
+                  visible={
+                    id === "basics"
+                      ? item.id === resume.data.basics.id
+                      : mappingData[id as keyof SectionMappingDto].includes(item.id)
+                  }
                   onUpdate={() => {
                     onUpdate(item as T);
                   }}

@@ -13,7 +13,7 @@ import {
 import { cn } from "@reactive-resume/utils";
 import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
 
-import { useResumeStore } from "@/client/stores/resume";
+import { useSectionsStore } from "@/client/stores/section";
 
 type CustomFieldProps = {
   field: ICustomField;
@@ -122,15 +122,15 @@ type Props = {
 };
 
 export const CustomFieldsSection = ({ className, id }: Props) => {
-  const setValue = useResumeStore((state) => state.setValue);
-  const basicsItems = useResumeStore((state) => state.resume.data.sections.basics.items);
+  const setValue = useSectionsStore((state) => state.setValue);
+  const basicsItems = useSectionsStore((state) => state.sections.basics);
   const basicsItem = basicsItems.find((item) => item.id === id) ?? defaultBasics;
 
   const customFields = basicsItem.customFields;
 
   const onAddCustomField = () => {
     setValue(
-      `sections.basics.items`,
+      `sections.basics`,
       basicsItems.map((item) =>
         item.id === id
           ? {
@@ -147,7 +147,7 @@ export const CustomFieldsSection = ({ className, id }: Props) => {
 
   const onChangeCustomField = (field: ICustomField) => {
     setValue(
-      `sections.basics.items`,
+      `sections.basics`,
       basicsItems.map((item) =>
         item.id === id
           ? {
@@ -161,14 +161,14 @@ export const CustomFieldsSection = ({ className, id }: Props) => {
 
   const onReorderCustomFields = (values: ICustomField[]) => {
     setValue(
-      `sections.basics.items`,
+      `sections.basics`,
       basicsItems.map((item) => (item.id === id ? { ...item, customFields: values } : item)),
     );
   };
 
   const onRemoveCustomField = (fieldId: string) => {
     setValue(
-      `sections.basics.items`,
+      `sections.basics`,
       basicsItems.map((item) =>
         item.id === id
           ? {
