@@ -11,7 +11,7 @@ export class StorageHealthIndicator extends HealthIndicator {
 
   async isHealthy(): Promise<HealthIndicatorResult> {
     try {
-      await this.storageService.bucketExists();
+      await this.storageService.containerExists();
 
       return this.getStatus("storage", true);
     } catch (error: unknown) {

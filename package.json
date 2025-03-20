@@ -1,13 +1,13 @@
 {
-  "name": "@reactive-resume/source",
+  "name": "@ez-cv/source",
   "description": "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.",
   "version": "v1.0.0",
   "license": "MIT",
   "private": true,
   "author": {
-    "name": "Amruth Pillai",
-    "url": "https://amruthpillai.com",
-    "email": "hello@amruthpillai.com"
+    "name": "The Elite Task Force",
+    "url": "https://github.com/The-Elite-Task-Force",
+    "email": "ezcv.dev@gmail.com"
   },
   "repository": {
     "type": "git",
@@ -139,6 +139,7 @@
     "vitest": "^2.1.9"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.27.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^7.0.0",
     "@dnd-kit/sortable": "^8.0.0",
@@ -199,6 +200,7 @@
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
     "@types/passport-jwt": "^4.0.1",
+    "@types/passport-microsoft": "^1.0.3",
     "@types/react-router-dom": "^5.3.3",
     "async-retry": "^1.3.3",
     "axios": "^1.7.9",
@@ -235,6 +237,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "passport-microsoft": "^2.1.0",
     "passport-openidconnect": "^0.1.2",
     "pdf-lib": "^1.17.1",
     "pg": "^8.13.3",

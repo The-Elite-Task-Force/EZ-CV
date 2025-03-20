@@ -33,17 +33,13 @@ export const configSchema = z.object({
     .refine((url) => url.startsWith("smtp://") || url.startsWith("smtps://"))
     .optional(),
 
-  // Storage
-  STORAGE_ENDPOINT: z.string(),
-  STORAGE_PORT: z.coerce.number(),
-  STORAGE_REGION: z.string().default("us-east-1"),
-  STORAGE_BUCKET: z.string(),
-  STORAGE_ACCESS_KEY: z.string(),
-  STORAGE_SECRET_KEY: z.string(),
-  STORAGE_USE_SSL: z
-    .string()
-    .default("false")
-    .transform((s) => s !== "false" && s !== "0"),
+  // Azure Blob Storage
+
+  AZURE_ACCOUNT_NAME: z.string(),
+  AZURE_ACCOUNT_KEY: z.string(),
+  AZURE_STORAGE_CONTAINER: z.string(),
+
+  // Storage (minio)
   STORAGE_SKIP_BUCKET_CHECK: z
     .string()
     .default("false")
@@ -83,6 +79,15 @@ export const configSchema = z.object({
   OPENID_SCOPE: z.string().optional(),
   OPENID_TOKEN_URL: z.string().url().optional(),
   OPENID_USER_INFO_URL: z.string().url().optional(),
+
+  // Microsoft (Optional)
+  MICROSOFT_CLIENT_ID: z.string().optional(),
+  MICROSOFT_CLIENT_SECRET: z.string().optional(),
+  MICROSOFT_CALLBACK_URL: z.string().optional(),
+  MICROSOFT_AUTHORIZATION_URL: z.string().optional(),
+  MICROSOFT_TOKEN_URL: z.string().optional(),
+  MICROSOFT_USER_INFO_URL: z.string().optional(),
+  MICROSOFT_SCOPE: z.string().optional(),
 });
 
 export type Config = z.infer<typeof configSchema>;

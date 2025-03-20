@@ -27,7 +27,7 @@ export const userSchema = z.object({
   emailVerified: z.boolean().default(false),
   twoFactorEnabled: z.boolean().default(false),
   profileResumeId: z.string().nullable(),
-  provider: z.enum(["email", "github", "google", "openid"]).default("email"),
+  provider: z.enum(["email", "github", "google", "openid", "microsoft"]).default("email"),
   createdAt: dateSchema,
   updatedAt: dateSchema,
 });
