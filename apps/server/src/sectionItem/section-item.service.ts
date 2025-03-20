@@ -3,11 +3,19 @@ import {
   CreateSectionItemDto,
   CreateSectionMappingDto,
   DeleteMappingDto,
-  ImportSectionsSchema,
+  LinkedInImportSections,
   SECTION_FORMAT,
   SectionMappingDto,
   UpdateSectionItemDto,
 } from "@reactive-resume/dto";
+import {
+  defaultCertification,
+  defaultEducation,
+  defaultExperience,
+  defaultLanguage,
+  defaultProject,
+  defaultSkill,
+} from "@reactive-resume/schema";
 import { PrismaService } from "nestjs-prisma";
 
 import {
@@ -1025,118 +1033,133 @@ export class SectionItemService {
     }
   }
 
-  async import(userId: string, sections: ImportSectionsSchema) {
-    console.log("sectionImportFunction");
-
+  async import(userId: string, sections: LinkedInImportSections) {
     try {
       // skills
       if (sections.skills) {
-        await this.prisma.skillItem.create({
-          data: {
+        await this.prisma.skillItem.createMany({
+          data: sections.skills.map((skill) => ({
+            ...defaultSkill,
+            ...skill,
             userId,
-            ...sections.skills,
-          },
+          })),
         });
       }
       // works
+      // Work Experience
       if (sections.work) {
-        await this.prisma.workItem.create({
-          data: {
+        await this.prisma.workItem.createMany({
+          data: sections.work.map((work) => ({
+            ...defaultExperience,
+            ...work,
             userId,
-            ...sections.work,
-          },
+          })),
         });
       }
 
-      // // awards
-      // if (sections.awards) {
-      //   await this.prisma.awardItem.create({
-      //     data: {
-      //       userId,
-      //       ...sections.awards,
-      //     },
-      //   });
-      // }
-
-      // projects
+      // Projects
       if (sections.projects) {
-        await this.prisma.projectItem.create({
-          data: {
+        await this.prisma.projectItem.createMany({
+          data: sections.projects.map((project) => ({
+            ...defaultProject,
+            ...project,
             userId,
-            ...sections.projects,
-          },
+          })),
         });
       }
 
-      // education
+      // Education
       if (sections.education) {
-        await this.prisma.educationItem.create({
-          data: {
+        await this.prisma.educationItem.createMany({
+          data: sections.education.map((edu) => ({
+            ...defaultEducation,
+            ...edu,
             userId,
-            ...sections.education,
-          },
+          })),
         });
       }
 
-      // // interests
-      // if (sections.interests) {
-      //   await this.prisma.interestItem.create({
-      //     data: {
-      //       userId,
-      //       ...sections.interests,
-      //     },
-      //   });
-      // }
-
-      // languages
+      // Languages
       if (sections.languages) {
-        await this.prisma.languageItem.create({
-          data: {
+        await this.prisma.languageItem.createMany({
+          data: sections.languages.map((lang) => ({
+            ...defaultLanguage,
+            ...lang,
             userId,
-            ...sections.languages,
-          },
+          })),
         });
       }
 
-      // // volunteer
-      // if (sections.volunteer) {
-      //   await this.prisma.volunteerItem.create({
-      //     data: {
-      //       userId,
-      //       ...sections.volunteer,
-      //     },
-      //   });
-      // }
-
-      // // references
-      // if (sections.references) {
-      //   await this.prisma.referenceItem.create({
-      //     data: {
-      //       userId,
-      //       ...sections.references,
-      //     },
-      //   });
-      // }
-
-      // // publications
-      // if (sections.publications) {
-      //   await this.prisma.publicationItem.create({
-      //     data: {
-      //       userId,
-      //       ...sections.publications,
-      //     },
-      //   });
-      // }
-
-      // certifications
+      // Certifications
       if (sections.certifications) {
-        await this.prisma.certificationItem.create({
-          data: {
+        await this.prisma.certificationItem.createMany({
+          data: sections.certifications.map((cert) => ({
+            ...defaultCertification,
+            ...cert,
             userId,
-            ...sections.certifications,
-          },
+          })),
         });
       }
+
+      // They are not currently included in the LinkedIn zip file, but needs to be double checked before removed completely
+      // Optional Sections (Uncomment to include)
+
+      // Awards
+      // if (sections.awards) {
+      //   await this.prisma.awardItem.createMany({
+      //     data: sections.awards.map(award => ({
+      //       ...defaultAward,
+      //       ...award,
+      //       userId,
+      //     })),
+      //   });
+      // }
+
+      // Interests
+      // if (sections.interests) {
+      //   await this.prisma.interestItem.createMany({
+      //     data: sections.interests.map(interest => ({
+      //       ...defaultInterest,
+      //       ...interest,
+      //       userId,
+      //     })),
+      //   });
+      // }
+
+      // Volunteer
+      // if (sections.volunteer) {
+      //   await this.prisma.volunteerItem.createMany({
+      //     data: sections.volunteer.map(volunteer => ({
+      //       ...defaultVolunteer,
+      //       ...volunteer,
+      //       userId,
+      //     })),
+      //   });
+      // }
+
+      // References
+      // if (sections.references) {
+      //   await this.prisma.referenceItem.createMany({
+      //     data: sections.references.map(ref => ({
+      //       ...defaultReference,
+      //       ...ref,
+      //       userId,
+      //     })),
+      //   });
+      // }
+
+      // Publications
+      // if (sections.publications) {
+      //   await this.prisma.publicationItem.createMany({
+      //     data: sections.publications.map(pub => ({
+      //       ...defaultPublication,
+      //       ...pub,
+      //       userId,
+      //     })),
+      //   });
+      // }
+
+      console.log("Created!");
 
       return { message: "Import successful" };
     } catch (error) {

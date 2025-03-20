@@ -1,3 +1,4 @@
+import { ResumeData } from "@reactive-resume/schema";
 import { z } from "zod";
 
 const dateSchema = z
@@ -173,18 +174,21 @@ const certificationSchema = z
   })
   .nullable();
 
-export const importSectionsSchema = z.object({
-  work: workSchema.optional(),
+export const linkedInImportSectionsSchema = z.object({
+  work: z.array(workSchema).optional(),
+  skills: z.array(skillSchema).optional(),
+  projects: z.array(projectSchema).optional(),
+  education: z.array(educationSchema).optional(),
+  languages: z.array(languageSchema).optional(),
+  certifications: z.array(certificationSchema).optional(),
+
+  // These are not currently included in the LinkedIn zip file, but it needs to be double checked before deleted
+
   // awards: awardSchema.optional(),
-  skills: skillSchema.optional(),
-  projects: projectSchema.optional(),
-  education: educationSchema.optional(),
   // interests: interestSchema.optional(),
-  languages: languageSchema.optional(),
   // volunteer: volunteerSchema.optional(),
   // references: referenceSchema.optional(),
   // publications: publicationSchema.optional(),
-  certifications: certificationSchema.optional(),
   // certifications: sectionSchema
   //   .extend({
   //     items: z.array(certificationSchema),
@@ -192,4 +196,17 @@ export const importSectionsSchema = z.object({
   //   .optional(),
 });
 
-export type ImportSectionsSchema = z.infer<typeof importSectionsSchema>;
+export type LinkedInImportSections = z.infer<typeof linkedInImportSectionsSchema>;
+
+export const transformLinkedInData = (data: /* ResumeData */ any): LinkedInImportSections => {
+  const transformedData: LinkedInImportSections = {
+    work: data.sections.experience?.items,
+    skills: data.sections.skills?.items,
+    projects: data.sections.projects?.items,
+    education: data.sections.education?.items,
+    languages: data.sections.languages?.items,
+    certifications: data.sections.certifications?.items,
+  };
+
+  return transformedData;
+};

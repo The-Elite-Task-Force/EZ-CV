@@ -1,5 +1,7 @@
 import { createId } from "@paralleldrive/cuid2";
+import type { Basics } from "@reactive-resume/schema";
 import {
+  defaultBasics,
   defaultCertification,
   defaultEducation,
   defaultExperience,
@@ -26,6 +28,8 @@ const avoidTooShort = (name: string, len: number) => {
   return name;
 };
 
+const extractFirstWebsiteLink = (entry: string) =>
+  (parseArrayLikeCSVEntry(entry)[0] ?? "").replace(/.*?:/, "");
 export class LinkedInParser implements Parser<JSZip, LinkedIn> {
   schema: Schema;
 
@@ -60,29 +64,35 @@ export class LinkedInParser implements Parser<JSZip, LinkedIn> {
 
   convert(data: LinkedIn) {
     const result = JSON.parse(JSON.stringify(defaultResumeData));
+    delete result.basics.id;
 
     // Profile
     if (data.Profile && data.Profile.length > 0) {
-      const profile = data.Profile[0];
-      const twitterHandle = profile["Twitter Handles"];
+      for (const profile of data.Profile) {
+        const twitterHandle = profile["Twitter Handles"];
+        const profileBasic: Basics = defaultBasics;
+        delete profileBasic.id;
 
-      result.basics.name = `${profile["First Name"]} ${profile["Last Name"]}`;
-      result.basics.location = profile["Geo Location"];
-      result.basics.headline = profile.Headline;
-      // profile.Websites is represented as an array-like structure f.e. [COMPANY:https://some.link,PORTFOLIO:...]
-      const extractFirstWebsiteLink = (entry: string) =>
-        (parseArrayLikeCSVEntry(entry)[0] ?? "").replace(/.*?:/, "");
-      result.basics.url.href = extractUrl(extractFirstWebsiteLink(profile.Websites)) ?? "";
-      result.sections.summary.content = profile.Summary;
-      if (twitterHandle) {
-        result.sections.profiles.items.push({
-          ...defaultProfile,
-          id: createId(),
-          icon: "twitter",
-          network: "Twitter",
-          username: twitterHandle,
-          url: { ...defaultProfile.url, href: `https://twitter.com/${twitterHandle}` },
-        });
+        profileBasic.name = `${profile["First Name"]} ${profile["Last Name"]}`;
+        profileBasic.location = profile["Geo Location"];
+        profileBasic.headline = profile.Headline;
+
+        // profile.Websites is represented as an array-like structure f.e. [COMPANY:https://some.link,PORTFOLIO:...]
+        profileBasic.url.href = extractUrl(extractFirstWebsiteLink(profile.Websites)) ?? "";
+        profileBasic.summary = profile.Summary;
+
+        if (twitterHandle) {
+          result.sections.profiles.items.push({
+            ...defaultProfile,
+            id: createId(),
+            icon: "twitter",
+            network: "Twitter",
+            username: twitterHandle,
+            url: { ...defaultProfile.url, href: `https://twitter.com/${twitterHandle}` },
+          });
+        }
+
+        result.sections.basics.items.push(profileBasic);
       }
     }
 
@@ -172,8 +182,6 @@ export class LinkedInParser implements Parser<JSZip, LinkedIn> {
         });
       }
     }
-
-    delete result.basics.id;
 
     return resumeDataSchema.parse(result);
   }

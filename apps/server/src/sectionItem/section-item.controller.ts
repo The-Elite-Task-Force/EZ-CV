@@ -17,12 +17,12 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import {
   CreateSectionItemDto,
   CreateSectionMappingDto,
-  ImportSectionsSchema,
+  LinkedInImportSections,
   SECTION_FORMAT,
   UpdateSectionItemDto,
 } from "@reactive-resume/dto";
 import { DeleteMappingDto } from "@reactive-resume/dto";
-import { sectionSchemaWithData, sectionsSchema } from "@reactive-resume/schema";
+import { sectionSchemaWithData } from "@reactive-resume/schema";
 import { ERROR_MESSAGE } from "@reactive-resume/utils";
 import zodToJsonSchema from "zod-to-json-schema";
 
@@ -74,10 +74,9 @@ export class SectionItemController {
 
   @Post("import")
   @UseGuards(TwoFactorGuard)
-  async import(@User() user: UserEntity, @Body() importSectionsDto: ImportSectionsSchema) {
+  async import(@User() user: UserEntity, @Body() importSectionsDto: LinkedInImportSections) {
     try {
-      const result = sectionsSchema.parse(importSectionsDto);
-      return await this.sectionItemService.import(user.id, result);
+      return await this.sectionItemService.import(user.id, importSectionsDto);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
         throw new BadRequestException(ERROR_MESSAGE.ResumeSlugAlreadyExists);
