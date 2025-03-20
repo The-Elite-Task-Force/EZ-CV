@@ -52,7 +52,7 @@ export class LinkedInParser implements Parser<JSZip, LinkedIn> {
 
     for (const [name, file] of Object.entries(data.files)) {
       for (const key of Object.keys(linkedInSchema.shape)) {
-        if (name.includes(key)) {
+        if (name.replace(".csv", "") === key) {
           const content = await file.async("text");
           result[key] = await parseCSV(content);
         }

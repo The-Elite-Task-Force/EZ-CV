@@ -3,6 +3,7 @@ import type { ResumeData } from "@reactive-resume/schema";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 
+import { SECTIONS_KEY } from "@/client/constants/query-keys";
 import { axios } from "@/client/libs/axios";
 import { queryClient } from "@/client/libs/query-client";
 
@@ -14,6 +15,8 @@ export const importSections = async (data: ResumeData) => {
     AxiosResponse<LinkedInImportSections>,
     LinkedInImportSections
   >("/sectionItem/import", sections);
+
+  await queryClient.invalidateQueries({ queryKey: SECTIONS_KEY });
 
   return response.data;
 };

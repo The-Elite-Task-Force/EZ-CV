@@ -9,6 +9,7 @@ import {
   UpdateSectionItemDto,
 } from "@reactive-resume/dto";
 import {
+  defaultBasics,
   defaultCertification,
   defaultEducation,
   defaultExperience,
@@ -1034,8 +1035,19 @@ export class SectionItemService {
   }
 
   async import(userId: string, sections: LinkedInImportSections) {
+    console.log("import time");
+
     try {
       // skills
+      if (sections.basics) {
+        await this.prisma.basicsItem.createMany({
+          data: sections.basics.map((basic) => ({
+            ...defaultBasics,
+            ...basic,
+            userId,
+          })),
+        });
+      }
       if (sections.skills) {
         await this.prisma.skillItem.createMany({
           data: sections.skills.map((skill) => ({
@@ -1045,8 +1057,8 @@ export class SectionItemService {
           })),
         });
       }
-      // works
-      // Work Experience
+
+      // Work
       if (sections.work) {
         await this.prisma.workItem.createMany({
           data: sections.work.map((work) => ({
@@ -1158,8 +1170,6 @@ export class SectionItemService {
       //     })),
       //   });
       // }
-
-      console.log("Created!");
 
       return { message: "Import successful" };
     } catch (error) {

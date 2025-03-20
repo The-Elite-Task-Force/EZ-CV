@@ -41,8 +41,8 @@ import { z, ZodError } from "zod";
 
 import { useToast } from "@/client/hooks/use-toast";
 import { useImportResume } from "@/client/services/resume/import";
-import { useDialog } from "@/client/stores/dialog";
 import { importSections } from "@/client/services/section/import";
+import { useDialog } from "@/client/stores/dialog";
 
 enum ImportType {
   "reactive-resume-json" = "reactive-resume-json",

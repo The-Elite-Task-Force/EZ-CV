@@ -17,26 +17,11 @@ const basicsSchema = z.object({
   email: z.literal("").or(z.string().email()),
   phone: z.string().optional(),
   headline: z.string().optional(),
-  summary: z
-    .string()
-    .or(
-      z.object({
-        body: z.string().optional(),
-        visible: z.boolean().default(true),
-        heading: z.string().optional(),
-      }),
-    )
-    .optional(),
+  summary: z.string().optional(),
   birthdate: z.string().optional(),
   website: z.string().optional(),
   profiles: z.array(profileSchema).optional(),
-  location: z.object({
-    address: z.string().optional(),
-    postalCode: z.string().optional(),
-    city: z.string().optional(),
-    country: z.string().optional(),
-    region: z.string().optional(),
-  }),
+  location: z.string().optional(),
   photo: z.object({
     visible: z.boolean(),
     url: z.string().optional(),
@@ -175,6 +160,7 @@ const certificationSchema = z
   .nullable();
 
 export const linkedInImportSectionsSchema = z.object({
+  basics: z.array(basicsSchema).optional(),
   work: z.array(workSchema).optional(),
   skills: z.array(skillSchema).optional(),
   projects: z.array(projectSchema).optional(),
@@ -200,6 +186,7 @@ export type LinkedInImportSections = z.infer<typeof linkedInImportSectionsSchema
 
 export const transformLinkedInData = (data: /* ResumeData */ any): LinkedInImportSections => {
   const transformedData: LinkedInImportSections = {
+    basics: data.sections.basics?.items,
     work: data.sections.experience?.items,
     skills: data.sections.skills?.items,
     projects: data.sections.projects?.items,
