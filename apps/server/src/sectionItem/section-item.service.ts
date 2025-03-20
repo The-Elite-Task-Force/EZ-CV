@@ -36,6 +36,7 @@ import {
   parseSummaryData,
   parseVolunteerData,
 } from "../utils/section-parsers";
+import { createId } from "@paralleldrive/cuid2";
 
 @Injectable()
 export class SectionItemService {
@@ -1035,19 +1036,20 @@ export class SectionItemService {
   }
 
   async import(userId: string, sections: LinkedInImportSections) {
-    console.log("import time");
-
     try {
-      // skills
+      // Basics
       if (sections.basics) {
         await this.prisma.basicsItem.createMany({
           data: sections.basics.map((basic) => ({
             ...defaultBasics,
             ...basic,
+            id: createId(),
             userId,
           })),
         });
       }
+
+      // Skills
       if (sections.skills) {
         await this.prisma.skillItem.createMany({
           data: sections.skills.map((skill) => ({
