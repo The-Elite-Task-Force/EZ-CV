@@ -23,12 +23,11 @@ jobs:
 
       - name: Set up migration files
         run: |
-          rm -r tools/prisma/migrations/*/
           pnpm exec prisma generate
           pnpm exec prisma migrate reset --force
           pnpm exec prisma migrate dev -n action --create-only
 
       - name: Apply all pending migrations to the database
-        run: npx prisma migrate deploy
+        run: pnpm exec prisma migrate deploy
         env:
           DATABASE_URL: postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}${{ secrets.DATABASE_URL }}
