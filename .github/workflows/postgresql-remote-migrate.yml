@@ -5,6 +5,9 @@ on:
       - main
       - 205-database-ci
 
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -29,5 +32,3 @@ jobs:
 
       - name: Apply all pending migrations to the database
         run: pnpm exec prisma migrate deploy
-        env:
-          DATABASE_URL: postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}${{ secrets.DATABASE_URL }}
