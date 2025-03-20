@@ -1,0 +1,34 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+      - 205-database-ci
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4.1.4
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Set up migration files
+        run: |
+          del-cli tools/prisma/migrations/*/
+          pnpm exec prisma generate
+          pnpm exec prisma migrate reset --force
+          pnpm exec prisma migrate dev -n action --create-only
+
+      - name: Apply all pending migrations to the database
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}${{ secrets.DATABASE_URL }}
