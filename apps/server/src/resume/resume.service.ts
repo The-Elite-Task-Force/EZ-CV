@@ -61,6 +61,7 @@ export class ResumeService {
         userId,
         visibility: "private",
         data: importResumeDto.data,
+        id: createId(),
         title: importResumeDto.title ?? randomTitle,
         slug: importResumeDto.slug ?? slugify(randomTitle),
       },
