@@ -33,6 +33,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Switch,
 } from "@reactive-resume/ui";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
@@ -41,6 +42,7 @@ import { z, ZodError } from "zod";
 
 import { useToast } from "@/client/hooks/use-toast";
 import { useImportResume } from "@/client/services/resume/import";
+import { importSections } from "@/client/services/section/import";
 import { useDialog } from "@/client/stores/dialog";
 
 enum ImportType {
@@ -74,6 +76,8 @@ export const ImportDialog = () => {
   const { importResume, loading } = useImportResume();
 
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
+  const [createResume, setCreateResume] = useState(true);
+  const [resumeTitle, setResumeTitle] = useState("");
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -179,7 +183,7 @@ export const ImportDialog = () => {
         const parser = new LinkedInParser();
         const data = parser.convert(validationResult.result as LinkedIn);
 
-        await importResume({ data });
+        await importSections({ data, createResume, resumeTitle });
       }
 
       close();
@@ -275,6 +279,46 @@ export const ImportDialog = () => {
                 </FormItem>
               )}
             />
+
+            {filetype === ImportType["linkedin-data-export-zip"] && (
+              <>
+                <div className="flex items-center gap-x-4">
+                  <Label htmlFor="createResume">Create resume</Label>
+                </div>
+                <FormItem>
+                  <FormControl>
+                    <Label>
+                      <Switch
+                        id="createResume"
+                        checked={createResume}
+                        onCheckedChange={(checked: boolean) => {
+                          setCreateResume(checked);
+                        }}
+                      />
+                    </Label>
+                  </FormControl>
+                  <FormMessage />
+                  <FormDescription>Create a new CV based on the imported data</FormDescription>
+                </FormItem>
+              </>
+            )}
+
+            {createResume && (
+              <FormItem>
+                <FormLabel>CV Title</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Enter your CV title"
+                    onChange={(e) => {
+                      setResumeTitle(e.target.value);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+                <FormDescription>Enter a title for your new CV</FormDescription>
+              </FormItem>
+            )}
 
             {validationResult?.isValid === false && (
               <div className="space-y-2">

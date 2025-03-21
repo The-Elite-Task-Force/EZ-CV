@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -12,14 +13,17 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { User as UserEntity } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import {
   CreateSectionItemDto,
   CreateSectionMappingDto,
+  LinkedInImportSections,
   SECTION_FORMAT,
   UpdateSectionItemDto,
 } from "@reactive-resume/dto";
 import { DeleteMappingDto } from "@reactive-resume/dto";
 import { sectionSchemaWithData } from "@reactive-resume/schema";
+import { ERROR_MESSAGE } from "@reactive-resume/utils";
 import zodToJsonSchema from "zod-to-json-schema";
 
 import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
@@ -63,6 +67,31 @@ export class SectionItemController {
     try {
       return await this.sectionItemService.updateSectionItem(user.id, id, updateSectionDto);
     } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @Post("import")
+  @UseGuards(TwoFactorGuard)
+  async import(
+    @User() user: UserEntity,
+    @Body("sections") importSectionsDto: LinkedInImportSections,
+    @Body("createResume") createResume: boolean,
+    @Body("resumeTitle") resumeTitle: string,
+  ) {
+    try {
+      return await this.sectionItemService.import(
+        user.id,
+        importSectionsDto,
+        createResume,
+        resumeTitle,
+      );
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
+        throw new BadRequestException(ERROR_MESSAGE.ResumeSlugAlreadyExists);
+      }
+
       Logger.error(error);
       throw new InternalServerErrorException(error);
     }

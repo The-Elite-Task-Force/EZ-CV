@@ -1,14 +1,33 @@
 import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
+import { PrismaClient } from "@prisma/client";
 import {
   CreateSectionItemDto,
   CreateSectionMappingDto,
   DeleteMappingDto,
+  LinkedInImportSections,
+  LinkInBasics,
+  LinkInCertification,
+  LinkInEducation,
+  LinkInLanguage,
+  LinkInProject,
+  LinkInSkill,
+  LinkInWork,
   SECTION_FORMAT,
   SectionMappingDto,
   UpdateSectionItemDto,
 } from "@reactive-resume/dto";
+import {
+  defaultBasics,
+  defaultCertification,
+  defaultEducation,
+  defaultExperience,
+  defaultLanguage,
+  defaultProject,
+  defaultSkill,
+} from "@reactive-resume/schema";
 import { PrismaService } from "nestjs-prisma";
 
+import { ResumeService } from "../resume/resume.service";
 import {
   parseAwardData,
   parseBasicData,
@@ -29,7 +48,10 @@ import {
 
 @Injectable()
 export class SectionItemService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly resumeService: ResumeService,
+  ) {}
 
   async findAll(userId: string) {
     try {
@@ -954,6 +976,228 @@ export class SectionItemService {
           throw new InternalServerErrorException(`Unknown format for ${data.format}`);
         }
       }
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async linkSectionsToResume(
+    section: SECTION_FORMAT,
+    resumeId: string,
+    sectionId: string,
+    order: number,
+  ) {
+    try {
+      switch (section) {
+        case SECTION_FORMAT.Basics: {
+          await this.prisma.resume.update({
+            where: { id: resumeId },
+            data: { basicsItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Summary: {
+          await this.prisma.resumeSummaryItemMapping.create({
+            data: { resumeId, order, summaryItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Profiles: {
+          await this.prisma.resumeProfileItemMapping.create({
+            data: { resumeId, order, profileItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Experience: {
+          await this.prisma.resumeWorkItemMapping.create({
+            data: { resumeId, order, workItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Education: {
+          await this.prisma.resumeEducationItemMapping.create({
+            data: { resumeId, order, educationItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Skills: {
+          await this.prisma.resumeSkillItemMapping.create({
+            data: { resumeId, order, skillItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Languages: {
+          await this.prisma.resumeLanguageItemMapping.create({
+            data: { resumeId, order, languageItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Awards: {
+          await this.prisma.resumeAwardItemMapping.create({
+            data: { resumeId, order, awardItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Certifications: {
+          await this.prisma.resumeCertificationItemMapping.create({
+            data: { resumeId, order, certificationItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Interests: {
+          await this.prisma.resumeInterestItemMapping.create({
+            data: { resumeId, order, interestItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Projects: {
+          await this.prisma.resumeProjectItemMapping.create({
+            data: { resumeId, order, projectItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Publications: {
+          await this.prisma.resumePublicationItemMapping.create({
+            data: { resumeId, order, publicationItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.Volunteering: {
+          await this.prisma.resumeVolunteerItemMapping.create({
+            data: { resumeId, order, volunteerItemId: sectionId },
+          });
+          break;
+        }
+        case SECTION_FORMAT.References: {
+          await this.prisma.resumeReferenceItemMapping.create({
+            data: { resumeId, order, referenceItemId: sectionId },
+          });
+          break;
+        }
+
+        default: {
+          throw new Error("Invalid section type");
+        }
+      }
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async import(
+    userId: string,
+    sections: LinkedInImportSections,
+    createResume: boolean,
+    resumeTitle?: string,
+  ): Promise<{ message: string; insertedData: LinkedInImportSections }> {
+    try {
+      const insertedData: LinkedInImportSections = {};
+      let resume: any = null;
+
+      if (createResume) {
+        resume = await this.resumeService.createEmptyResume(userId, resumeTitle);
+      }
+
+      const insertItems = async <T>(
+        items: Partial<T>[],
+        model: keyof PrismaClient,
+        defaultValues: Partial<T>,
+        section: SECTION_FORMAT,
+      ): Promise<T[]> => {
+        const prismaModel = this.prisma[model] as any;
+
+        return Promise.all(
+          items.map(async (item, index) => {
+            const createdItem = await prismaModel.create({
+              data: {
+                ...defaultValues,
+                ...item,
+                userId,
+              },
+            });
+
+            if (createResume && resume.id) {
+              await this.linkSectionsToResume(section, resume?.id, createdItem.id, index);
+            }
+
+            return createdItem;
+          }),
+        ) as Promise<T[]>;
+      };
+
+      // Basics
+      if (sections.basics) {
+        insertedData.basics = await insertItems<LinkInBasics>(
+          sections.basics,
+          "basicsItem",
+          defaultBasics,
+          SECTION_FORMAT.Basics,
+        );
+      }
+
+      // Skills
+      if (sections.skills) {
+        insertedData.skills = await insertItems<LinkInSkill>(
+          sections.skills,
+          "skillItem",
+          defaultSkill,
+          SECTION_FORMAT.Skills,
+        );
+      }
+
+      // Work
+      if (sections.work) {
+        insertedData.work = await insertItems<LinkInWork>(
+          sections.work,
+          "workItem",
+          defaultExperience,
+          SECTION_FORMAT.Experience,
+        );
+      }
+
+      // Projects
+      if (sections.projects) {
+        insertedData.projects = await insertItems<LinkInProject>(
+          sections.projects,
+          "projectItem",
+          defaultProject,
+          SECTION_FORMAT.Projects,
+        );
+      }
+
+      // Education
+      if (sections.education) {
+        insertedData.education = await insertItems<LinkInEducation>(
+          sections.education,
+          "educationItem",
+          defaultEducation,
+          SECTION_FORMAT.Education,
+        );
+      }
+
+      // Languages
+      if (sections.languages) {
+        insertedData.languages = await insertItems<LinkInLanguage>(
+          sections.languages,
+          "languageItem",
+          defaultLanguage,
+          SECTION_FORMAT.Languages,
+        );
+      }
+
+      // Certifications
+      if (sections.certifications) {
+        insertedData.certifications = await insertItems<LinkInCertification>(
+          sections.certifications,
+          "certificationItem",
+          defaultCertification,
+          SECTION_FORMAT.Certifications,
+        );
+      }
+
+      return { message: "Import successful", insertedData };
     } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException(error);

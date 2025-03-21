@@ -51,6 +51,23 @@ export class ResumeService {
     });
   }
 
+  createEmptyResume(userId: string, resumeTitle?: string) {
+    const randomTitle = generateRandomName();
+
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const title = resumeTitle || randomTitle;
+
+    return this.prisma.resume.create({
+      data: {
+        userId,
+        visibility: "private",
+        data: defaultResumeData,
+        title: title,
+        slug: slugify(title),
+      },
+    });
+  }
+
   findAll(userId: string) {
     return this.prisma.resume.findMany({ where: { userId }, orderBy: { updatedAt: "desc" } });
   }
