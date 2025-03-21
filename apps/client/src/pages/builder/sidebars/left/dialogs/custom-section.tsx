@@ -30,7 +30,9 @@ const formSchema = customSectionSchema;
 
 type FormValues = z.infer<typeof formSchema>;
 
+// obs: FIX CUSTOM
 export const CustomSectionDialog = () => {
+  /*
   const { payload } = useDialog<CustomSection>("custom");
 
   const form = useForm<FormValues>({
@@ -195,4 +197,6 @@ export const CustomSectionDialog = () => {
       </div>
     </SectionDialog>
   );
+  */
+  return null;
 };
