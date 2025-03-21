@@ -14,6 +14,7 @@ import { GitHubStrategy } from "./strategy/github.strategy";
 import { GoogleStrategy } from "./strategy/google.strategy";
 import { JwtStrategy } from "./strategy/jwt.strategy";
 import { LocalStrategy } from "./strategy/local.strategy";
+import { MicrosoftStrategy } from "./strategy/microsoft.strategy";
 import { OpenIDStrategy } from "./strategy/openid.strategy";
 import { RefreshStrategy } from "./strategy/refresh.strategy";
 import { TwoFactorStrategy } from "./strategy/two-factor.strategy";
@@ -59,6 +60,22 @@ export class AuthModule {
               const callbackURL = configService.getOrThrow("GOOGLE_CALLBACK_URL");
 
               return new GoogleStrategy(clientID, clientSecret, callbackURL, userService);
+            } catch {
+              return new DummyStrategy();
+            }
+          },
+        },
+
+        {
+          provide: MicrosoftStrategy,
+          inject: [ConfigService, UserService],
+          useFactory: (configService: ConfigService<Config>, userService: UserService) => {
+            try {
+              const clientID = configService.getOrThrow("MICROSOFT_CLIENT_ID");
+              const clientSecret = configService.getOrThrow("MICROSOFT_CLIENT_SECRET");
+              const callbackURL = configService.getOrThrow("MICROSOFT_CALLBACK_URL");
+
+              return new MicrosoftStrategy(clientID, clientSecret, callbackURL, userService);
             } catch {
               return new DummyStrategy();
             }

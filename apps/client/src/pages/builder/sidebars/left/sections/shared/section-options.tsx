@@ -42,7 +42,9 @@ export const SectionOptions = ({ id }: Props) => {
   const setValue = useResumeStore((state) => state.setValue);
   const removeSection = useResumeStore((state) => state.removeSection);
 
-  const originalName = get(defaultSections, `${id}.name`, "") as SectionWithItem;
+  // OBS: FIX CUSTOM
+  //const originalName = get(defaultSections, `${id}.name`, "") as SectionWithItem;
+  const originalName = get(defaultSections, `${id}.name`, "") as unknown as SectionWithItem;
   const section = useResumeStore((state) => get(state.resume.data.sections, id)) as SectionWithItem;
 
   const hasItems = useMemo(() => "items" in section, [section]);
