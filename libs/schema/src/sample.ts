@@ -361,7 +361,8 @@ export const sampleResume: ResumeData = {
         },
       ],
     },
-    custom: {},
+    //OBS
+    //custom: [],
   },
   metadata: {
     template: "glalie",
