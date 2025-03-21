@@ -982,7 +982,7 @@ export class SectionItemService {
     }
   }
 
-  async createSectionMapping(
+  async linkSectionsToResume(
     section: SECTION_FORMAT,
     resumeId: string,
     sectionId: string,
@@ -991,8 +991,9 @@ export class SectionItemService {
     try {
       switch (section) {
         case SECTION_FORMAT.Basics: {
-          await this.prisma.resumeBasicsItemMapping.create({
-            data: { resumeId, order, basicsItemId: sectionId },
+          await this.prisma.resume.update({
+            where: { id: resumeId },
+            data: { basicsItemId: sectionId },
           });
           break;
         }
@@ -1118,7 +1119,7 @@ export class SectionItemService {
             });
 
             if (createResume && resume.id) {
-              await this.createSectionMapping(section, resume?.id, createdItem.id, index);
+              await this.linkSectionsToResume(section, resume?.id, createdItem.id, index);
             }
 
             return createdItem;
