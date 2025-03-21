@@ -154,12 +154,9 @@ export class SectionItemService {
             },
           });
           if (resumeId) {
-            await this.prisma.resumeBasicsItemMapping.create({
-              data: {
-                resumeId,
-                basicsItemId: createdItem.id,
-                order: 0, // Set the order as needed
-              },
+            await this.prisma.resume.update({
+              where: { id: resumeId },
+              data: { basicsItemId: createdItem.id },
             });
           }
           break;
@@ -434,7 +431,7 @@ export class SectionItemService {
           throw new Error("Invalid section type");
         }
       }
-      return createdItem;
+      return { format: format, data: createdItem };
     } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException(error);
@@ -639,9 +636,6 @@ export class SectionItemService {
     try {
       const result: SectionMappingDto = new SectionMappingDto();
 
-      const basics = await this.prisma.resumeBasicsItemMapping.findMany({ where: { resumeId } });
-      result.basics = basics.map((t) => t.basicsItemId);
-
       const summary = await this.prisma.resumeSummaryItemMapping.findMany({ where: { resumeId } });
       result.summary = summary.map((t) => t.summaryItemId);
 
@@ -709,154 +703,95 @@ export class SectionItemService {
     try {
       switch (data.format) {
         case "basics": {
-          const item = await this.prisma.resumeBasicsItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              basicsItemId: data.itemId,
-              order: 0,
-            },
+          await this.prisma.resume.update({
+            where: { id: data.resumeId },
+            data: { basicsItemId: data.itemId },
           });
-          return { resumeId: item.resumeId, itemId: item.basicsItemId };
+          return { resumeId: data.resumeId, itemId: data.itemId, format: data.format };
         }
         case "summary": {
           const item = await this.prisma.resumeSummaryItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              summaryItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, summaryItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.summaryItemId };
+          return { resumeId: item.resumeId, itemId: item.summaryItemId, format: data.format };
         }
         case "profiles": {
           const item = await this.prisma.resumeProfileItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              profileItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, profileItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.profileItemId };
+          return { resumeId: item.resumeId, itemId: item.profileItemId, format: data.format };
         }
         case "experience": {
           const item = await this.prisma.resumeWorkItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              workItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, workItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.workItemId };
+          return { resumeId: item.resumeId, itemId: item.workItemId, format: data.format };
         }
         case "education": {
           const item = await this.prisma.resumeEducationItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              educationItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, educationItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.educationItemId };
+          return { resumeId: item.resumeId, itemId: item.educationItemId, format: data.format };
         }
         case "skills": {
           const item = await this.prisma.resumeSkillItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              skillItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, skillItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.skillItemId };
+          return { resumeId: item.resumeId, itemId: item.skillItemId, format: data.format };
         }
         case "languages": {
           const item = await this.prisma.resumeLanguageItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              languageItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, languageItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.languageItemId };
+          return { resumeId: item.resumeId, itemId: item.languageItemId, format: data.format };
         }
         case "awards": {
           const item = await this.prisma.resumeAwardItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              awardItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, awardItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.awardItemId };
+          return { resumeId: item.resumeId, itemId: item.awardItemId, format: data.format };
         }
         case "certifications": {
           const item = await this.prisma.resumeCertificationItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              certificationItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, certificationItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.certificationItemId };
+          return { resumeId: item.resumeId, itemId: item.certificationItemId, format: data.format };
         }
         case "interests": {
           const item = await this.prisma.resumeInterestItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              interestItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, interestItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.interestItemId };
+          return { resumeId: item.resumeId, itemId: item.interestItemId, format: data.format };
         }
         case "projects": {
           const item = await this.prisma.resumeProjectItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              projectItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, projectItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.projectItemId };
+          return { resumeId: item.resumeId, itemId: item.projectItemId, format: data.format };
         }
         case "publications": {
           const item = await this.prisma.resumePublicationItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              publicationItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, publicationItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.publicationItemId };
+          return { resumeId: item.resumeId, itemId: item.publicationItemId, format: data.format };
         }
         case "volunteer": {
           const item = await this.prisma.resumeVolunteerItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              volunteerItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, volunteerItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.volunteerItemId };
+          return { resumeId: item.resumeId, itemId: item.volunteerItemId, format: data.format };
         }
         case "references": {
           const item = await this.prisma.resumeReferenceItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              referenceItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, referenceItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.referenceItemId };
+          return { resumeId: item.resumeId, itemId: item.referenceItemId, format: data.format };
         }
         case "custom": {
           const item = await this.prisma.resumeCustomItemMapping.create({
-            data: {
-              resumeId: data.resumeId,
-              customItemId: data.itemId,
-              order: 0,
-            },
+            data: { resumeId: data.resumeId, customItemId: data.itemId, order: 0 },
           });
-          return { resumeId: item.resumeId, itemId: item.customItemId };
+          return { resumeId: item.resumeId, itemId: item.customItemId, format: data.format };
         }
         default: {
           throw new InternalServerErrorException(`Unknown format for ${data.format}`);
@@ -872,15 +807,16 @@ export class SectionItemService {
     try {
       switch (data.format) {
         case "basics": {
-          await this.prisma.resumeBasicsItemMapping.delete({
+          await this.prisma.resume.update({
             where: {
-              resumeId_basicsItemId: {
-                resumeId: data.resumeId,
-                basicsItemId: data.id,
-              },
+              id: data.resumeId,
+              basicsItemId: data.id,
+            },
+            data: {
+              basicsItemId: null,
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Basics };
         }
         case "summary": {
           await this.prisma.resumeSummaryItemMapping.delete({
@@ -891,7 +827,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Summary };
         }
         case "profiles": {
           await this.prisma.resumeProfileItemMapping.delete({
@@ -902,7 +838,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Profiles };
         }
         case "experience": {
           await this.prisma.resumeWorkItemMapping.delete({
@@ -913,7 +849,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Experience };
         }
         case "education": {
           await this.prisma.resumeEducationItemMapping.delete({
@@ -924,7 +860,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Education };
         }
         case "skills": {
           await this.prisma.resumeSkillItemMapping.delete({
@@ -935,7 +871,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Skills };
         }
         case "languages": {
           await this.prisma.resumeLanguageItemMapping.delete({
@@ -946,7 +882,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Languages };
         }
         case "awards": {
           await this.prisma.resumeAwardItemMapping.delete({
@@ -957,7 +893,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Awards };
         }
         case "certifications": {
           await this.prisma.resumeCertificationItemMapping.delete({
@@ -968,7 +904,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Certifications };
         }
         case "interests": {
           await this.prisma.resumeInterestItemMapping.delete({
@@ -979,7 +915,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Interests };
         }
         case "projects": {
           await this.prisma.resumeProjectItemMapping.delete({
@@ -990,7 +926,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Projects };
         }
         case "publications": {
           await this.prisma.resumePublicationItemMapping.delete({
@@ -1001,7 +937,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Publications };
         }
         case "volunteer": {
           await this.prisma.resumeVolunteerItemMapping.delete({
@@ -1012,7 +948,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Volunteering };
         }
         case "references": {
           await this.prisma.resumeReferenceItemMapping.delete({
@@ -1023,7 +959,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.References };
         }
         case "custom": {
           await this.prisma.resumeCustomItemMapping.delete({
@@ -1034,7 +970,7 @@ export class SectionItemService {
               },
             },
           });
-          break;
+          return { resumeId: data.resumeId, format: SECTION_FORMAT.Custom };
         }
         default: {
           throw new InternalServerErrorException(`Unknown format for ${data.format}`);

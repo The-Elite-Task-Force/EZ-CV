@@ -3,7 +3,6 @@ import { createZodDto } from "nestjs-zod/dto";
 import { z } from "zod";
 
 export const sectionMappingSchema = z.object({
-  basics: z.array(z.string()),
   summary: z.array(z.string()),
   experience: z.array(z.string()),
   education: z.array(z.string()),
@@ -25,6 +24,7 @@ export class SectionMappingDto extends createZodDto(sectionMappingSchema) {}
 export const sectionMappingItemSchema = z.object({
   itemId: idSchema,
   resumeId: idSchema,
+  format: z.string(),
 });
 
 export class SectionMappingItemDto extends createZodDto(sectionMappingItemSchema) {}

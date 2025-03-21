@@ -88,10 +88,11 @@ model Resume {
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+  basicsItemId String?  
+  basicsItem  BasicsItem? @relation(fields: [basicsItemId], references: [id], onDelete: SetNull)
 
   TeamsMapping                   TeamsMapping[]
   ResumeProfileItemMapping       ResumeProfileItemMapping[]
-  ResumeBasicsItemMapping        ResumeBasicsItemMapping[]
   ResumeWorkItemMapping          ResumeWorkItemMapping[]
   ResumeAwardItemMapping         ResumeAwardItemMapping[]
   ResumeSkillItemMapping         ResumeSkillItemMapping[]
@@ -344,8 +345,8 @@ model BasicsItem {
   location                String?
   customFields            Json?
   picture                 Json?
-  updatedAt               DateTime                  @updatedAt  
-  ResumeBasicsItemMapping ResumeBasicsItemMapping[]
+  updatedAt               DateTime                  @updatedAt
+  resumes                 Resume[]
 
   @@unique([userId, id])
   @@index(fields: [userId])
@@ -395,17 +396,6 @@ model ResumeProfileItemMapping {
   order         Int
 
   @@unique([resumeId, profileItemId])
-}
-
-model ResumeBasicsItemMapping {
-  id           String     @id @default(cuid())
-  resumeId     String
-  basicsItemId String
-  resume       Resume     @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-  basicsItem   BasicsItem @relation(fields: [basicsItemId], references: [id], onDelete: Cascade)
-  order        Int
-
-  @@unique([resumeId, basicsItemId])
 }
 
 model ResumeSummaryItemMapping {

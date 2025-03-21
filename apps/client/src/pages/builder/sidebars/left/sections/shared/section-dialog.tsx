@@ -86,7 +86,7 @@ export const SectionDialog = <T extends SectionItem>({
         resumeId: resumeId,
       });
 
-      values.id = dto.id;
+      values.id = dto.data.id;
 
       if (pendingKeyword && "keywords" in values) {
         values.keywords.push(pendingKeyword);

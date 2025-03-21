@@ -16,6 +16,7 @@ export const resumeSchema = z.object({
   user: userSchema.optional(),
   createdAt: dateSchema,
   updatedAt: dateSchema,
+  basicsItemId: idSchema.optional(),
 });
 
 export class ResumeDto extends createZodDto(resumeSchema) {}
