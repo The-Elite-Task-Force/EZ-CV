@@ -3,7 +3,7 @@ import type { ResumeData } from "@reactive-resume/schema";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 
-import { RESUME_KEY, RESUMES_KEY, SECTIONS_KEY } from "@/client/constants/query-keys";
+import { RESUMES_KEY, SECTIONS_KEY } from "@/client/constants/query-keys";
 import { axios } from "@/client/libs/axios";
 import { queryClient } from "@/client/libs/query-client";
 
@@ -28,7 +28,6 @@ export const importSections = async ({
     resumeTitle,
   });
 
-  await queryClient.invalidateQueries({ queryKey: RESUME_KEY });
   await queryClient.invalidateQueries({ queryKey: RESUMES_KEY });
   await queryClient.invalidateQueries({ queryKey: SECTIONS_KEY });
 
