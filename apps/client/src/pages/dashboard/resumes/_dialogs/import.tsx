@@ -44,9 +44,7 @@ import { useImportResume } from "@/client/services/resume/import";
 import { useDialog } from "@/client/stores/dialog";
 
 enum ImportType {
-  "reactive-resume-json" = "reactive-resume-json",
-  "reactive-resume-v3-json" = "reactive-resume-v3-json",
-  "json-resume-json" = "json-resume-json",
+  "json" = "json",
   "linkedin-data-export-zip" = "linkedin-data-export-zip",
 }
 
@@ -77,7 +75,7 @@ export const ImportDialog = () => {
 
   const form = useForm<FormValues>({
     defaultValues: {
-      type: ImportType["reactive-resume-json"],
+      type: ImportType["json"],
     },
     resolver: zodResolver(formSchema),
   });
@@ -102,24 +100,8 @@ export const ImportDialog = () => {
     try {
       const { file, type } = formSchema.parse(form.getValues());
 
-      if (type === ImportType["reactive-resume-json"]) {
+      if (type === ImportType["json"]) {
         const parser = new ReactiveResumeParser();
-        const data = await parser.readFile(file);
-        const result = parser.validate(data);
-
-        setValidationResult({ isValid: true, type, result });
-      }
-
-      if (type === ImportType["reactive-resume-v3-json"]) {
-        const parser = new ReactiveResumeV3Parser();
-        const data = await parser.readFile(file);
-        const result = parser.validate(data);
-
-        setValidationResult({ isValid: true, type, result });
-      }
-
-      if (type === ImportType["json-resume-json"]) {
-        const parser = new JsonResumeParser();
         const data = await parser.readFile(file);
         const result = parser.validate(data);
 
@@ -154,27 +136,13 @@ export const ImportDialog = () => {
     if (!validationResult?.isValid || validationResult.type !== type) return;
 
     try {
-      if (type === ImportType["reactive-resume-json"]) {
+      // eslint-disable-next-line @typescript-eslint/dot-notation
+      if (type === ImportType["json"]) {
         const parser = new ReactiveResumeParser();
         const data = parser.convert(validationResult.result as ResumeData);
 
         await importResume({ data });
       }
-
-      if (type === ImportType["reactive-resume-v3-json"]) {
-        const parser = new ReactiveResumeV3Parser();
-        const data = parser.convert(validationResult.result as ReactiveResumeV3);
-
-        await importResume({ data });
-      }
-
-      if (type === ImportType["json-resume-json"]) {
-        const parser = new JsonResumeParser();
-        const data = parser.convert(validationResult.result as JsonResume);
-
-        await importResume({ data });
-      }
-
       if (type === ImportType["linkedin-data-export-zip"]) {
         const parser = new LinkedInParser();
         const data = parser.convert(validationResult.result as LinkedIn);
@@ -228,12 +196,8 @@ export const ImportDialog = () => {
                       </SelectTrigger>
                       <SelectContent>
                         {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
-                        <SelectItem value="reactive-resume-json">EzCV (.json)</SelectItem>
-                        {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
-                        <SelectItem value="reactive-resume-v3-json">EzCV v3 (.json)</SelectItem>
-                        {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
-                        <SelectItem value="json-resume-json">JSON Resume (.json)</SelectItem>
-                        {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
+                        <SelectItem value="json">EzCV (.json)</SelectItem>
+
                         <SelectItem value="linkedin-data-export-zip">
                           LinkedIn Data Export (.zip)
                         </SelectItem>

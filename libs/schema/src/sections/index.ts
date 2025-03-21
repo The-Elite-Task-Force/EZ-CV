@@ -113,7 +113,7 @@ export const sectionsSchema = z.object({
     id: z.literal("skills"),
     items: z.array(skillSchema),
   }),
-  custom: z.record(z.string(), customSchema),
+  //custom: z.record(z.string(), customSchema),
 });
 
 // Detailed Types
@@ -147,7 +147,7 @@ export const defaultSections: Sections = {
   publications: { ...defaultSection, id: "publications", name: "Publications", items: [] },
   references: { ...defaultSection, id: "references", name: "References", items: [] },
   skills: { ...defaultSection, id: "skills", name: "Skills", items: [] },
-  custom: {},
+  //custom: {},
 };
 
 export * from "./award";

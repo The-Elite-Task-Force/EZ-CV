@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from "@nestjs/common";
+import { createId } from "@paralleldrive/cuid2";
 import {
   CreateResumeDto,
   ImportResumeDto,
@@ -65,160 +66,138 @@ export class ResumeService {
       },
     });
 
-    for (const item of importResumeDto.data.sections.basics.items) {
-      await this.prisma.basicsItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
+    // Basics is not done yet
+    /*
+    const basicItemResult = await this.prisma.basicsItem.create({
+      data: { ...importResumeDto.data.basics, id: createId() },
+    });
+    await this.prisma.resumeBasicsItemMapping.create({
+      data: { resumeId: result.id, order: 0, basicsItemId: basicItemResult.id },
+    });
+    */
 
-      await this.prisma.resumeBasicsItemMapping.create({
-        data: { resumeId: result.id, order: 0, basicsItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.awards.items) {
-      await this.prisma.awardItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumeAwardItemMapping.create({
-        data: { resumeId: result.id, order: 0, awardItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.certifications.items) {
-      await this.prisma.certificationItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumeCertificationItemMapping.create({
-        data: { resumeId: result.id, order: 0, certificationItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.education.items) {
-      await this.prisma.educationItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumeEducationItemMapping.create({
-        data: { resumeId: result.id, order: 0, educationItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.experience.items) {
-      await this.prisma.workItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumeWorkItemMapping.create({
-        data: { resumeId: result.id, order: 0, workItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.volunteer.items) {
-      await this.prisma.volunteerItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumeVolunteerItemMapping.create({
-        data: { resumeId: result.id, order: 0, volunteerItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.interests.items) {
-      await this.prisma.interestItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumeInterestItemMapping.create({
-        data: { resumeId: result.id, order: 0, interestItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.languages.items) {
-      await this.prisma.languageItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumeLanguageItemMapping.create({
-        data: { resumeId: result.id, order: 0, languageItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.profiles.items) {
-      await this.prisma.profileItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumeProfileItemMapping.create({
-        data: { resumeId: result.id, order: 0, profileItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.projects.items) {
-      await this.prisma.projectItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumeProjectItemMapping.create({
-        data: { resumeId: result.id, order: 0, projectItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.publications.items) {
-      await this.prisma.publicationItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumePublicationItemMapping.create({
-        data: { resumeId: result.id, order: 0, publicationItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.references.items) {
-      await this.prisma.referenceItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumeReferenceItemMapping.create({
-        data: { resumeId: result.id, order: 0, referenceItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.skills.items) {
-      await this.prisma.skillItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
-      });
-      await this.prisma.resumeSkillItemMapping.create({
-        data: { resumeId: result.id, order: 0, skillItemId: item.id },
-      });
-    }
-
-    for (const item of importResumeDto.data.sections.summary.items) {
-      await this.prisma.summaryItem.upsert({
-        where: { id: item.id },
-        create: item,
-        update: item,
+    for (const [index, item] of importResumeDto.data.sections.summary.items.entries()) {
+      const summaryItemResult = await this.prisma.summaryItem.create({
+        data: { ...item, id: createId() },
       });
       await this.prisma.resumeSummaryItemMapping.create({
-        data: { resumeId: result.id, order: 0, summaryItemId: item.id },
+        data: { resumeId: result.id, order: index, summaryItemId: summaryItemResult.id },
       });
     }
+
+    for (const [index, item] of importResumeDto.data.sections.awards.items.entries()) {
+      const awardItemResult = await this.prisma.awardItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumeAwardItemMapping.create({
+        data: { resumeId: result.id, order: index, awardItemId: awardItemResult.id },
+      });
+    }
+
+    for (const [index, item] of importResumeDto.data.sections.certifications.items.entries()) {
+      const certificationItemResult = await this.prisma.certificationItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumeCertificationItemMapping.create({
+        data: {
+          resumeId: result.id,
+          order: index,
+          certificationItemId: certificationItemResult.id,
+        },
+      });
+    }
+
+    for (const [index, item] of importResumeDto.data.sections.education.items.entries()) {
+      const educationItemResult = await this.prisma.educationItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumeEducationItemMapping.create({
+        data: { resumeId: result.id, order: index, educationItemId: educationItemResult.id },
+      });
+    }
+
+    for (const [index, item] of importResumeDto.data.sections.experience.items.entries()) {
+      const workItemResult = await this.prisma.workItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumeWorkItemMapping.create({
+        data: { resumeId: result.id, order: index, workItemId: workItemResult.id },
+      });
+    }
+
+    for (const [index, item] of importResumeDto.data.sections.volunteer.items.entries()) {
+      const volunteerItemResult = await this.prisma.volunteerItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumeVolunteerItemMapping.create({
+        data: { resumeId: result.id, order: index, volunteerItemId: volunteerItemResult.id },
+      });
+    }
+
+    for (const [index, item] of importResumeDto.data.sections.projects.items.entries()) {
+      const projectItemResult = await this.prisma.projectItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumeProjectItemMapping.create({
+        data: { resumeId: result.id, order: index, projectItemId: projectItemResult.id },
+      });
+    }
+
+    for (const [index, item] of importResumeDto.data.sections.publications.items.entries()) {
+      const publicationItemResult = await this.prisma.publicationItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumePublicationItemMapping.create({
+        data: { resumeId: result.id, order: index, publicationItemId: publicationItemResult.id },
+      });
+    }
+
+    for (const [index, item] of importResumeDto.data.sections.references.items.entries()) {
+      const referenceItemResult = await this.prisma.referenceItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumeReferenceItemMapping.create({
+        data: { resumeId: result.id, order: index, referenceItemId: referenceItemResult.id },
+      });
+    }
+
+    for (const [index, item] of importResumeDto.data.sections.skills.items.entries()) {
+      const skillItemResult = await this.prisma.skillItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumeSkillItemMapping.create({
+        data: { resumeId: result.id, order: index, skillItemId: skillItemResult.id },
+      });
+    }
+
+    for (const [index, item] of importResumeDto.data.sections.languages.items.entries()) {
+      const languageItemResult = await this.prisma.languageItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumeLanguageItemMapping.create({
+        data: { resumeId: result.id, order: index, languageItemId: languageItemResult.id },
+      });
+    }
+
+    for (const [index, item] of importResumeDto.data.sections.interests.items.entries()) {
+      const interestItemResult = await this.prisma.interestItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumeInterestItemMapping.create({
+        data: { resumeId: result.id, order: index, interestItemId: interestItemResult.id },
+      });
+    }
+
+    for (const [index, item] of importResumeDto.data.sections.profiles.items.entries()) {
+      const profileItemResult = await this.prisma.profileItem.create({
+        data: { ...item, id: createId() },
+      });
+      await this.prisma.resumeProfileItemMapping.create({
+        data: { resumeId: result.id, order: index, profileItemId: profileItemResult.id },
+      });
+    }
+
+    //OBS: Fix custom section
 
     return result;
   }
