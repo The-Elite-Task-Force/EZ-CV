@@ -2,6 +2,7 @@ import type { ImportResumeDto, ResumeDto } from "@reactive-resume/dto";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 
+import { SECTION_MAPPING_KEY, SECTIONS_KEY } from "@/client/constants/query-keys";
 import { axios } from "@/client/libs/axios";
 import { queryClient } from "@/client/libs/query-client";
 
@@ -30,6 +31,9 @@ export const useImportResume = () => {
       });
     },
   });
+
+  void queryClient.invalidateQueries({ queryKey: SECTIONS_KEY });
+  void queryClient.invalidateQueries({ queryKey: SECTION_MAPPING_KEY });
 
   return { importResume: importResumeFn, loading, error };
 };
