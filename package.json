@@ -1,17 +1,22 @@
 {
-  "name": "@reactive-resume/source",
+  "name": "@ez-cv/source",
   "description": "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.",
-  "version": "4.4.6",
+  "version": "v1.0.0",
   "license": "MIT",
   "private": true,
   "author": {
-    "name": "Amruth Pillai",
-    "url": "https://amruthpillai.com",
-    "email": "hello@amruthpillai.com"
+    "name": "The Elite Task Force",
+    "url": "https://github.com/The-Elite-Task-Force",
+    "email": "ezcv.dev@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/AmruthPillai/Reactive-Resume.git"
+    "url": "https://github.com/The-Elite-Task-Force/EZ-CV.git"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
   },
   "scripts": {
     "dev": "nx run-many -t serve",
@@ -30,7 +35,8 @@
     "prisma:migrate:dev": "pnpm exec prisma migrate dev",
     "prisma:migrate:reset": "pnpm exec prisma migrate reset",
     "prisma:all": "del-cli tools/prisma/migrations/*/ && pnpm exec prisma generate && pnpm exec prisma migrate reset && pnpm exec prisma migrate dev && node tools/scripts/apply-vector-migration.js",
-    "messages:extract": "pnpm exec lingui extract --clean --overwrite"
+    "messages:extract": "pnpm exec lingui extract --clean --overwrite",
+    "release": "npx semantic-release"
   },
   "devDependencies": {
     "@babel/core": "^7.26.7",
@@ -52,6 +58,11 @@
     "@nx/web": "^19.8.14",
     "@nx/webpack": "^19.8.14",
     "@nx/workspace": "^19.8.14",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.3",
     "@swc-node/register": "^1.10.9",
     "@swc/cli": "^0.4.0",
     "@swc/core": "^1.10.12",
@@ -117,6 +128,7 @@
     "postcss-nested": "^6.2.0",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "semantic-release": "^24.2.3",
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
     "ts-jest": "^29.2.5",
@@ -127,6 +139,7 @@
     "vitest": "^2.1.9"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.27.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^7.0.0",
     "@dnd-kit/sortable": "^8.0.0",
@@ -187,6 +200,7 @@
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
     "@types/passport-jwt": "^4.0.1",
+    "@types/passport-microsoft": "^1.0.3",
     "@types/react-router-dom": "^5.3.3",
     "async-retry": "^1.3.3",
     "axios": "^1.7.9",
@@ -223,6 +237,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "passport-microsoft": "^2.1.0",
     "passport-openidconnect": "^0.1.2",
     "pdf-lib": "^1.17.1",
     "pg": "^8.13.3",

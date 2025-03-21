@@ -65,7 +65,9 @@ export const useResumeStore = create<ResumeStore>()(
           set((state) => {
             removeItemInLayout(sectionId, state.resume.data.metadata.layout);
             // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-            delete state.resume.data.sections.custom[id];
+
+            //OBS: FIX CUSTOM
+            //delete state.resume.data.sections.custom[id];
 
             void debouncedUpdateResume(JSON.parse(JSON.stringify(state.resume)));
           });

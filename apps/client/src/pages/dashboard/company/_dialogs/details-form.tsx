@@ -1,11 +1,9 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/macro";
-import { UploadSimple } from "@phosphor-icons/react";
 import type { CompanyDto, companySchema, UpdateCompanyDto } from "@reactive-resume/dto";
 import { updateCompanySchema } from "@reactive-resume/dto";
 import {
   Button,
-  buttonVariants,
   Form,
   FormControl,
   FormField,
@@ -15,14 +13,13 @@ import {
   Input,
   RichInput,
 } from "@reactive-resume/ui";
-import { cn } from "@reactive-resume/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 import { AiActions } from "@/client/components/ai-actions";
-import { CompanyLogo } from "@/client/pages/dashboard/company/company-logo";
+import { ImageSection } from "@/client/pages/builder/sidebars/left/sections/picture/image-section";
 import { useUpdateCompany } from "@/client/services/company";
 import { useUploadImage } from "@/client/services/storage";
 
@@ -77,11 +74,15 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
     }
   };
 
+  const { setValue } = form;
+
   const onSelectImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       const response = await uploadImage(file);
       const url = response.data;
+
+      setValue("picture", url);
 
       await updateCompany({
         id: companyState.id,
@@ -90,48 +91,22 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
     }
   };
 
+  const removeImage = async () => {
+    await updateCompany({
+      id: companyState.id,
+      picture: null,
+    });
+    setValue("picture", null);
+  };
+
   return (
     <div>
       <div className="space-y-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div style={{ marginBottom: "10px" }}>
-              <div style={{ marginBottom: "10px" }}>
-                <FormField
-                  name="picture"
-                  control={form.control}
-                  render={({ field, fieldState: { error } }) => (
-                    <div
-                      className={cn(
-                        "flex items-end gap-x-4 sm:col-span-2",
-                        error && "items-center",
-                      )}
-                    >
-                      <CompanyLogo company={companyState} />
-                      <FormItem className="flex-1">
-                        <FormLabel>Logo</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://..." {...field} value={field.value ?? ""} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+              <ImageSection clickImage={removeImage} onSelectImage={onSelectImage} />
 
-                      <input ref={inputRef} hidden type="file" onChange={onSelectImage} />
-
-                      <motion.button
-                        disabled={isUploading}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className={cn(buttonVariants({ size: "icon", variant: "ghost" }))}
-                        onClick={() => inputRef.current?.click()}
-                      >
-                        <UploadSimple />
-                      </motion.button>
-                    </div>
-                  )}
-                />
-              </div>
               <FormField
                 name="name"
                 control={form.control}
@@ -152,7 +127,7 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t`Location`}</FormLabel>
+                  <FormLabel>Location</FormLabel>
                   <FormControl>
                     <Input autoComplete="location" {...field} />
                   </FormControl>
@@ -166,7 +141,7 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel>{t`Description`}</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <RichInput
                       {...field}
@@ -189,6 +164,9 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
                 </FormItem>
               )}
             />
+
+            {error && <div className="text-red-500">{error}</div>}
+
             <AnimatePresence presenceAffectsLayout>
               {form.formState.isDirty && (
                 <motion.div
@@ -199,10 +177,10 @@ export const DetailsForm = ({ companyState, setCompanyState }: Props) => {
                   className="flex items-center space-x-2 self-center sm:col-start-2"
                 >
                   <Button type="submit" disabled={loading}>
-                    {t`Save Changes`}
+                    Save Changes
                   </Button>
                   <Button type="reset" variant="ghost" onClick={onReset}>
-                    {t`Discard`}
+                    Discard
                   </Button>
                 </motion.div>
               )}

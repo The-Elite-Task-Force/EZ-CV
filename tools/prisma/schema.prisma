@@ -13,6 +13,7 @@ enum Provider {
   github
   google
   openid
+  microsoft
 }
 
 enum Visibility {

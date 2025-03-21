@@ -113,7 +113,8 @@ export const sectionsSchema = z.object({
     id: z.literal("skills"),
     items: z.array(skillSchema),
   }),
-  custom: z.record(z.string(), customSchema),
+  //OBS: FIX CUSTOM,
+  //custom: z.record(z.string(), customSchema),
 });
 
 // Detailed Types
@@ -121,6 +122,7 @@ export type Section = z.infer<typeof sectionSchema>;
 export type Sections = z.infer<typeof sectionsSchema>;
 
 export type SectionKey = "basics" | keyof Sections | `custom.${string}`;
+
 export type SectionWithItem<T = unknown> = Sections[FilterKeys<Sections, { items: T[] }>];
 export type SectionItem = SectionWithItem["items"][number];
 export type CustomSectionGroup = z.infer<typeof customSchema>;
@@ -147,7 +149,8 @@ export const defaultSections: Sections = {
   publications: { ...defaultSection, id: "publications", name: "Publications", items: [] },
   references: { ...defaultSection, id: "references", name: "References", items: [] },
   skills: { ...defaultSection, id: "skills", name: "Skills", items: [] },
-  custom: {},
+  //OBS: FIX CUSTOM,
+  //custom: {},
 };
 
 export * from "./award";

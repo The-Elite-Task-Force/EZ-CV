@@ -31,7 +31,7 @@ export const SearchPage = () => {
         <Input
           type="text"
           value={query}
-          placeholder={t`Enter your search query`}
+          placeholder={"Enter your search query"}
           className="mr-2 grow"
           onChange={(e) => {
             setQuery(e.target.value);
@@ -52,7 +52,7 @@ export const SearchPage = () => {
             ))}
           </ul>
         ) : (
-          !isLoading && <p>{t`No results found`}</p>
+          !isLoading && <p>No results found</p>
         )}
       </div>
     </div>

@@ -478,7 +478,8 @@ const References = () => {
     </Section>
   );
 };
-
+//OBS: FIX CUSTOM
+/*
 const Custom = ({ id }: { id: string }) => {
   const section = useArtboardStore((state) => state.resume.sections.custom[id]);
 
@@ -510,7 +511,7 @@ const Custom = ({ id }: { id: string }) => {
     </Section>
   );
 };
-
+*/
 const mapSectionToComponent = (section: SectionKey) => {
   switch (section) {
     case "profiles": {
@@ -553,7 +554,8 @@ const mapSectionToComponent = (section: SectionKey) => {
       return <References />;
     }
     default: {
-      if (section.startsWith("custom.")) return <Custom id={section.split(".")[1]} />;
+      //OBS: FIX CUSTOM
+      //if (section.startsWith("custom.")) return <Custom id={section.split(".")[1]} />;
 
       return null;
     }
