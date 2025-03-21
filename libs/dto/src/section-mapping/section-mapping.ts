@@ -24,6 +24,7 @@ export class SectionMappingDto extends createZodDto(sectionMappingSchema) {}
 export const sectionMappingItemSchema = z.object({
   itemId: idSchema,
   resumeId: idSchema,
+  format: z.string(),
 });
 
 export class SectionMappingItemDto extends createZodDto(sectionMappingItemSchema) {}

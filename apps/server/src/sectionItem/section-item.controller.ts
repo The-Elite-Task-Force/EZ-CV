@@ -18,13 +18,13 @@ import {
   SECTION_FORMAT,
   UpdateSectionItemDto,
 } from "@reactive-resume/dto";
+import { DeleteMappingDto } from "@reactive-resume/dto";
 import { sectionSchemaWithData } from "@reactive-resume/schema";
 import zodToJsonSchema from "zod-to-json-schema";
 
 import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
 import { User } from "../user/decorators/user.decorator";
 import { SectionItemService } from "./section-item.service";
-import { DeleteMappingDto } from "@reactive-resume/dto";
 
 @ApiTags("SectionItem")
 @Controller("sectionItem")
@@ -109,7 +109,7 @@ export class SectionItemController {
   @UseGuards(TwoFactorGuard)
   async deleteMappings(@User() user: UserEntity, @Body() data: DeleteMappingDto) {
     try {
-      await this.sectionItemService.deleteMapping(data);
+      return await this.sectionItemService.deleteMapping(data);
     } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException(error);

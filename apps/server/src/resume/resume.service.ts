@@ -5,9 +5,10 @@ import {
   Logger,
 } from "@nestjs/common";
 import { CreateResumeDto, ImportResumeDto, ResumeDto, UpdateResumeDto } from "@reactive-resume/dto";
-import { defaultMetadata } from "@reactive-resume/schema";
-import { ERROR_MESSAGE, generateRandomName } from "@reactive-resume/utils";
+import { defaultResumeData, ResumeData } from "@reactive-resume/schema";
+import { DeepPartial, ERROR_MESSAGE, generateRandomName } from "@reactive-resume/utils";
 import slugify from "@sindresorhus/slugify";
+import deepmerge from "deepmerge";
 import { PrismaService } from "nestjs-prisma";
 
 import { PrinterService } from "@/server/printer/printer.service";
@@ -23,7 +24,7 @@ export class ResumeService {
   ) {}
 
   async create(userId: string, createResumeDto: CreateResumeDto) {
-    const data = { metadata: defaultMetadata };
+    const data = deepmerge(defaultResumeData, {} satisfies DeepPartial<ResumeData>);
 
     return this.prisma.resume.create({
       data: {
@@ -101,14 +102,12 @@ export class ResumeService {
       if (locked) throw new BadRequestException(ERROR_MESSAGE.ResumeLocked);
       if (!updateResumeDto.data) throw new BadRequestException("Invalid data");
 
-      const { sections: _sections, basics: _basics, ...rest } = updateResumeDto.data;
-
       return await this.prisma.resume.update({
         data: {
           title: updateResumeDto.title,
           slug: updateResumeDto.slug,
           visibility: updateResumeDto.visibility,
-          data: rest,
+          data: updateResumeDto.data,
         },
         where: { userId_id: { userId, id } },
       });

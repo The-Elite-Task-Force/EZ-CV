@@ -13,7 +13,7 @@ import {
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
-import { CustomFieldsSection } from "../sections/custom/section";
+//import { CustomFieldsSection } from "../sections/custom/section";
 import { PictureSection } from "../sections/picture/section";
 import { SectionDialog } from "../sections/shared/section-dialog";
 import { SectionIcon } from "../sections/shared/section-icon";
@@ -28,7 +28,7 @@ export const BasicDialog = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const id = form.watch("id");
+  // const id = form.watch("id");
 
   return (
     <SectionDialog<FormValues> id="basics" form={form} defaultValues={defaultBasics}>
@@ -164,7 +164,9 @@ export const BasicDialog = () => {
           />
         </main>
 
-        <CustomFieldsSection id={id} className="sm:col-span-2" />
+        {/*
+        Custom fields broke after sectionItem refactoring, clicking add custom field simply closes the dialog, needs to be fixed.
+        <CustomFieldsSection id={id} className="sm:col-span-2" />*/}
       </div>
     </SectionDialog>
   );

@@ -86,8 +86,6 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
     }),
   );
 
-  console.log(resume)
-
   //Should be fixed though, this means we don't actually know what our data is and have typed it incorrectly
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!section) return null;

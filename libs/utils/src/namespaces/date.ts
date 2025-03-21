@@ -1,10 +1,10 @@
 import dayjs from "dayjs";
 import { z } from "zod";
 
-export const dateSchema = z.union([z.date(), z.string().datetime()]).transform((value) => {
-  if (typeof value === "string") return dayjs(value).toDate();
-  return value;
-});
+export const dateSchema = z
+  .union([z.date(), z.string().datetime()])
+  .transform((value) => (typeof value === "string" ? dayjs(value).toDate() : value))
+  .pipe(z.date());
 
 export const sortByDate = <T>(a: T, b: T, key: keyof T, desc = true) => {
   if (!a[key] || !b[key]) return 0;

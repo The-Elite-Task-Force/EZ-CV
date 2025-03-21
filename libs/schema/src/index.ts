@@ -6,8 +6,8 @@ import { defaultSections, sectionsSchema } from "./sections";
 
 // Schema
 export const resumeDataSchema = z.object({
-  basics: basicsSchema.default(defaultBasics),
-  sections: sectionsSchema.default(defaultSections),
+  basics: basicsSchema,
+  sections: sectionsSchema,
   metadata: metadataSchema,
 });
 

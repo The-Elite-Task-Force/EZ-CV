@@ -69,9 +69,6 @@ export class ReactiveResumeV3Parser implements Parser<Json, ReactiveResumeV3> {
     result.basics.phone = data.basics.phone ?? "";
     result.basics.headline = data.basics.headline ?? "";
     result.basics.location = data.basics.location.address ?? "";
-    result.sections.summary.content =
-      (typeof data.basics.summary === "string" ? data.basics.summary : data.basics.summary?.body) ??
-      "";
     result.basics.picture.url = isUrl(data.basics.photo.url) ? data.basics.photo.url! : "";
 
     // Profiles
