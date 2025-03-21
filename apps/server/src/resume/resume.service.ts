@@ -4,7 +4,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
 import {
   CreateResumeDto,
   ImportResumeDto,
@@ -63,6 +62,23 @@ export class ResumeService {
         data: importResumeDto.data,
         title: importResumeDto.title ?? randomTitle,
         slug: importResumeDto.slug ?? slugify(randomTitle),
+      },
+    });
+  }
+
+  createEmptyResume(userId: string, resumeTitle?: string) {
+    const randomTitle = generateRandomName();
+
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const title = resumeTitle || randomTitle;
+
+    return this.prisma.resume.create({
+      data: {
+        userId,
+        visibility: "private",
+        data: defaultResumeData,
+        title: title,
+        slug: slugify(title),
       },
     });
   }

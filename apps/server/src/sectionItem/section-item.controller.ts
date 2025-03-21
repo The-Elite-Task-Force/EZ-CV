@@ -74,9 +74,19 @@ export class SectionItemController {
 
   @Post("import")
   @UseGuards(TwoFactorGuard)
-  async import(@User() user: UserEntity, @Body() importSectionsDto: LinkedInImportSections) {
+  async import(
+    @User() user: UserEntity,
+    @Body("sections") importSectionsDto: LinkedInImportSections,
+    @Body("createResume") createResume: boolean,
+    @Body("resumeTitle") resumeTitle: string,
+  ) {
     try {
-      return await this.sectionItemService.import(user.id, importSectionsDto);
+      return await this.sectionItemService.import(
+        user.id,
+        importSectionsDto,
+        createResume,
+        resumeTitle,
+      );
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
         throw new BadRequestException(ERROR_MESSAGE.ResumeSlugAlreadyExists);
