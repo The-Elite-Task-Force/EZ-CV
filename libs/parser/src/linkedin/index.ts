@@ -71,7 +71,6 @@ export class LinkedInParser implements Parser<JSZip, LinkedIn> {
       for (const profile of data.Profile) {
         const twitterHandle = profile["Twitter Handles"];
         const profileBasic: Basics = defaultBasics;
-        delete profileBasic.id;
 
         profileBasic.name = `${profile["First Name"]} ${profile["Last Name"]}`;
         profileBasic.location = profile["Geo Location"];
@@ -182,7 +181,7 @@ export class LinkedInParser implements Parser<JSZip, LinkedIn> {
         });
       }
     }
-
+    result.sections.basics.items[0].id = createId();
     return resumeDataSchema.parse(result);
   }
 }

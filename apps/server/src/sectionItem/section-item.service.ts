@@ -1043,7 +1043,6 @@ export class SectionItemService {
           data: sections.basics.map((basic) => ({
             ...defaultBasics,
             ...basic,
-            id: createId(),
             userId,
           })),
         });
