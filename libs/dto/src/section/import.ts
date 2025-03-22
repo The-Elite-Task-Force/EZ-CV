@@ -1,14 +1,15 @@
+import type { ResumeData } from "@reactive-resume/schema";
 import { urlSchema } from "@reactive-resume/schema";
 import { z } from "zod";
 
-const linkInProfileSchema = z.object({
+const linkedInProfileSchema = z.object({
   id: z.string().optional(),
   url: urlSchema,
   network: z.string().optional(),
   username: z.string().optional(),
 });
 
-const linkInBasicsSchema = z.object({
+const linkedInBasicsSchema = z.object({
   name: z.string().optional(),
   email: z.literal("").or(z.string().email()),
   phone: z.string().optional(),
@@ -16,21 +17,22 @@ const linkInBasicsSchema = z.object({
   summary: z.string().optional(),
   birthdate: z.string().optional(),
   website: z.string().optional(),
-  profiles: z.array(linkInProfileSchema).optional(),
+  profiles: z.array(linkedInProfileSchema).optional(),
   location: z.string().optional(),
-  photo: z.object({
-    visible: z.boolean(),
-    url: urlSchema,
-    filters: z.object({
-      shape: z.string().nullable().optional(),
-      size: z.coerce.number(),
-      border: z.boolean(),
-      grayscale: z.boolean(),
+  picture: z.object({
+    url: z.string(),
+    size: z.number().default(64),
+    aspectRatio: z.number().default(1),
+    borderRadius: z.number().default(0),
+    effects: z.object({
+      hidden: z.boolean().default(false),
+      border: z.boolean().default(false),
+      grayscale: z.boolean().default(false),
     }),
   }),
 });
 
-const linkInSectionSchema = z.object({
+const linkedInSectionSchema = z.object({
   id: z.string().optional(),
   name: z.string().optional(),
   type: z.enum(["basic", "work", "custom"]),
@@ -38,7 +40,7 @@ const linkInSectionSchema = z.object({
   visible: z.boolean(),
 });
 
-const linkInWorkSchema = z
+const linkedInWorkSchema = z
   .object({
     id: z.string().optional(),
     url: urlSchema,
@@ -49,7 +51,7 @@ const linkInWorkSchema = z
   })
   .nullable();
 
-const linkInAwardSchema = z
+const linkedInAwardSchema = z
   .object({
     id: z.string().optional(),
     url: urlSchema,
@@ -60,7 +62,7 @@ const linkInAwardSchema = z
   })
   .nullable();
 
-const linkInSkillSchema = z
+const linkedInSkillSchema = z
   .object({
     id: z.string().optional(),
     name: z.string().optional(),
@@ -69,7 +71,7 @@ const linkInSkillSchema = z
   })
   .nullable();
 
-const linkInProjectSchema = z
+const linkedInProjectSchema = z
   .object({
     id: z.string().optional(),
     url: urlSchema,
@@ -81,7 +83,7 @@ const linkInProjectSchema = z
   })
   .nullable();
 
-const linkInEducationSchema = z
+const linkedInEducationSchema = z
   .object({
     id: z.string().optional(),
     url: urlSchema,
@@ -95,7 +97,7 @@ const linkInEducationSchema = z
   })
   .nullable();
 
-const linkInInterestSchema = z
+const linkedInInterestSchema = z
   .object({
     id: z.string().optional(),
     name: z.string().optional(),
@@ -103,7 +105,7 @@ const linkInInterestSchema = z
   })
   .nullable();
 
-const linkInLanguageSchema = z
+const linkedInLanguageSchema = z
   .object({
     id: z.string().optional(),
     name: z.string().optional(),
@@ -111,7 +113,7 @@ const linkInLanguageSchema = z
   })
   .nullable();
 
-const linkInVolunteerSchema = z
+const linkedInVolunteerSchema = z
   .object({
     id: z.string().optional(),
     organization: z.string().optional(),
@@ -122,7 +124,7 @@ const linkInVolunteerSchema = z
   })
   .nullable();
 
-const linkInReferenceSchema = z
+const linkedInReferenceSchema = z
   .object({
     id: z.string().optional(),
     name: z.string().optional(),
@@ -133,7 +135,7 @@ const linkInReferenceSchema = z
   })
   .nullable();
 
-const linkInPublicationSchema = z
+const linkedInPublicationSchema = z
   .object({
     id: z.string().optional(),
     url: urlSchema,
@@ -144,7 +146,7 @@ const linkInPublicationSchema = z
   })
   .nullable();
 
-const linkInCertificationSchema = z
+const linkedInCertificationSchema = z
   .object({
     id: z.string().optional(),
     url: urlSchema,
@@ -156,13 +158,13 @@ const linkInCertificationSchema = z
   .nullable();
 
 export const linkedInImportSectionsSchema = z.object({
-  basics: z.array(linkInBasicsSchema).optional(),
-  work: z.array(linkInWorkSchema).optional(),
-  skills: z.array(linkInSkillSchema).optional(),
-  projects: z.array(linkInProjectSchema).optional(),
-  education: z.array(linkInEducationSchema).optional(),
-  languages: z.array(linkInLanguageSchema).optional(),
-  certifications: z.array(linkInCertificationSchema).optional(),
+  basics: z.array(linkedInBasicsSchema).optional(),
+  work: z.array(linkedInWorkSchema).optional(),
+  skills: z.array(linkedInSkillSchema).optional(),
+  projects: z.array(linkedInProjectSchema).optional(),
+  education: z.array(linkedInEducationSchema).optional(),
+  languages: z.array(linkedInLanguageSchema).optional(),
+  certifications: z.array(linkedInCertificationSchema).optional(),
 
   // These are not currently included in the LinkedIn zip file, but it needs to be double checked before deleted
 
@@ -180,30 +182,30 @@ export const linkedInImportSectionsSchema = z.object({
 
 export type LinkedInImportSections = z.infer<typeof linkedInImportSectionsSchema>;
 
-export type LinkInProfile = z.infer<typeof linkInProfileSchema>;
-export type LinkInBasics = z.infer<typeof linkInBasicsSchema>;
-export type LinkInSection = z.infer<typeof linkInSectionSchema>;
-export type LinkInWork = z.infer<typeof linkInWorkSchema>;
-export type LinkInAward = z.infer<typeof linkInAwardSchema>;
-export type LinkInSkill = z.infer<typeof linkInSkillSchema>;
-export type LinkInProject = z.infer<typeof linkInProjectSchema>;
-export type LinkInEducation = z.infer<typeof linkInEducationSchema>;
-export type LinkInInterest = z.infer<typeof linkInInterestSchema>;
-export type LinkInLanguage = z.infer<typeof linkInLanguageSchema>;
-export type LinkInVolunteer = z.infer<typeof linkInVolunteerSchema>;
-export type LinkInReference = z.infer<typeof linkInReferenceSchema>;
-export type LinkInPublication = z.infer<typeof linkInPublicationSchema>;
-export type LinkInCertification = z.infer<typeof linkInCertificationSchema>;
+export type LinkedInProfile = z.infer<typeof linkedInProfileSchema>;
+export type LinkedInBasics = z.infer<typeof linkedInBasicsSchema>;
+export type LinkedInSection = z.infer<typeof linkedInSectionSchema>;
+export type LinkedInWork = z.infer<typeof linkedInWorkSchema>;
+export type LinkedInAward = z.infer<typeof linkedInAwardSchema>;
+export type LinkedInSkill = z.infer<typeof linkedInSkillSchema>;
+export type LinkedInProject = z.infer<typeof linkedInProjectSchema>;
+export type LinkedInEducation = z.infer<typeof linkedInEducationSchema>;
+export type LinkedInInterest = z.infer<typeof linkedInInterestSchema>;
+export type LinkedInLanguage = z.infer<typeof linkedInLanguageSchema>;
+export type LinkedInVolunteer = z.infer<typeof linkedInVolunteerSchema>;
+export type LinkedInReference = z.infer<typeof linkedInReferenceSchema>;
+export type LinkedInPublication = z.infer<typeof linkedInPublicationSchema>;
+export type LinkedInCertification = z.infer<typeof linkedInCertificationSchema>;
 
-export const transformLinkedInData = (data: /* ResumeData */ any): LinkedInImportSections => {
+export const transformLinkedInData = (data: ResumeData): LinkedInImportSections => {
   const transformedData: LinkedInImportSections = {
-    basics: data.sections.basics?.items,
-    work: data.sections.experience?.items,
-    skills: data.sections.skills?.items,
-    projects: data.sections.projects?.items,
-    education: data.sections.education?.items,
-    languages: data.sections.languages?.items,
-    certifications: data.sections.certifications?.items,
+    basics: data.sections.basics.items,
+    work: data.sections.experience.items,
+    skills: data.sections.skills.items,
+    projects: data.sections.projects.items,
+    education: data.sections.education.items,
+    languages: data.sections.languages.items,
+    certifications: data.sections.certifications.items,
   };
 
   return transformedData;

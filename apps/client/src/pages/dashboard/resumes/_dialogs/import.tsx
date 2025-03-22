@@ -303,7 +303,7 @@ export const ImportDialog = () => {
               </>
             )}
 
-            {createResume && (
+            {filetype === ImportType["linkedin-data-export-zip"] && createResume && (
               <FormItem>
                 <FormLabel>CV Title</FormLabel>
                 <FormControl>
@@ -316,7 +316,9 @@ export const ImportDialog = () => {
                   />
                 </FormControl>
                 <FormMessage />
-                <FormDescription>Enter a title for your new CV</FormDescription>
+                <FormDescription>
+                  Enter a title for your new CV - Leave blank for a random name
+                </FormDescription>
               </FormItem>
             )}
 

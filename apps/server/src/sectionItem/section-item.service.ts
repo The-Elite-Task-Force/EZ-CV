@@ -4,14 +4,15 @@ import {
   CreateSectionItemDto,
   CreateSectionMappingDto,
   DeleteMappingDto,
+  LinkedInBasics,
+  LinkedInCertification,
+  LinkedInEducation,
   LinkedInImportSections,
-  LinkInBasics,
-  LinkInCertification,
-  LinkInEducation,
-  LinkInLanguage,
-  LinkInProject,
-  LinkInSkill,
-  LinkInWork,
+  LinkedInLanguage,
+  LinkedInProject,
+  LinkedInSkill,
+  LinkedInWork,
+  ResumeDto,
   SECTION_FORMAT,
   SectionMappingDto,
   UpdateSectionItemDto,
@@ -982,110 +983,6 @@ export class SectionItemService {
     }
   }
 
-  async linkSectionsToResume(
-    section: SECTION_FORMAT,
-    resumeId: string,
-    sectionId: string,
-    order: number,
-  ) {
-    try {
-      switch (section) {
-        case SECTION_FORMAT.Basics: {
-          await this.prisma.resume.update({
-            where: { id: resumeId },
-            data: { basicsItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Summary: {
-          await this.prisma.resumeSummaryItemMapping.create({
-            data: { resumeId, order, summaryItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Profiles: {
-          await this.prisma.resumeProfileItemMapping.create({
-            data: { resumeId, order, profileItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Experience: {
-          await this.prisma.resumeWorkItemMapping.create({
-            data: { resumeId, order, workItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Education: {
-          await this.prisma.resumeEducationItemMapping.create({
-            data: { resumeId, order, educationItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Skills: {
-          await this.prisma.resumeSkillItemMapping.create({
-            data: { resumeId, order, skillItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Languages: {
-          await this.prisma.resumeLanguageItemMapping.create({
-            data: { resumeId, order, languageItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Awards: {
-          await this.prisma.resumeAwardItemMapping.create({
-            data: { resumeId, order, awardItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Certifications: {
-          await this.prisma.resumeCertificationItemMapping.create({
-            data: { resumeId, order, certificationItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Interests: {
-          await this.prisma.resumeInterestItemMapping.create({
-            data: { resumeId, order, interestItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Projects: {
-          await this.prisma.resumeProjectItemMapping.create({
-            data: { resumeId, order, projectItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Publications: {
-          await this.prisma.resumePublicationItemMapping.create({
-            data: { resumeId, order, publicationItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.Volunteering: {
-          await this.prisma.resumeVolunteerItemMapping.create({
-            data: { resumeId, order, volunteerItemId: sectionId },
-          });
-          break;
-        }
-        case SECTION_FORMAT.References: {
-          await this.prisma.resumeReferenceItemMapping.create({
-            data: { resumeId, order, referenceItemId: sectionId },
-          });
-          break;
-        }
-
-        default: {
-          throw new Error("Invalid section type");
-        }
-      }
-    } catch (error) {
-      Logger.error(error);
-      throw new InternalServerErrorException(error);
-    }
-  }
-
   async import(
     userId: string,
     sections: LinkedInImportSections,
@@ -1094,10 +991,13 @@ export class SectionItemService {
   ): Promise<{ message: string; insertedData: LinkedInImportSections }> {
     try {
       const insertedData: LinkedInImportSections = {};
-      let resume: any = null;
+      let resume: ResumeDto | null = null;
 
       if (createResume) {
-        resume = await this.resumeService.createEmptyResume(userId, resumeTitle);
+        resume = (await this.resumeService.createEmptyResume(
+          userId,
+          resumeTitle,
+        )) as unknown as ResumeDto;
       }
 
       const insertItems = async <T>(
@@ -1106,20 +1006,25 @@ export class SectionItemService {
         defaultValues: Partial<T>,
         section: SECTION_FORMAT,
       ): Promise<T[]> => {
-        const prismaModel = this.prisma[model] as any;
-
+        const prismaModel = this.prisma[model] as PrismaClient[keyof PrismaClient] & {
+          create: (args: unknown) => Promise<T>;
+        };
         return Promise.all(
           items.map(async (item, index) => {
-            const createdItem = await prismaModel.create({
+            const createdItem = (await prismaModel.create({
               data: {
                 ...defaultValues,
                 ...item,
                 userId,
               },
-            });
+            })) as T & { id: string };
 
-            if (createResume && resume.id) {
-              await this.linkSectionsToResume(section, resume?.id, createdItem.id, index);
+            if (createResume && resume) {
+              await this.createMapping({
+                format: section,
+                resumeId: resume.id,
+                itemId: createdItem.id,
+              });
             }
 
             return createdItem;
@@ -1129,7 +1034,7 @@ export class SectionItemService {
 
       // Basics
       if (sections.basics) {
-        insertedData.basics = await insertItems<LinkInBasics>(
+        insertedData.basics = await insertItems<LinkedInBasics>(
           sections.basics,
           "basicsItem",
           defaultBasics,
@@ -1139,7 +1044,7 @@ export class SectionItemService {
 
       // Skills
       if (sections.skills) {
-        insertedData.skills = await insertItems<LinkInSkill>(
+        insertedData.skills = await insertItems<LinkedInSkill>(
           sections.skills,
           "skillItem",
           defaultSkill,
@@ -1149,7 +1054,7 @@ export class SectionItemService {
 
       // Work
       if (sections.work) {
-        insertedData.work = await insertItems<LinkInWork>(
+        insertedData.work = await insertItems<LinkedInWork>(
           sections.work,
           "workItem",
           defaultExperience,
@@ -1159,7 +1064,7 @@ export class SectionItemService {
 
       // Projects
       if (sections.projects) {
-        insertedData.projects = await insertItems<LinkInProject>(
+        insertedData.projects = await insertItems<LinkedInProject>(
           sections.projects,
           "projectItem",
           defaultProject,
@@ -1169,7 +1074,7 @@ export class SectionItemService {
 
       // Education
       if (sections.education) {
-        insertedData.education = await insertItems<LinkInEducation>(
+        insertedData.education = await insertItems<LinkedInEducation>(
           sections.education,
           "educationItem",
           defaultEducation,
@@ -1179,7 +1084,7 @@ export class SectionItemService {
 
       // Languages
       if (sections.languages) {
-        insertedData.languages = await insertItems<LinkInLanguage>(
+        insertedData.languages = await insertItems<LinkedInLanguage>(
           sections.languages,
           "languageItem",
           defaultLanguage,
@@ -1189,7 +1094,7 @@ export class SectionItemService {
 
       // Certifications
       if (sections.certifications) {
-        insertedData.certifications = await insertItems<LinkInCertification>(
+        insertedData.certifications = await insertItems<LinkedInCertification>(
           sections.certifications,
           "certificationItem",
           defaultCertification,
