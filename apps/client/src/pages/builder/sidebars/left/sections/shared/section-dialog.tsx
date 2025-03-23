@@ -170,9 +170,9 @@ export const SectionDialog = <T extends SectionItem>({
                     {isUpdate && <PencilSimple />}
                     {isDuplicate && <CopySimple />}
                     <h2>
-                      {isCreate && t`Create ${sectionType} item`}
-                      {isUpdate && t`Update an existing item`}
-                      {isDuplicate && t`Duplicate an existing item`}
+                      {isCreate && t`Create item`}
+                      {isUpdate && t`Update an existing ${sectionType} item`}
+                      {isDuplicate && t`Duplicate an existing ${sectionType} item`}
                     </h2>
                   </div>
                 </DialogTitle>
