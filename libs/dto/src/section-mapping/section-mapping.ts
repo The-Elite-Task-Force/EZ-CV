@@ -16,8 +16,7 @@ export const sectionMappingSchema = z.object({
   publications: z.array(z.string()),
   volunteer: z.array(z.string()),
   references: z.array(z.string()),
-  // OBS: FIX
-  //custom: z.array(z.string()),
+  custom: z.array(z.string()),
 });
 
 export class SectionMappingDto extends createZodDto(sectionMappingSchema) {}
