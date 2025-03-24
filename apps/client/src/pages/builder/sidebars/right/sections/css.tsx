@@ -30,7 +30,6 @@ export const CssSection = () => {
       </header>
 
       <main className="space-y-4">
-        {/* OBS */}
         <div className="flex items-center gap-x-4">
           <Switch
             id="metadata.css.visible"

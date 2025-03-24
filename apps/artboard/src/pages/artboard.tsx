@@ -66,7 +66,6 @@ export const ArtboardPage = () => {
             {metadata.css.value}
           </style>
         )}
-        {/* OBS */}
       </Helmet>
 
       <Outlet />
