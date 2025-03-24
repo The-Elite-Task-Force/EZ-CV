@@ -260,7 +260,8 @@ export class ResumeService {
       });
 
       if (locked) throw new BadRequestException(ERROR_MESSAGE.ResumeLocked);
-      if (!updateResumeDto.data) throw new BadRequestException("Invalid data");
+      if (!updateResumeDto.data && !updateResumeDto.title)
+        throw new BadRequestException("Invalid data");
 
       return await this.prisma.resume.update({
         data: {
