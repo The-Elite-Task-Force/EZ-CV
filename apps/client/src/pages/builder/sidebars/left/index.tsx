@@ -1,4 +1,3 @@
-import { t } from "@lingui/macro";
 //import { Plus, PlusCircle } from "@phosphor-icons/react";
 import type {
   Award,
@@ -54,11 +53,11 @@ export const LeftSidebar = () => {
         <div className="flex flex-col items-center justify-center gap-y-2">
           <SectionIcon
             id="basics"
-            name={t({
-              message: "Basics",
-              context:
-                "The basics sectionItem of a resume consists of User's Picture, Full Name, Location etc.",
-            })}
+            // name={t({
+            //   message: "Basics",
+            //   context:
+            //     "The basics sectionItem of a resume consists of User's Picture, Full Name, Location etc.",
+            // })}
             onClick={() => {
               scrollIntoView("#basics");
             }}

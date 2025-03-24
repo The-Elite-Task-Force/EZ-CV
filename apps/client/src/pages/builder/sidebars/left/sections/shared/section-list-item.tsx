@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { t } from "@lingui/macro";
@@ -100,12 +101,12 @@ export const SectionListItem = ({
             {visible ? (
               <DropdownMenuItem onClick={onToggleVisibility}>
                 <EyeClosed size={14} />
-                <span className="ml-2">{t`Set hidden`}</span>
+                <span className="ml-2">Set hidden</span>
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem onClick={onToggleVisibility}>
                 <Eye size={14} />
-                <span className="ml-2">{t`Set visible`}</span>
+                <span className="ml-2">Set visible</span>
               </DropdownMenuItem>
             )}
             {/* <span className="-ml-0.5">{t`Set hidden`}</span> */}
