@@ -6,12 +6,12 @@ param prefix string = 'ezcv'
   'prod'
 ])
 param dockerTag string = 'latest'
-param name string = '${prefix}-${dockerTag}-blob-storage'
-
 param sku object = {
   name: 'Standard_LRS'
   tier: 'Standard'
 }
+
+var name = '${prefix}${dockerTag}blobstorage'
 
 resource storageAccounts_sta_resource 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: name

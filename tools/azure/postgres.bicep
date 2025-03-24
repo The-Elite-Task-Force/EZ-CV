@@ -1,14 +1,19 @@
 param prefix string = 'ezcv'
-param name string = '${prefix}-postgres-db'
 param sku object = {
   name: 'Standard_B1ms'
   tier: 'Burstable'
 }
 param postgresVersion string = '16'
+@allowed([
+  'latest'
+  'beta'
+  'prod'
+])
+param dockerTag string = 'latest'
 
-resource flexibleServers_ezcv_postgres_db_name_resource 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview' = {
-  name: name
-  location: 'North Europe'
+resource flexibleServers 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview' = {
+  name: '${prefix}-${dockerTag}-postgres-db'
+  location: resourceGroup().location
   sku: sku
   properties: {
     replica: {
@@ -32,6 +37,7 @@ resource flexibleServers_ezcv_postgres_db_name_resource 'Microsoft.DBforPostgreS
     }
     version: postgresVersion
     administratorLogin: 'postgres'
+    administratorLoginPassword: 'postgres'
     availabilityZone: '1'
     backup: {
       backupRetentionDays: 7

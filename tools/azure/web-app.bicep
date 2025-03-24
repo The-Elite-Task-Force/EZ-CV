@@ -1,3 +1,92 @@
+@secure()
+param ACCESS_TOKEN_SECRET string
+@secure()
+param APPLICATIONINSIGHTS_CONNECTION_STRING string 
+@secure()
+param ApplicationInsightsAgent_EXTENSION_VERSION string
+@secure()
+param AZURE_ACCOUNT_KEY string 
+@secure()
+param AZURE_ACCOUNT_NAME string 
+@secure()
+param AZURE_STORAGE_CONTAINER string 
+@secure()
+param CHROME_TOKEN string 
+@secure()
+param CHROME_PORT string 
+@secure()
+param CHROME_URL string 
+@secure()
+param DATABASE_URL string 
+@secure()
+param DOCKER_ENABLE_CI string 
+@secure()
+param DOCKER_REGISTRY_SERVER_PASSWORD string 
+@secure()
+param DOCKER_REGISTRY_SERVER_USERNAME string 
+@secure()
+param DOCKER_REGISTRY_SERVER_URL string 
+@secure()
+param GITHUB_CALLBACK_URL string
+@secure()
+param GITHUB_CLIENT_ID string
+@secure()
+param GITHUB_CLIENT_SECRET string
+@secure()
+param GOOGLE_CALLBACK_URL string
+@secure()
+param GOOGLE_CLIENT_ID string
+@secure()
+param GOOGLE_CLIENT_SECRET string
+@secure()
+param MICROSOFT_AUTHORIZATION_URL string 
+@secure()
+param MICROSOFT_CALLBACK_URL string
+@secure()
+param MICROSOFT_CLIENT_ID string
+@secure()
+param MICROSOFT_CLIENT_SECRET string
+@secure()
+param MICROSOFT_SCOPE string
+@secure()
+param MICROSOFT_TOKEN_URL string 
+@secure()
+param MICROSOFT_USER_INFO_URL string
+@secure()
+param OPENAI_API_KEY string
+@secure()
+param POSTGRES_DB string
+@secure()
+param POSTGRES_PASSWORD string
+@secure()
+param POSTGRES_USER string
+@secure()
+param POSTGRES_PORT string
+@secure()
+param REFRESH_TOKEN_SECRET string
+@secure()
+param STORAGE_ACCESS_KEY string
+@secure()
+param STORAGE_BUCKET string
+@secure()
+param STORAGE_ENDPOINT string
+@secure()
+param STORAGE_PORT string
+@secure()
+param STORAGE_REGION string
+@secure()
+param STORAGE_SECRET_KEY string
+@secure()
+param STORAGE_SKIP_BUCKET_CHECK string
+@secure()
+param STORAGE_URL string
+@secure()
+param STORAGE_USE_SSL string
+@secure()
+param WEBSITES_ENABLE_APP_SERVICE_STORAGE string
+@secure()
+param XDT_MicrosoftApplicationInsights_Mode string
+
 param location string = resourceGroup().location
 param prefix string = 'ezcv'
 @allowed([
@@ -13,10 +102,10 @@ resource serverFarm 'Microsoft.Web/serverfarms@2024-04-01' = {
   name: '${prefix}-ASP-${dockerTag}'
   location: location
   sku: {
-    name: 'P1v2'
-    tier: 'PremiumV2'
-    size: 'P1v2'
-    family: 'P'
+    name: 'B3'
+    tier: 'Basic'
+    size: 'B3'
+    family: 'B'
     capacity: 1
   }
   properties: {
@@ -37,24 +126,6 @@ resource sites 'Microsoft.Web/sites@2024-04-01' = {
   kind: 'app,linux,container'
   properties: {
     enabled: true
-    hostNameSslStates: [
-      {
-        name: 'dev.ezcv.thetechcollective.dev'
-        sslState: 'SniEnabled'
-        thumbprint: 'D63262A7F31712E193A877F36E3F9FE320EBACEB'
-        hostType: 'Standard'
-      }
-      {
-        name: 'ezcv-container-webapp-b0dbezgsd7bgc6ey.northeurope-01.azurewebsites.net'
-        sslState: 'Disabled'
-        hostType: 'Standard'
-      }
-      {
-        name: 'ezcv-container-webapp-b0dbezgsd7bgc6ey.scm.northeurope-01.azurewebsites.net'
-        sslState: 'Disabled'
-        hostType: 'Repository'
-      }
-    ]
     serverFarmId: serverFarm.id
     reserved: true
     isXenon: false
@@ -112,6 +183,188 @@ resource dockerApp 'Microsoft.Web/sites/config@2024-04-01' = {
   parent: sites
   name: 'web'
   properties: {
+    appSettings: [
+      {
+        name: 'ACCESS_TOKEN_SECRET'
+        value: ACCESS_TOKEN_SECRET
+      }
+      {
+      name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+      value: APPLICATIONINSIGHTS_CONNECTION_STRING 
+      }
+      {
+      name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
+      value: ApplicationInsightsAgent_EXTENSION_VERSION 
+      }
+      {
+      name: 'AZURE_ACCOUNT_KEY'
+      value: AZURE_ACCOUNT_KEY
+      }
+      {
+      name: 'AZURE_ACCOUNT_NAME'
+      value: AZURE_ACCOUNT_NAME
+      }
+      {
+      name: 'AZURE_STORAGE_CONTAINER'
+      value: AZURE_STORAGE_CONTAINER
+      }
+      {
+      name: 'CHROME_TOKEN'
+      value: CHROME_TOKEN
+      }
+      {
+      name: 'CHROME_PORT'
+      value: CHROME_PORT
+      }
+      {
+      name: 'CHROME_URL'
+      value: CHROME_URL
+      }
+      {
+      name: 'DATABASE_URL'
+      value: DATABASE_URL
+    }
+    {
+      name: 'DOCKER_ENABLE_CI'
+      value: DOCKER_ENABLE_CI
+    }
+    {
+      name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
+      value: DOCKER_REGISTRY_SERVER_PASSWORD
+    }
+    {
+       name: 'DOCKER_REGISTRY_SERVER_USERNAME'
+      value: DOCKER_REGISTRY_SERVER_USERNAME
+    }
+    {
+      name: 'DOCKER_REGISTRY_SERVER_URL'
+      value: DOCKER_REGISTRY_SERVER_URL
+    }
+    {
+      name: 'GITHUB_CALLBACK_URL'
+      value: GITHUB_CALLBACK_URL
+    }
+    {
+      name: 'GITHUB_CLIENT_ID'
+      value: GITHUB_CLIENT_ID
+    }
+    {
+      name: 'GITHUB_CLIENT_SECRET'
+      value: GITHUB_CLIENT_SECRET
+    }
+    {
+       name: 'GOOGLE_CALLBACK_URL'
+      value: GOOGLE_CALLBACK_URL
+    }
+    {
+      name: 'GOOGLE_CLIENT_ID'
+      value: GOOGLE_CLIENT_ID
+    }
+    {
+      name: 'GOOGLE_CLIENT_SECRET'
+      value: GOOGLE_CLIENT_SECRET
+    }
+    {
+      name: 'MICROSOFT_AUTHORIZATION_URL'
+      value: MICROSOFT_AUTHORIZATION_URL
+    }
+    {
+      name: 'MICROSOFT_CALLBACK_URL'
+      value: MICROSOFT_CALLBACK_URL
+    }
+    {
+      name: 'MICROSOFT_CLIENT_ID'
+      value: MICROSOFT_CLIENT_ID
+    }
+    {
+      name: 'MICROSOFT_CLIENT_SECRET'
+      value: MICROSOFT_CLIENT_SECRET
+    }
+    {
+      name: 'MICROSOFT_SCOPE'
+      value: MICROSOFT_SCOPE
+    }
+    {
+      name: 'MICROSOFT_TOKEN_URL'
+      value: MICROSOFT_TOKEN_URL
+    }
+    {
+      name: 'MICROSOFT_USER_INFO_URL'
+      value: MICROSOFT_USER_INFO_URL
+    }
+    {
+       name: 'OPENAI_API_KEY'
+      value: OPENAI_API_KEY
+    }
+    {
+      name: 'POSTGRES_DB'
+      value: POSTGRES_DB
+    }
+    {
+      name: 'POSTGRES_PASSWORD'
+      value: POSTGRES_PASSWORD
+    }
+    {
+      name: 'POSTGRES_USER'
+      value: POSTGRES_USER
+    }
+    {
+      name: 'POSTGRES_PORT'
+      value: POSTGRES_PORT
+    }
+    {
+      name: 'PUBLIC_URL'
+      value: 'https://${sites.properties.defaultHostName}'
+    }
+    {
+      name: 'REFRESH_TOKEN_SECRET'
+      value: REFRESH_TOKEN_SECRET
+    }
+    {
+      name: 'STORAGE_ACCESS_KEY'
+      value: STORAGE_ACCESS_KEY
+    }
+    {
+      name: 'STORAGE_BUCKET'
+      value: STORAGE_BUCKET
+    }
+    {
+      name: 'STORAGE_ENDPOINT'
+      value: STORAGE_ENDPOINT
+    }
+    {
+      name: 'STORAGE_PORT'
+      value: STORAGE_PORT
+    }
+    {
+      name: 'STORAGE_REGION'
+      value: STORAGE_REGION
+    }
+    {
+      name: 'STORAGE_SECRET_KEY'
+      value: STORAGE_SECRET_KEY
+    }
+    {
+      name: 'STORAGE_SKIP_BUCKET_CHECK'
+      value: STORAGE_SKIP_BUCKET_CHECK
+    }
+    {
+      name: 'STORAGE_URL'
+      value: STORAGE_URL
+    }
+    {
+      name: 'STORAGE_USE_SSL'
+      value: STORAGE_USE_SSL
+    }
+    {
+      name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
+      value: WEBSITES_ENABLE_APP_SERVICE_STORAGE
+    }
+    {
+      name: 'XDT_MicrosoftApplicationInsights_Mode'
+      value: XDT_MicrosoftApplicationInsights_Mode
+    }
+    ]
     numberOfWorkers: 1
     defaultDocuments: [
       'Default.htm'
@@ -183,25 +436,5 @@ resource dockerApp 'Microsoft.Web/sites/config@2024-04-01' = {
     functionsRuntimeScaleMonitoringEnabled: false
     minimumElasticInstanceCount: 1
     azureStorageAccounts: {}
-  }
-}
-
-resource techcollectiveNameBinding 'Microsoft.Web/sites/hostNameBindings@2024-04-01' = {
-  parent: sites
-  name: '${dockerTag}.ezcv.thetechcollective.dev'
-  properties: {
-    siteName: '${prefix}-${dockerTag}-container-webapp'
-    hostNameType: 'Verified'
-    sslState: 'SniEnabled'
-    thumbprint: 'D63262A7F31712E193A877F36E3F9FE320EBACEB'
-  }
-}
-
-resource defaultNameBindings 'Microsoft.Web/sites/hostNameBindings@2024-04-01' = {
-  parent: sites
-  name: '${name}.northeurope-01.azurewebsites.net'
-  properties: {
-    siteName: '${prefix}-${dockerTag}-container-webapp'
-    hostNameType: 'Verified'
   }
 }
