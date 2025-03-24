@@ -15,8 +15,6 @@ export const CssSection = () => {
   const setValue = useResumeStore((state) => state.setValue);
   const css = useResumeStore((state) => state.resume.data.metadata.css);
 
-  console.log(css);
-
   return (
     <section id="css" className="grid gap-y-6">
       <Helmet>
