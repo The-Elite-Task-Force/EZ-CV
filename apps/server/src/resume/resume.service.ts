@@ -44,7 +44,7 @@ export class ResumeService {
     const title = importResumeDto.title || randomTitle;
 
     const basicItemResult = await this.prisma.basicsItem.create({
-      data: { ...importResumeDto.data.basics, userId: userId },
+      data: { ...importResumeDto.data.basics, userId: userId, id: createId() },
     });
 
     const result = await this.prisma.resume.create({

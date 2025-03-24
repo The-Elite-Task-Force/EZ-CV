@@ -69,9 +69,8 @@ export class ResumeController {
       return await this.resumeService.import(user.id, result);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
-        throw new BadRequestException(ERROR_MESSAGE.ResumeSlugAlreadyExists);
+        throw new BadRequestException(error.message);
       }
-
       Logger.error(error);
       throw new InternalServerErrorException(error);
     }
