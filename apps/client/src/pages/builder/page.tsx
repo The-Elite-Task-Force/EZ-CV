@@ -20,6 +20,8 @@ export const mapSections = (sections: Sections, mapping: SectionMappingDto) => {
 
   for (const [key, section] of Object.entries(sections)) {
     if (key === "custom" && typeof section === "object") {
+      //OBS: FIX Custom
+      /*
       result.custom = Object.fromEntries(
         Object.entries(section).map(([customKey, customSection]) => [
           customKey,
@@ -31,6 +33,7 @@ export const mapSections = (sections: Sections, mapping: SectionMappingDto) => {
           },
         ]),
       );
+      */
     } else if (Array.isArray(section.items)) {
       result[key].items = section.items.filter((s: { id: string }) =>
         mapping[key as keyof SectionMappingDto].includes(s.id),

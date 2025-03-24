@@ -673,8 +673,9 @@ export class SectionItemService {
       });
       result.references = references.map((t) => t.referenceItemId);
 
-      const custom = await this.prisma.resumeCustomItemMapping.findMany({ where: { resumeId } });
-      result.custom = custom.map((t) => t.customItemId);
+      // OBS: FIX custom
+      //const custom = await this.prisma.resumeCustomItemMapping.findMany({ where: { resumeId } });
+      //result.custom = custom.map((t) => t.customItemId);
 
       return result;
     } catch (error) {

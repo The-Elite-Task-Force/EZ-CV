@@ -79,7 +79,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.summary.items.entries()) {
       const summaryItemResult = await this.prisma.summaryItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeSummaryItemMapping.create({
         data: { resumeId: result.id, order: index, summaryItemId: summaryItemResult.id },
@@ -88,7 +88,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.awards.items.entries()) {
       const awardItemResult = await this.prisma.awardItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeAwardItemMapping.create({
         data: { resumeId: result.id, order: index, awardItemId: awardItemResult.id },
@@ -97,7 +97,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.certifications.items.entries()) {
       const certificationItemResult = await this.prisma.certificationItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeCertificationItemMapping.create({
         data: {
@@ -110,7 +110,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.education.items.entries()) {
       const educationItemResult = await this.prisma.educationItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeEducationItemMapping.create({
         data: { resumeId: result.id, order: index, educationItemId: educationItemResult.id },
@@ -119,7 +119,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.experience.items.entries()) {
       const workItemResult = await this.prisma.workItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeWorkItemMapping.create({
         data: { resumeId: result.id, order: index, workItemId: workItemResult.id },
@@ -128,7 +128,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.volunteer.items.entries()) {
       const volunteerItemResult = await this.prisma.volunteerItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeVolunteerItemMapping.create({
         data: { resumeId: result.id, order: index, volunteerItemId: volunteerItemResult.id },
@@ -137,7 +137,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.projects.items.entries()) {
       const projectItemResult = await this.prisma.projectItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeProjectItemMapping.create({
         data: { resumeId: result.id, order: index, projectItemId: projectItemResult.id },
@@ -146,7 +146,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.publications.items.entries()) {
       const publicationItemResult = await this.prisma.publicationItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumePublicationItemMapping.create({
         data: { resumeId: result.id, order: index, publicationItemId: publicationItemResult.id },
@@ -155,7 +155,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.references.items.entries()) {
       const referenceItemResult = await this.prisma.referenceItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeReferenceItemMapping.create({
         data: { resumeId: result.id, order: index, referenceItemId: referenceItemResult.id },
@@ -164,7 +164,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.skills.items.entries()) {
       const skillItemResult = await this.prisma.skillItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeSkillItemMapping.create({
         data: { resumeId: result.id, order: index, skillItemId: skillItemResult.id },
@@ -173,7 +173,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.languages.items.entries()) {
       const languageItemResult = await this.prisma.languageItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeLanguageItemMapping.create({
         data: { resumeId: result.id, order: index, languageItemId: languageItemResult.id },
@@ -182,7 +182,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.interests.items.entries()) {
       const interestItemResult = await this.prisma.interestItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeInterestItemMapping.create({
         data: { resumeId: result.id, order: index, interestItemId: interestItemResult.id },
@@ -191,7 +191,7 @@ export class ResumeService {
 
     for (const [index, item] of importResumeDto.data.sections.profiles.items.entries()) {
       const profileItemResult = await this.prisma.profileItem.create({
-        data: { ...item, id: createId() },
+        data: { ...item, userId: userId, id: createId() },
       });
       await this.prisma.resumeProfileItemMapping.create({
         data: { resumeId: result.id, order: index, profileItemId: profileItemResult.id },

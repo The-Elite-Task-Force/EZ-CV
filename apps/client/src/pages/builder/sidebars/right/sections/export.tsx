@@ -6,12 +6,26 @@ import { saveAs } from "file-saver";
 
 import { usePrintResume } from "@/client/services/resume/print";
 import { useResumeStore } from "@/client/stores/resume";
+import { useSectionMappingStore } from "@/client/stores/section-mapping";
 
 import { SectionIcon } from "../shared/section-icon";
 
 const onJsonExport = () => {
   const { resume } = useResumeStore.getState();
-  const filename = `reactive_resume-${resume.id}.json`;
+  const { mappings } = useSectionMappingStore.getState();
+
+  // Iterate over each mapping key (the section name)
+  for (const sectionKey of Object.keys(mappings) as (keyof typeof resume.data.sections)[]) {
+    const allowedIds = mappings[sectionKey]; // array of allowed IDs for this section
+
+    // Check that the section exists, then filter its items by allowed IDs
+    const section = resume.data.sections[sectionKey];
+    if (section) {
+      const section = resume.data.sections[sectionKey] as { items: { id: string }[] };
+      section.items = section.items.filter((item) => allowedIds.includes(item.id));
+    }
+  }
+  const filename = `ezcv-${resume.title}.json`;
   const resumeJSON = JSON.stringify(resume.data, null, 2);
 
   saveAs(new Blob([resumeJSON], { type: "application/json" }), filename);
