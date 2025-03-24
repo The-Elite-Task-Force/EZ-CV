@@ -41,6 +41,10 @@ export class ResumeService {
   async import(userId: string, importResumeDto: ImportResumeDto) {
     const randomTitle = generateRandomName();
 
+    const basicItemResult = await this.prisma.basicsItem.create({
+      data: { ...importResumeDto.data.basics, userId: userId },
+    });
+
     const result = await this.prisma.resume.create({
       data: {
         userId,
@@ -49,18 +53,9 @@ export class ResumeService {
         id: createId(),
         title: importResumeDto.title ?? randomTitle,
         slug: importResumeDto.slug ?? slugify(randomTitle),
+        basicsItemId: basicItemResult.id,
       },
     });
-
-    // Basics is not done yet
-    /*
-    const basicItemResult = await this.prisma.basicsItem.create({
-      data: { ...importResumeDto.data.basics, id: createId() },
-    });
-    await this.prisma.resumeBasicsItemMapping.create({
-      data: { resumeId: result.id, order: 0, basicsItemId: basicItemResult.id },
-    });
-    */
 
     for (const [index, item] of importResumeDto.data.sections.summary.items.entries()) {
       const summaryItemResult = await this.prisma.summaryItem.create({
@@ -184,6 +179,15 @@ export class ResumeService {
     }
 
     //OBS: Fix custom section
+    // This is just pseudo code, it never worked
+    // for (const [index, item] of importResumeDto.data.sections.custom.items.entries()) {
+    //   const customItemResult = await this.prisma.customItem.create({
+    //     data: { ...item, userId: userId, id: createId() },
+    //   });
+    //   await this.prisma.resumeCustomItemMapping.create({
+    //     data: { resumeId: result.id, order: index, customItemId: customItemResult.id },
+    //   });
+    // }
 
     return result;
   }
