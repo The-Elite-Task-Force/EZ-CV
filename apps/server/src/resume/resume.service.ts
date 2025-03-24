@@ -41,6 +41,9 @@ export class ResumeService {
   async import(userId: string, importResumeDto: ImportResumeDto) {
     const randomTitle = generateRandomName();
 
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const title = importResumeDto.title || randomTitle;
+
     const basicItemResult = await this.prisma.basicsItem.create({
       data: { ...importResumeDto.data.basics, userId: userId },
     });
@@ -51,8 +54,8 @@ export class ResumeService {
         visibility: "private",
         data: importResumeDto.data,
         id: createId(),
-        title: importResumeDto.title ?? randomTitle,
-        slug: importResumeDto.slug ?? slugify(randomTitle),
+        title: title,
+        slug: slugify(title),
         basicsItemId: basicItemResult.id,
       },
     });
