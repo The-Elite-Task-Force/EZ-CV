@@ -15,7 +15,6 @@ import { ApiTags } from "@nestjs/swagger";
 import { User as UserEntity } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import {
-  APILinkResumeToItemDto,
   CreateResumeDto,
   importResumeSchema,
   ResumeDto,
@@ -177,19 +176,6 @@ export class ResumeController {
         throw new InternalServerErrorException(error);
       }
       return { message: "Resume set as profile successfully" };
-    } catch (error) {
-      Logger.error(error);
-      throw new InternalServerErrorException(error);
-    }
-  }
-
-  @Post(":id/link")
-  @UseGuards(TwoFactorGuard)
-  async linkResumeToItem(@Param("id") id: string, @Body() link: APILinkResumeToItemDto) {
-    const { format, itemId, order } = link;
-    try {
-      await this.resumeService.linkResumeToItem({ resumeId: id, itemId, order }, format);
-      return { message: "Resume and item linked succesfully" };
     } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException(error);

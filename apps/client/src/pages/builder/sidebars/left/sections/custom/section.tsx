@@ -1,7 +1,7 @@
 import { t, Trans } from "@lingui/macro";
 import { createId } from "@paralleldrive/cuid2";
 import { DotsSixVertical, Envelope, Plus, X } from "@phosphor-icons/react";
-import type { CustomField as ICustomField } from "@reactive-resume/schema";
+import { type CustomField as ICustomField, defaultBasics } from "@reactive-resume/schema";
 import {
   Button,
   Input,
@@ -13,7 +13,7 @@ import {
 import { cn } from "@reactive-resume/utils";
 import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
 
-import { useResumeStore } from "@/client/stores/resume";
+import { useSectionsStore } from "@/client/stores/section";
 
 type CustomFieldProps = {
   field: ICustomField;
@@ -118,35 +118,65 @@ export const CustomField = ({ field, onChange, onRemove }: CustomFieldProps) => 
 
 type Props = {
   className?: string;
+  id: string;
 };
 
-export const CustomFieldsSection = ({ className }: Props) => {
-  const setValue = useResumeStore((state) => state.setValue);
-  const customFields = useResumeStore((state) => state.resume.data.basics.customFields);
+export const CustomFieldsSection = ({ className, id }: Props) => {
+  const setValue = useSectionsStore((state) => state.setValue);
+  const basicsItems = useSectionsStore((state) => state.sections.basics);
+  const basicsItem = basicsItems.find((item) => item.id === id) ?? defaultBasics;
+
+  const customFields = basicsItem.customFields;
 
   const onAddCustomField = () => {
-    setValue("basics.customFields", [
-      ...customFields,
-      { id: createId(), icon: "envelope", name: "", value: "" },
-    ]);
+    setValue(
+      `sections.basics`,
+      basicsItems.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              customFields: [
+                ...customFields,
+                { id: createId(), icon: "envelope", name: "", value: "" },
+              ],
+            }
+          : item,
+      ),
+    );
   };
 
   const onChangeCustomField = (field: ICustomField) => {
-    const index = customFields.findIndex((item) => item.id === field.id);
-    const newCustomFields = JSON.parse(JSON.stringify(customFields));
-    newCustomFields[index] = field;
-
-    setValue("basics.customFields", newCustomFields);
+    setValue(
+      `sections.basics`,
+      basicsItems.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              customFields: item.customFields.map((f) => (f.id === field.id ? field : f)),
+            }
+          : item,
+      ),
+    );
   };
 
   const onReorderCustomFields = (values: ICustomField[]) => {
-    setValue("basics.customFields", values);
+    setValue(
+      `sections.basics`,
+      basicsItems.map((item) => (item.id === id ? { ...item, customFields: values } : item)),
+    );
   };
 
-  const onRemoveCustomField = (id: string) => {
+  const onRemoveCustomField = (fieldId: string) => {
     setValue(
-      "basics.customFields",
-      customFields.filter((field) => field.id !== id),
+      `sections.basics`,
+      basicsItems.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              customFields: item.customFields.filter((field) => field.id !== fieldId),
+            }
+          : item,
+      ),
     );
   };
 

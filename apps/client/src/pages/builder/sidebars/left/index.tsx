@@ -26,7 +26,6 @@ import { UserAvatar } from "@/client/components/user-avatar";
 import { UserOptions } from "@/client/components/user-options";
 import { useMapSectionsToResume } from "@/client/hooks/use-map-sections-to-resume";
 
-//import { useResumeStore } from "@/client/stores/resume";
 import { SectionBase } from "./sections/shared/section-base";
 import { SectionIcon } from "./sections/shared/section-icon";
 

@@ -1,5 +1,4 @@
 /* eslint-disable lingui/no-unlocalized-strings */
-import { t } from "@lingui/macro";
 import type { ResumeDto, SectionMappingDto } from "@reactive-resume/dto";
 import type { Sections } from "@reactive-resume/schema";
 import { useCallback, useEffect } from "react";
@@ -19,6 +18,7 @@ export const mapSections = (sections: Sections, mapping: SectionMappingDto) => {
   const result = JSON.parse(JSON.stringify(sections));
 
   for (const [key, section] of Object.entries(sections)) {
+    if (key === "basics") continue;
     if (key === "custom" && typeof section === "object") {
       //OBS: FIX Custom
       /*
@@ -56,35 +56,6 @@ export const BuilderPage = () => {
   useSectionMappings(resume.id);
   useSections();
 
-  const defaultBasics = {
-    id: "",
-    userId: "",
-    updatedAt: "",
-    name: "",
-    headline: "",
-    email: "",
-    phone: "",
-    location: "",
-    summary: "",
-    url: {
-      label: "",
-      href: "",
-    },
-    customFields: [],
-    birthdate: "",
-    picture: {
-      url: "",
-      size: 64,
-      aspectRatio: 1,
-      borderRadius: 0,
-      effects: {
-        hidden: false,
-        border: false,
-        grayscale: false,
-      },
-    },
-  };
-
   const syncResumeToArtboard = useCallback(() => {
     const latestMappings = useSectionMappingStore.getState().mappings;
     if (Object.values(latestMappings).length === 0) {
@@ -98,10 +69,7 @@ export const BuilderPage = () => {
       const message = {
         type: "SET_RESUME",
         payload: {
-          basics:
-            latestResume.data.sections.basics.items.length > 0
-              ? latestResume.data.sections.basics.items[0]
-              : defaultBasics,
+          basics: latestResume.data.basics,
           sections: mapSections(latestResume.data.sections, latestMappings),
           metadata: latestResume.data.metadata,
         },
