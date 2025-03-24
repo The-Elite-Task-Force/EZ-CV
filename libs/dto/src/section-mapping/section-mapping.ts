@@ -17,7 +17,7 @@ export const sectionMappingSchema = z.object({
   publications: z.array(z.string()),
   volunteer: z.array(z.string()),
   references: z.array(z.string()),
-  // OBS: FIX custom
+  // OBS: FIX
   //custom: z.array(z.string()),
 });
 

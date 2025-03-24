@@ -96,3 +96,8 @@ export function getSectionFormat(sectionId: string): SECTION_FORMAT | undefined 
 
 export class SectionsDto extends createZodDto(jsonSectionsSchema) {}
 export class SectionItemDto extends createZodDto(sectionSchema) {}
+const AllSectionSchemasWrapper = z.object({
+  data: AllSectionSchemas,
+});
+
+export class AllSectionSchemasDto2 extends createZodDto(AllSectionSchemasWrapper) {}
