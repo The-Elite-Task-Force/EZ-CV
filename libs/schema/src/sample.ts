@@ -383,6 +383,7 @@ export const sampleResume: ResumeData = {
     ],
     css: {
       value: "* {\n\toutline: 1px solid #000;\n\toutline-offset: 4px;\n}",
+      visible: false,
     },
     page: {
       margin: 14,
