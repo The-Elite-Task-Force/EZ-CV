@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/macro";
 import { defaultSummary, summarySchema } from "@reactive-resume/schema";
@@ -14,6 +15,7 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 import { AiActions } from "@/client/components/ai-actions";
+import { getSectionNameFromId } from "@/client/utils/section-names";
 
 import { SectionDialog } from "../sections/shared/section-dialog";
 
@@ -26,9 +28,18 @@ export const SummaryDialog = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const sectionTypeId = "summary";
+
   return (
-    <SectionDialog<FormValues> id="summary" form={form} defaultValues={defaultSummary}>
+    <SectionDialog<FormValues> id={sectionTypeId} form={form} defaultValues={defaultSummary}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <header className="flex items-center justify-between sm:col-span-2">
+          <div className="flex items-center gap-x-4">
+            <h2 className="line-clamp-1 text-2xl font-bold lg:text-3xl">
+              {getSectionNameFromId(sectionTypeId)}
+            </h2>
+          </div>
+        </header>
         <FormField
           name="name"
           control={form.control}

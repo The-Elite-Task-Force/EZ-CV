@@ -40,7 +40,6 @@ export class ResumeService {
 
   async import(userId: string, importResumeDto: ImportResumeDto) {
     const randomTitle = generateRandomName();
-
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const title = importResumeDto.title || randomTitle;
 

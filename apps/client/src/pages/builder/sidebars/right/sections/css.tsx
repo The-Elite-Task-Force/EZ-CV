@@ -30,11 +30,10 @@ export const CssSection = () => {
       </header>
 
       <main className="space-y-4">
-        {/* OBS */}
         <div className="flex items-center gap-x-4">
           <Switch
             id="metadata.css.visible"
-            checked={true}
+            checked={css.visible}
             onCheckedChange={(checked) => {
               setValue("metadata.css.visible", checked);
             }}

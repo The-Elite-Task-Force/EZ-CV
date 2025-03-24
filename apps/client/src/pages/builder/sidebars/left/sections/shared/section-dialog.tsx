@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { createId } from "@paralleldrive/cuid2";
 import { CopySimple, PencilSimple, Plus } from "@phosphor-icons/react";
@@ -170,9 +171,9 @@ export const SectionDialog = <T extends SectionItem>({
                     {isUpdate && <PencilSimple />}
                     {isDuplicate && <CopySimple />}
                     <h2>
-                      {isCreate && t`Create ${sectionType} item`}
-                      {isUpdate && t`Update an existing item`}
-                      {isDuplicate && t`Duplicate an existing item`}
+                      {isCreate && "Create item"}
+                      {isUpdate && `Update an existing ${sectionType} item`}
+                      {isDuplicate && `Duplicate an existing ${sectionType} item`}
                     </h2>
                   </div>
                 </DialogTitle>

@@ -1,4 +1,5 @@
 export enum SECTION_NAMES {
+  basics = "Basic",
   interests = "Interest",
   education = "Education",
   experience = "Experience",
