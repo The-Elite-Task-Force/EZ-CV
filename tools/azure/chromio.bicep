@@ -1,3 +1,6 @@
+@secure()
+param CHROME_TOKEN string
+
 param prefix string = 'ezcv'
 @allowed([
   'latest'
@@ -37,7 +40,7 @@ resource chromium_container_name_resource 'Microsoft.ContainerInstance/container
             }
             {
               name: 'TOKEN'
-              value: 'chrome_token'
+              value: CHROME_TOKEN
             }
             {
               name: 'PROXY_HOST'

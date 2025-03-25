@@ -94,6 +94,7 @@ module chromio './chromio.bicep' = {
     prefix: prefix
     location: rg.location
     sku: sku
+    CHROME_TOKEN: kv.getSecret('CHROME-TOKEN')
   }
 }
 
@@ -104,5 +105,7 @@ module postgres './postgres.bicep' = {
     prefix: prefix
     dockerTag: dockerTag
     postgresVersion: '16'
+    POSTGRES_USER: kv.getSecret('POSTGRES-USER')
+    POSTGRES_PASSWORD: kv.getSecret('POSTGRES-PASSWORD')
   }
 }

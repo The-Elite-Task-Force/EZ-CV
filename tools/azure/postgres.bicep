@@ -1,3 +1,8 @@
+@secure()
+param POSTGRES_USER string
+@secure()
+param POSTGRES_PASSWORD string
+
 param prefix string = 'ezcv'
 param sku object = {
   name: 'Standard_B1ms'
@@ -36,8 +41,8 @@ resource flexibleServers 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-p
       passwordAuth: 'Enabled'
     }
     version: postgresVersion
-    administratorLogin: 'postgres'
-    administratorLoginPassword: 'postgres'
+    administratorLogin: POSTGRES_USER
+    administratorLoginPassword: POSTGRES_PASSWORD
     availabilityZone: '1'
     backup: {
       backupRetentionDays: 7
