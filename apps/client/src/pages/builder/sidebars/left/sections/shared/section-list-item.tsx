@@ -79,21 +79,21 @@ export const SectionListItem = ({
         <DropdownMenu>
           <div
             className={cn(
-              "flex w-full cursor-context-menu items-center justify-between p-4 hover:bg-secondary-accent",
+              "flex w-full cursor-context-menu items-center justify-between p-2 hover:bg-secondary-accent",
               !visible && "opacity-50",
             )}
           >
             <DropdownMenuTrigger asChild>
               <div className="flex-1">
-                <h4 className="font-medium leading-relaxed">{title}</h4>
+                <h4 className="text-xs font-medium leading-relaxed">{title}</h4>
                 {description && <p className="text-xs leading-relaxed opacity-50">{description}</p>}
               </div>
             </DropdownMenuTrigger>
             <div className="flex size-6 cursor-pointer items-center justify-center">
               {visible ? (
-                <Eye size={20} onClick={onToggleVisibility} />
+                <Eye size={16} onClick={onToggleVisibility} />
               ) : (
-                <EyeClosed size={20} onClick={onToggleVisibility} />
+                <EyeClosed size={16} onClick={onToggleVisibility} />
               )}
             </div>
           </div>

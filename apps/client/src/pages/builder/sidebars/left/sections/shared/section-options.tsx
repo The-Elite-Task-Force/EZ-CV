@@ -58,10 +58,6 @@ export const SectionOptions = ({ id }: Props) => {
     setValue(`sections.${id}.separateLinks`, checked);
   };
 
-  const toggleVisibility = () => {
-    // setValue(`sections.${id}.visible`, !section.visible);
-  };
-
   const onResetName = () => {
     setValue(`sections.${id}.name`, originalName);
   };
@@ -88,10 +84,6 @@ export const SectionOptions = ({ id }: Props) => {
       <DropdownMenuContent className="mr-4 w-48">
         {hasItems && (
           <>
-            <DropdownMenuItem onClick={onCreate}>
-              <Plus />
-              <span className="ml-2">{t`Add a new item`}</span>
-            </DropdownMenuItem>
             <DropdownMenuCheckboxItem
               checked={section.separateLinks}
               onCheckedChange={toggleSeperateLinks}
@@ -101,12 +93,7 @@ export const SectionOptions = ({ id }: Props) => {
             <DropdownMenuSeparator />
           </>
         )}
-        {/* TODO - Fix true statement with visibility check */}
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={toggleVisibility}>
-            {true ? <Eye /> : <EyeSlash />}
-            <span className="ml-2">{true ? t`Hide` : t`Show`}</span>
-          </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <PencilSimple />

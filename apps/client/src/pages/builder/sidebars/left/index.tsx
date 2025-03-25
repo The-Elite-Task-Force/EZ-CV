@@ -163,7 +163,7 @@ export const LeftSidebar = () => {
       </div>
 
       <ScrollArea orientation="vertical" className="h-screen flex-1 pb-16 lg:pb-0">
-        <div ref={containterRef} className="grid gap-y-10 p-6 @container/left">
+        <div ref={containterRef} className="grid gap-y-2 p-6 @container/left">
           <SectionBase<Basics>
             id="basics"
             title={(item) => item.name}

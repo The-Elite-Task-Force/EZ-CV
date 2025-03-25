@@ -15,13 +15,14 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { t } from "@lingui/macro";
-import { Plus } from "@phosphor-icons/react";
+import { CaretDown, CaretRight, Plus } from "@phosphor-icons/react";
 import type { SectionMappingDto, SectionMappingItemDto } from "@reactive-resume/dto";
 import type { SectionItem, SectionKey, SectionWithItem } from "@reactive-resume/schema";
 import { Button } from "@reactive-resume/ui";
 import { cn } from "@reactive-resume/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import get from "lodash.get";
+import { useState } from "react";
 
 import {
   useCreateSectionMapping,
@@ -31,7 +32,6 @@ import { useDialog } from "@/client/stores/dialog";
 import { useResumeStore } from "@/client/stores/resume";
 import { useSectionMappingStore } from "@/client/stores/section-mapping";
 
-import { SectionIcon } from "./section-icon";
 import { SectionListItem } from "./section-list-item";
 import { SectionOptions } from "./section-options";
 
@@ -63,6 +63,7 @@ const addToMapSections = (
 
 export const SectionBase = <T extends SectionItem>({ id, title, description }: Props<T>) => {
   const { open } = useDialog(id);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const mappingData = useSectionMappingStore((state) => state.mappings);
 
@@ -142,82 +143,96 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="grid gap-y-6"
+      className="grid gap-y-4"
     >
-      <header className="flex items-center justify-between">
-        <div className="flex items-center gap-x-4">
-          <SectionIcon id={id} size={18} />
-          <h2 className="line-clamp-1 text-2xl font-bold lg:text-3xl">{section.name}</h2>
-        </div>
+      <button
+        className="ml-2"
+        onClick={() => {
+          setIsExpanded(!isExpanded);
+        }}
+      >
+        <header className="flex items-center justify-between">
+          <div className="flex items-center gap-x-4">
+            {isExpanded ? <CaretDown size={18} /> : <CaretRight size={18} />}
+            <h2 className="line-clamp-1 text-lg font-bold lg:text-xl">{section.name}</h2>
+          </div>
+          <div className="flex items-center gap-x-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(event) => {
+                event.stopPropagation();
+                onCreate();
+              }}
+            >
+              <Plus size={14} />
+            </Button>
+            <SectionOptions id={id} />
+          </div>
+        </header>
+      </button>
 
-        <div className="flex items-center gap-x-2">
-          <SectionOptions id={id} />
-        </div>
-      </header>
+      {isExpanded && (
+        <main className={cn("grid transition-opacity")}>
+          {section.items.length === 0 && (
+            <Button
+              variant="outline"
+              className="gap-x-2 border-dashed py-2 leading-relaxed hover:bg-secondary-accent"
+              onClick={onCreate}
+            >
+              <Plus size={12} />
+              <span className="font-medium lg:text-xs">
+                {t({
+                  message: "Add a new item",
+                  context: "For example, add a new work experience, or add a new profile.",
+                })}
+              </span>
+            </Button>
+          )}
 
-      <main className={cn("grid transition-opacity")}>
-        {section.items.length === 0 && (
-          <Button
-            variant="outline"
-            className="gap-x-2 border-dashed py-6 leading-relaxed hover:bg-secondary-accent"
-            onClick={onCreate}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            modifiers={[restrictToParentElement]}
+            onDragEnd={onDragEnd}
           >
-            <Plus size={14} />
-            <span className="font-medium">
-              {t({
-                message: "Add a new item",
-                context: "For example, add a new work experience, or add a new profile.",
-              })}
-            </span>
-          </Button>
-        )}
+            <SortableContext items={section.items} strategy={verticalListSortingStrategy}>
+              <AnimatePresence>
+                {section.items.map((item, index) => (
+                  <SectionListItem
+                    key={item.id}
+                    id={item.id}
+                    title={title(item as T)}
+                    description={description?.(item as T)}
+                    visible={
+                      id === "basics"
+                        ? item.id === resume.data.basics.id
+                        : mappingData[id as keyof SectionMappingDto].includes(item.id)
+                    }
+                    onUpdate={() => {
+                      onUpdate(item as T);
+                    }}
+                    onDelete={() => {
+                      onDelete(item as T);
+                    }}
+                    onDuplicate={() => {
+                      onDuplicate(item as T);
+                    }}
+                    onToggleVisibility={() => {
+                      void onToggleVisibility(item as T, index);
+                    }}
+                  />
+                ))}
+              </AnimatePresence>
+            </SortableContext>
+          </DndContext>
+        </main>
+      )}
 
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          modifiers={[restrictToParentElement]}
-          onDragEnd={onDragEnd}
-        >
-          <SortableContext items={section.items} strategy={verticalListSortingStrategy}>
-            <AnimatePresence>
-              {section.items.map((item, index) => (
-                <SectionListItem
-                  key={item.id}
-                  id={item.id}
-                  title={title(item as T)}
-                  description={description?.(item as T)}
-                  visible={
-                    id === "basics"
-                      ? item.id === resume.data.basics.id
-                      : mappingData[id as keyof SectionMappingDto].includes(item.id)
-                  }
-                  onUpdate={() => {
-                    onUpdate(item as T);
-                  }}
-                  onDelete={() => {
-                    onDelete(item as T);
-                  }}
-                  onDuplicate={() => {
-                    onDuplicate(item as T);
-                  }}
-                  onToggleVisibility={() => {
-                    void onToggleVisibility(item as T, index);
-                  }}
-                />
-              ))}
-            </AnimatePresence>
-          </SortableContext>
-        </DndContext>
-      </main>
-
-      {section.items.length > 0 && (
+      {section.items.length > 0 && isExpanded && (
         <footer className="flex items-center justify-end">
-          <Button
-            variant="outline"
-            className="ml-auto gap-x-2 text-xs lg:text-sm"
-            onClick={onCreate}
-          >
-            <Plus />
+          <Button variant="outline" className="ml-auto gap-x-1 px-2 lg:text-xs" onClick={onCreate}>
+            <Plus size={12} />
             <span>
               {t({
                 message: "Add a new item",
