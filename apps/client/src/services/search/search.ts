@@ -6,7 +6,7 @@ import { axios } from "@/client/libs/axios";
 
 export const fetchSearchResults = async (query: string, totalResults: number) => {
   const response = await axios.get<SearchResultDto[], AxiosResponse<SearchResultDto[]>>(
-    `http://localhost:5173/api/search?query=${encodeURIComponent(query)}&k=${totalResults}`,
+    `search?query=${encodeURIComponent(query)}&k=${totalResults}`,
   );
   return response.data;
 };
