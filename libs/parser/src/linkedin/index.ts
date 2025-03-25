@@ -194,9 +194,6 @@ export class LinkedInParser implements Parser<JSZip, LinkedIn> {
           description: reference.Company,
           summary: reference.Text ?? "",
           url: defaultUrl,
-          email: "",
-          phone: "",
-          relationship: "",
         });
       }
     }
