@@ -7,6 +7,7 @@ import { languageSchema } from "./language";
 import { positionSchema } from "./position";
 import { profileSchema } from "./profile";
 import { projectSchema } from "./project";
+import { referenceSchema } from "./reference";
 import { skillSchema } from "./skill";
 
 export const linkedInSchema = z.object({
@@ -18,6 +19,7 @@ export const linkedInSchema = z.object({
   Positions: z.array(positionSchema).optional(),
   Projects: z.array(projectSchema).optional(),
   Skills: z.array(skillSchema).optional(),
+  Recommendations_Received: z.array(referenceSchema).optional(),
 });
 
 export type LinkedIn = z.infer<typeof linkedInSchema>;

@@ -10,6 +10,7 @@ import {
   LinkedInImportSections,
   LinkedInLanguage,
   LinkedInProject,
+  LinkedInReference,
   LinkedInSkill,
   LinkedInWork,
   ResumeDto,
@@ -24,6 +25,7 @@ import {
   defaultExperience,
   defaultLanguage,
   defaultProject,
+  defaultReference,
   defaultSkill,
 } from "@reactive-resume/schema";
 import { PrismaService } from "nestjs-prisma";
@@ -1099,6 +1101,16 @@ export class SectionItemService {
           "certificationItem",
           defaultCertification,
           SECTION_FORMAT.Certifications,
+        );
+      }
+
+      // References
+      if (sections.references) {
+        insertedData.references = await insertItems<LinkedInReference>(
+          sections.references,
+          "referenceItem",
+          defaultReference,
+          SECTION_FORMAT.References,
         );
       }
 

@@ -165,13 +165,13 @@ export const linkedInImportSectionsSchema = z.object({
   education: z.array(linkedInEducationSchema).optional(),
   languages: z.array(linkedInLanguageSchema).optional(),
   certifications: z.array(linkedInCertificationSchema).optional(),
+  references: z.array(linkedInReferenceSchema).optional(),
 
   // These are not currently included in the LinkedIn zip file, but it needs to be double checked before deleted
 
   // awards: awardSchema.optional(),
   // interests: interestSchema.optional(),
   // volunteer: volunteerSchema.optional(),
-  // references: referenceSchema.optional(),
   // publications: publicationSchema.optional(),
   // certifications: sectionSchema
   //   .extend({
@@ -206,6 +206,7 @@ export const transformLinkedInData = (data: ResumeData): LinkedInImportSections 
     education: data.sections.education.items,
     languages: data.sections.languages.items,
     certifications: data.sections.certifications.items,
+    references: data.sections.references.items,
   };
 
   return transformedData;
