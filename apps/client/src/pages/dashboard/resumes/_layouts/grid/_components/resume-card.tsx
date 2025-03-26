@@ -69,10 +69,10 @@ export const ResumeCard = ({ resume }: Props) => {
   };
 
   return (
-    <div className="relative" onDoubleClick={onOpen}>
+    <div className="group relative" onDoubleClick={onOpen}>
       <DropdownMenu>
         <DropdownMenuTrigger className="pointer-events-none text-left">
-          <BaseCard className="pointer-events-auto cursor-context-menu space-y-0">
+          <BaseCard className="pointer-events-auto relative cursor-context-menu space-y-0">
             <AnimatePresence>
               {resume.locked && (
                 <motion.div
@@ -99,12 +99,18 @@ export const ResumeCard = ({ resume }: Props) => {
               <h4 className="line-clamp-2 font-medium">{resume.title}</h4>
               <p className="line-clamp-1 text-xs opacity-75">{t`Last updated ${lastUpdated}`}</p>
             </div>
-
             <img
               src={`/templates/jpg/${template}.jpg`}
               alt={template}
               className="rounded-sm opacity-80"
             />
+            <button
+              className="absolute right-2 top-2 hidden items-center rounded bg-white p-2 text-gray-700 shadow-md hover:bg-gray-100 group-hover:flex"
+              onClick={onDuplicate}
+            >
+              <CopySimple size={16} className="mr-1" />
+              {t`Duplicate`}
+            </button>
           </BaseCard>
         </DropdownMenuTrigger>
 
