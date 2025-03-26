@@ -22,8 +22,10 @@ import { Button } from "@reactive-resume/ui";
 import { cn } from "@reactive-resume/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import get from "lodash.get";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { SearchBar } from "@/client/components/searchbar";
+import { sectionItemFilterKeys } from "@/client/constants/search-filter-keys";
 import {
   useCreateSectionMapping,
   useDeleteSectionMapping,
@@ -74,6 +76,10 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
     get(state.resume.data.sections, id),
   ) as SectionWithItem<T>;
 
+  // Same issue as below obviously
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const [filteredItems, setFilteredItems] = useState<SectionItem[]>([]);
+
   const resume = useResumeStore((state) => state.resume);
   const { id: resumeId } = resume;
 
@@ -86,6 +92,13 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (section) {
+      setFilteredItems(section.items);
+    }
+  }, [section]);
 
   //Should be fixed though, this means we don't actually know what our data is and have typed it incorrectly
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -174,6 +187,13 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
 
       {isExpanded && (
         <main className={cn("grid transition-opacity")}>
+          <span className="pb-2">
+            <SearchBar<SectionItem>
+              items={section.items}
+              filterKeys={sectionItemFilterKeys}
+              onFilter={setFilteredItems}
+            />
+          </span>
           {section.items.length === 0 && (
             <Button
               variant="outline"
@@ -189,7 +209,6 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
               </span>
             </Button>
           )}
-
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -198,7 +217,7 @@ export const SectionBase = <T extends SectionItem>({ id, title, description }: P
           >
             <SortableContext items={section.items} strategy={verticalListSortingStrategy}>
               <AnimatePresence>
-                {section.items.map((item, index) => (
+                {filteredItems.map((item, index) => (
                   <SectionListItem
                     key={item.id}
                     id={item.id}
