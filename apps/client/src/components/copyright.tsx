@@ -33,6 +33,6 @@ export const Copyright = ({ className }: Props) => (
     </span>
     <span className="text-xs">Based on a project by Amruth Pillai</span>
 
-    <span className="mt-4">EzCV {"v" + appVersion}</span>
+    <span className="mt-4">EzCV {appVersion}</span>
   </div>
 );
