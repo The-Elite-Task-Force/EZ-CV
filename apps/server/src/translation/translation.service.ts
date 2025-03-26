@@ -54,6 +54,7 @@ export class TranslationService {
           progress: data.translationProgress,
           editorCode: data.language.editorCode,
           locale: data.language.locale,
+          countryCode: "",
         } satisfies Language;
       });
     } catch {

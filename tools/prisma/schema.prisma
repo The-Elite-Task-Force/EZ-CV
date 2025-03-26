@@ -90,6 +90,7 @@ model Resume {
   updatedAt  DateTime    @updatedAt
   basicsItemId String?  
   basicsItem  BasicsItem? @relation(fields: [basicsItemId], references: [id], onDelete: SetNull)
+  language   CountryCodesEnum @default(US)
 
   TeamsMapping                   TeamsMapping[]
   ResumeProfileItemMapping       ResumeProfileItemMapping[]
@@ -110,6 +111,52 @@ model Resume {
   @@unique([userId, id])
   @@unique([userId, slug])
   @@index(fields: [userId])
+}
+
+enum CountryCodesEnum {
+  ZA
+  AL
+  ET
+  SA
+  BD
+  BG
+  CN
+  TW
+  CZ
+  DK
+  NL
+  US
+  FI
+  FR
+  DE
+  GR
+  IL
+  HU
+  ID
+  IT
+  JP
+  KH
+  KR
+  LV
+  LT
+  MY
+  NP
+  NO
+  IR
+  PL
+  PT
+  BR
+  RO
+  RU
+  SP
+  ES
+  SE
+  IN
+  TH
+  TR
+  UA
+  UZ
+  VN
 }
 
 model Statistics {
