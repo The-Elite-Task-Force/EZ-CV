@@ -19,6 +19,14 @@ export class CompanyService {
     });
   }
 
+  async getCompanies(userId: string): Promise<CompanyDto[]> {
+    const mappings = await this.prisma.companyMapping.findMany({
+      where: { userId, status: COMPANY_STATUS.ACCEPTED },
+      include: { company: true },
+    });
+    return mappings.map((mapping) => mapping.company);
+  }
+
   async getCompanyById(id: string): Promise<CompanyDto> {
     return this.prisma.company.findUniqueOrThrow({
       where: { id },
