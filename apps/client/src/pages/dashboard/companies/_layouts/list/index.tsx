@@ -4,10 +4,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CompanyListItem } from "@/client/pages/dashboard/companies/_layouts/list/_components/company-item";
 import { CreateCompanyListItem } from "@/client/pages/dashboard/companies/_layouts/list/_components/create-item";
 import { BaseListItem } from "@/client/pages/dashboard/resumes/_layouts/list/_components/base-item";
-import { useOwnedCompanies } from "@/client/services/company/company";
+import { useCompanies } from "@/client/services/company/company";
 
 export const CompanyListView = () => {
-  const { companies, loading } = useOwnedCompanies();
+  const { companies, loading } = useCompanies();
 
   return (
     <div className="grid gap-y-2">

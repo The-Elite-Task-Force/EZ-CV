@@ -23,9 +23,9 @@ export const useCreateCompany = () => {
   } = useMutation({
     mutationFn: createCompany,
     onSuccess: (data) => {
-      queryClient.setQueryData<CompanyDto>(["company", { id: data.id }], data);
+      queryClient.setQueryData<CompanyDto>(["owned-companies", { id: data.id }], data);
 
-      queryClient.setQueryData<CompanyDto[]>(["companies"], (cache) => {
+      queryClient.setQueryData<CompanyDto[]>(["owned-companies"], (cache) => {
         if (!cache) return [data];
         return [...cache, data];
       });

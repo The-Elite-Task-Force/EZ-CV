@@ -36,7 +36,8 @@ export class CompanyController {
   @UseGuards(TwoFactorGuard)
   async get(@User() user: UserEntity) {
     try {
-      return await this.companyService.getCompanies(user.id);
+      const data = await this.companyService.getCompanies(user.id);
+      return data;
     } catch (error) {
       Logger.log(error);
       throw new InternalServerErrorException(error);
@@ -47,7 +48,8 @@ export class CompanyController {
   @UseGuards(TwoFactorGuard)
   async getByOwnerId(@User() user: UserEntity) {
     try {
-      return await this.companyService.getCompanyByOwnerId(user.id);
+      const data = await this.companyService.getCompanyByOwnerId(user.id);
+      return data;
     } catch (error) {
       Logger.log(error);
       throw new InternalServerErrorException(error);

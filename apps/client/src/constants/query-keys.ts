@@ -14,3 +14,4 @@ export const SECTIONS_KEY: QueryKey = ["sections"];
 export const SECTION_MAPPING_KEY: QueryKey = ["mappings", "id"];
 
 export const COMPANIES_KEY: QueryKey = ["companies"];
+export const OWNCOMPANIES_KEY: QueryKey = ["owned-companies"];
