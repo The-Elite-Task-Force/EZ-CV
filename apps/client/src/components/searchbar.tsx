@@ -1,17 +1,13 @@
 import { Input } from "@reactive-resume/ui";
 import { useState } from "react";
 
-type SearchBarProps<T extends Record<string, unknown>> = {
+type SearchBarProps<T extends object> = {
   items: T[];
   filterKeys: string[];
   onFilter: (filteredItems: T[]) => void;
 };
 
-export const SearchBar = <T extends Record<string, unknown>>({
-  items,
-  filterKeys,
-  onFilter,
-}: SearchBarProps<T>) => {
+export const SearchBar = <T extends object>({ items, filterKeys, onFilter }: SearchBarProps<T>) => {
   const [query, setQuery] = useState("");
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {

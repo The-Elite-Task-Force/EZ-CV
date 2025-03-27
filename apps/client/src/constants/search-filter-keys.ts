@@ -1,4 +1,7 @@
-export const sectionItemFilterKeys = [
+import type { ResumeDto } from "@reactive-resume/dto";
+import type { SectionItemKeys } from "@reactive-resume/schema";
+
+export const sectionItemFilterKeys: SectionItemKeys[] = [
   "title",
   "name",
   "description",
@@ -12,3 +15,5 @@ export const sectionItemFilterKeys = [
   "publisher",
   "organization",
 ];
+
+export const resumeFilterKeys: (keyof ResumeDto)[] = ["title", "slug"];
