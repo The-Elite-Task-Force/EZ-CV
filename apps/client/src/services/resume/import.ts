@@ -24,16 +24,16 @@ export const useImportResume = () => {
     mutationFn: importResume,
     onSuccess: (data) => {
       queryClient.setQueryData<ResumeDto>(["resume", { id: data.id }], data);
-
       queryClient.setQueryData<ResumeDto[]>(["resumes"], (cache) => {
         if (!cache) return [data];
         return [...cache, data];
       });
+
+      // Invalidate these queries only after a successful mutation
+      void queryClient.invalidateQueries({ queryKey: SECTIONS_KEY });
+      void queryClient.invalidateQueries({ queryKey: SECTION_MAPPING_KEY });
     },
   });
-
-  void queryClient.invalidateQueries({ queryKey: SECTIONS_KEY });
-  void queryClient.invalidateQueries({ queryKey: SECTION_MAPPING_KEY });
 
   return { importResume: importResumeFn, loading, error };
 };
