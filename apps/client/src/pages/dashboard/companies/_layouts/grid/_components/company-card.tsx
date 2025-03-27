@@ -40,10 +40,13 @@ export const CompanyCard = ({ company, role }: Props) => {
   };
 
   return (
-    <div style={{ willChange: "transform", display: "flex", flexDirection: "column" }}>
+    <div
+      style={{ willChange: "transform", display: "flex", flexDirection: "column" }}
+      onDoubleClick={onOpen}
+    >
       <DropdownMenu>
-        <DropdownMenuTrigger className="text-left">
-          <BaseCard className="cursor-context-menu space-y-0">
+        <DropdownMenuTrigger className="pointer-events-none text-left">
+          <BaseCard className="pointer-events-auto cursor-context-menu space-y-0">
             <div>
               <div
                 className={cn(
@@ -66,7 +69,7 @@ export const CompanyCard = ({ company, role }: Props) => {
             )}
           </BaseCard>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="pointer-events-auto">
           <DropdownMenuItem onClick={onOpen}>
             <FolderOpen size={14} className="mr-2" />
             {t`Open`}
