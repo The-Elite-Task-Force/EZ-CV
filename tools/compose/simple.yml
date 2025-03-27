@@ -20,17 +20,14 @@ services:
       retries: 5
 
   # Storage (for image uploads)
-  minio:
-    image: minio/minio:latest
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
     restart: unless-stopped
-    command: server /data
+    command: azurite-blob --loose --blobHost 0.0.0.0
     ports:
-      - "9000:9000"
+      - "10000:10000" # Blob service (HTTP only)
     volumes:
-      - minio_data:/data
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      - azurite_data:/data
 
   # Chrome Browser (for printing and previews)
   chrome:
@@ -61,7 +58,7 @@ services:
 
       # -- URLs --
       PUBLIC_URL: http://localhost:3000
-      STORAGE_URL: http://localhost:9000/default
+      STORAGE_URL: http://localhost:10000/devstoreaccount1/images
 
       # -- Printer (Chrome) --
       CHROME_TOKEN: chrome_token
@@ -78,16 +75,14 @@ services:
       MAIL_FROM: noreply@localhost
       # SMTP_URL: smtp://user:pass@smtp:587 # Optional
 
-      # -- Storage (Minio) --
-      STORAGE_ENDPOINT: minio
-      STORAGE_PORT: 9000
-      STORAGE_REGION: us-east-1 # Optional
-      STORAGE_BUCKET: default
-      STORAGE_ACCESS_KEY: minioadmin
-      STORAGE_SECRET_KEY: minioadmin
-      STORAGE_USE_SSL: "false"
-      STORAGE_SKIP_BUCKET_CHECK: "false"
+      # -- Storage (azurite) --
+      AZURE_ACCOUNT_NAME: devstoreaccount1
+      AZURE_ACCOUNT_KEY: Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==
+      AZURE_STORAGE_CONTAINER: images
 
+      STORAGE_TYPE: azurite
+
+      ## -- OPENAI KEY --
       OPENAI_API_KEY: ${OPENAI_API_KEY}
 
       # -- Crowdin (Optional) --
@@ -120,5 +115,5 @@ services:
       # OPENID_USER_INFO_URL:
 
 volumes:
-  minio_data:
+  azurite_data:
   postgres_data:
