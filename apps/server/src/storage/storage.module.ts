@@ -18,6 +18,7 @@ import { StorageService } from "./storage.service";
         containerName: configService.getOrThrow<string>("AZURE_STORAGE_CONTAINER"),
         skipContainerCheck: configService.getOrThrow<boolean>("STORAGE_SKIP_BUCKET_CHECK"),
         storageUrl: configService.getOrThrow<string>("STORAGE_URL"),
+        storageType: configService.get<string>("STORAGE_TYPE"),
       }),
     },
     StorageService,

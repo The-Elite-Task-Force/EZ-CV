@@ -29,12 +29,20 @@ export class StorageService implements OnModuleInit {
     const accountKey = this.configService.getOrThrow<string>("AZURE_ACCOUNT_KEY");
     const containerName = this.configService.getOrThrow<string>("AZURE_STORAGE_CONTAINER");
     const skipContainerCheck = this.configService.getOrThrow<boolean>("STORAGE_SKIP_BUCKET_CHECK");
-
+    const storageType = this.configService.getOrThrow<string>("STORAGE_TYPE");
     const credentials = new StorageSharedKeyCredential(accountName, accountKey);
-    this.blobServiceClient = new BlobServiceClient(
-      `https://${accountName}.blob.core.windows.net`,
-      credentials,
-    );
+    if (storageType == "azurite") {
+      this.logger.warn("Azurite storage type is not supported in production.");
+      this.blobServiceClient = new BlobServiceClient(
+        `http://localhost:10000/${accountName}`,
+        credentials,
+      );
+    } else {
+      this.blobServiceClient = new BlobServiceClient(
+        `https://${accountName}.blob.core.windows.net`,
+        credentials,
+      );
+    }
     this.containerClient = this.blobServiceClient.getContainerClient(containerName);
 
     if (skipContainerCheck) {

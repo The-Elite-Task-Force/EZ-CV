@@ -35,20 +35,14 @@ services:
       ADMINER_DEFAULT_DB: ${POSTGRES_DB:-postgres}
 
   # Storage (for image uploads)
-  minio:
-    image: minio/minio:latest
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
     restart: unless-stopped
-    command: server /data
+    command: azurite-blob --loose --blobHost 0.0.0.0
     ports:
-      - ${STORAGE_PORT:-9000}:9000
-      - "9001:9001" # Minio Console (Optional)
+      - "10000:10000" # Blob service (HTTP only)
     volumes:
-      - minio_data:/data
-    environment:
-      MINIO_ADDRESS: :9000
-      MINIO_CONSOLE_ADDRESS: :9001
-      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY:-minioadmin}
-      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_KEY:-minioadmin}
+      - azurite_data:/data
 
   # Chrome Browser (for printing and previews)
   chrome:
@@ -64,5 +58,5 @@ services:
       PROXY_SSL: "false"
 
 volumes:
-  minio_data:
+  azurite_data:
   postgres_data:
