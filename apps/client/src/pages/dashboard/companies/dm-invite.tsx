@@ -9,7 +9,7 @@ import {
 } from "@reactive-resume/ui";
 
 import { useToast } from "@/client/hooks/use-toast";
-import { inviteToCompany, useCompanies } from "@/client/services/company";
+import { inviteToCompany, useOwnedCompanies } from "@/client/services/company";
 import { useAuthStore } from "@/client/stores/auth";
 
 type Props = {
@@ -20,7 +20,7 @@ export const DropdownCompanyInviter = ({ invitedUserId }: Props) => {
   const { user } = useAuthStore();
   const { toast } = useToast();
 
-  const { companies, loading, error } = useCompanies();
+  const { companies, loading, error } = useOwnedCompanies();
 
   const onInvite = async (companyId: string) => {
     if (user) {

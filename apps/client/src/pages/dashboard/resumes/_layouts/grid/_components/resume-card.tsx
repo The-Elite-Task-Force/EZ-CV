@@ -69,78 +69,80 @@ export const ResumeCard = ({ resume }: Props) => {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="text-left">
-        <BaseCard className="cursor-context-menu space-y-0">
-          <AnimatePresence>
-            {resume.locked && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 flex items-center justify-center bg-background/75 backdrop-blur-sm"
-              >
-                <Lock size={42} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <div
-            className={cn(
-              "absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end space-y-0.5 p-4 pt-12",
-              "bg-gradient-to-t from-background/80 to-transparent",
-            )}
-          >
-            {resume.id === user?.profileResumeId && (
-              <div className="absolute right-1 top-6 rounded border border-gray-700 bg-black px-2 py-1 text-xs font-bold text-white shadow-md">
-                ★ Profile
-              </div>
-            )}
-            <h4 className="line-clamp-2 font-medium">{resume.title}</h4>
-            <p className="line-clamp-1 text-xs opacity-75">{t`Last updated ${lastUpdated}`}</p>
-          </div>
+    <div className="relative" onDoubleClick={onOpen}>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="pointer-events-none text-left">
+          <BaseCard className="pointer-events-auto cursor-context-menu space-y-0">
+            <AnimatePresence>
+              {resume.locked && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 flex items-center justify-center bg-background/75 backdrop-blur-sm"
+                >
+                  <Lock size={42} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <div
+              className={cn(
+                "absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end space-y-0.5 p-4 pt-12",
+                "bg-gradient-to-t from-background/80 to-transparent",
+              )}
+            >
+              {resume.id === user?.profileResumeId && (
+                <div className="absolute right-1 top-6 rounded border border-gray-700 bg-black px-2 py-1 text-xs font-bold text-white shadow-md">
+                  ★ Profile
+                </div>
+              )}
+              <h4 className="line-clamp-2 font-medium">{resume.title}</h4>
+              <p className="line-clamp-1 text-xs opacity-75">{t`Last updated ${lastUpdated}`}</p>
+            </div>
 
-          <img
-            src={`/templates/jpg/${template}.jpg`}
-            alt={template}
-            className="rounded-sm opacity-80"
-          />
-        </BaseCard>
-      </DropdownMenuTrigger>
+            <img
+              src={`/templates/jpg/${template}.jpg`}
+              alt={template}
+              className="rounded-sm opacity-80"
+            />
+          </BaseCard>
+        </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
-        <DropdownMenuItem onClick={onOpen}>
-          <FolderOpen size={14} className="mr-2" />
-          {t`Open`}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={onUpdate}>
-          <PencilSimple size={14} className="mr-2" />
-          {t`Rename`}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={onDuplicate}>
-          <CopySimple size={14} className="mr-2" />
-          {t`Duplicate`}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={onSetDefault}>
-          <FolderOpen size={14} className="mr-2" />
-          Set as profile
-        </DropdownMenuItem>
-        {resume.locked ? (
-          <DropdownMenuItem onClick={onLockChange}>
-            <LockOpen size={14} className="mr-2" />
-            {t`Unlock`}
+        <DropdownMenuContent className="pointer-events-auto">
+          <DropdownMenuItem onClick={onOpen}>
+            <FolderOpen size={14} className="mr-2" />
+            {t`Open`}
           </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem onClick={onLockChange}>
-            <Lock size={14} className="mr-2" />
-            {t`Lock`}
+          <DropdownMenuItem onClick={onUpdate}>
+            <PencilSimple size={14} className="mr-2" />
+            {t`Rename`}
           </DropdownMenuItem>
-        )}
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-error" onClick={onDelete}>
-          <TrashSimple size={14} className="mr-2" />
-          {t`Delete`}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <DropdownMenuItem onClick={onDuplicate}>
+            <CopySimple size={14} className="mr-2" />
+            {t`Duplicate`}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={onSetDefault}>
+            <FolderOpen size={14} className="mr-2" />
+            Set as profile
+          </DropdownMenuItem>
+          {resume.locked ? (
+            <DropdownMenuItem onClick={onLockChange}>
+              <LockOpen size={14} className="mr-2" />
+              {t`Unlock`}
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onClick={onLockChange}>
+              <Lock size={14} className="mr-2" />
+              {t`Lock`}
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="text-error" onClick={onDelete}>
+            <TrashSimple size={14} className="mr-2" />
+            {t`Delete`}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };

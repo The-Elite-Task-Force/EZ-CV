@@ -13,4 +13,6 @@ export const RESUME_ID_KEY: QueryKey = ["resume", "id"];
 export const SECTIONS_KEY: QueryKey = ["sections"];
 export const SECTION_MAPPING_KEY: QueryKey = ["mappings", "id"];
 
+export const COMPANY_KEY: QueryKey = ["company"];
 export const COMPANIES_KEY: QueryKey = ["companies"];
+export const OWNCOMPANIES_KEY: QueryKey = ["owned-companies"];

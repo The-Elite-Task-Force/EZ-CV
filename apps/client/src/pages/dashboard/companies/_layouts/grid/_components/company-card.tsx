@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { FolderOpen, PencilSimple, TrashSimple } from "@phosphor-icons/react";
 import type { CompanyDto } from "@reactive-resume/dto";
@@ -17,9 +18,10 @@ import { useDialog } from "@/client/stores/dialog";
 
 type Props = {
   company: CompanyDto;
+  role?: string;
 };
 
-export const CompanyCard = ({ company }: Props) => {
+export const CompanyCard = ({ company, role }: Props) => {
   const navigate = useNavigate();
   const { open } = useDialog<CompanyDto>("company");
 
@@ -38,10 +40,13 @@ export const CompanyCard = ({ company }: Props) => {
   };
 
   return (
-    <div style={{ willChange: "transform", display: "flex", flexDirection: "column" }}>
+    <div
+      style={{ willChange: "transform", display: "flex", flexDirection: "column" }}
+      onDoubleClick={onOpen}
+    >
       <DropdownMenu>
-        <DropdownMenuTrigger className="text-left">
-          <BaseCard className="cursor-context-menu space-y-0">
+        <DropdownMenuTrigger className="pointer-events-none text-left">
+          <BaseCard className="pointer-events-auto cursor-context-menu space-y-0">
             <div>
               <div
                 className={cn(
@@ -54,9 +59,17 @@ export const CompanyCard = ({ company }: Props) => {
               </div>
             </div>
             <img src={company.picture ?? undefined} alt={""} className="rounded-sm opacity-80" />
+            {role === "owner" && (
+              <div className="absolute right-1 top-6 rounded border border-gray-700 bg-black px-2 py-1 text-xs font-bold text-white shadow-md">
+                <span role="img" aria-label="Crown">
+                  👑
+                </span>{" "}
+                Owner
+              </div>
+            )}
           </BaseCard>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="pointer-events-auto">
           <DropdownMenuItem onClick={onOpen}>
             <FolderOpen size={14} className="mr-2" />
             {t`Open`}
