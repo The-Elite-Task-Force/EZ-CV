@@ -1,16 +1,18 @@
+import type { ResumeDto } from "@reactive-resume/dto";
 import { sortByDate } from "@reactive-resume/utils";
 import { AnimatePresence, motion } from "framer-motion";
-
-import { useResumes } from "@/client/services/resume";
 
 import { BaseListItem } from "./_components/base-item";
 import { CreateResumeListItem } from "./_components/create-item";
 import { ImportResumeListItem } from "./_components/import-item";
 import { ResumeListItem } from "./_components/resume-item";
 
-export const ResumeListView = () => {
-  const { resumes, loading } = useResumes();
+type ResumeListViewProps = {
+  resumes: ResumeDto[] | undefined;
+  loading: boolean;
+};
 
+export const ResumeListView = ({ resumes, loading }: ResumeListViewProps) => {
   return (
     <div className="grid gap-y-2">
       <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }}>

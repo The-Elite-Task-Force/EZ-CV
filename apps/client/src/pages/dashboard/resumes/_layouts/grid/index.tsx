@@ -1,16 +1,18 @@
+import type { ResumeDto } from "@reactive-resume/dto";
 import { sortByDate } from "@reactive-resume/utils";
 import { AnimatePresence, motion } from "framer-motion";
-
-import { useResumes } from "@/client/services/resume";
 
 import { BaseCard } from "./_components/base-card";
 import { CreateResumeCard } from "./_components/create-card";
 import { ImportResumeCard } from "./_components/import-card";
 import { ResumeCard } from "./_components/resume-card";
 
-export const ResumeGridView = () => {
-  const { resumes, loading } = useResumes();
+type ResumeGridViewProps = {
+  resumes: ResumeDto[] | undefined;
+  loading: boolean;
+};
 
+export const ResumeGridView = ({ resumes, loading }: ResumeGridViewProps) => {
   return (
     <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
       <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }}>

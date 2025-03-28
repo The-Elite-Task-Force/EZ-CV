@@ -1,11 +1,15 @@
 /* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { List, SquaresFour } from "@phosphor-icons/react";
+import type { ResumeDto } from "@reactive-resume/dto";
 import { ScrollArea, Tabs, TabsContent, TabsList, TabsTrigger } from "@reactive-resume/ui";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 
+import { SearchBar } from "@/client/components/searchbar";
+import { resumeFilterKeys } from "@/client/constants/search-filter-keys";
+import { useResumes } from "@/client/services/resume";
 import { useSections } from "@/client/services/section/sections";
 
 import { ResumeGridView } from "./_layouts/grid";
@@ -16,7 +20,17 @@ type Layout = "grid" | "list";
 export const ResumesPage = () => {
   const [layout, setLayout] = useState<Layout>("grid");
 
+  const { resumes, loading } = useResumes();
+
   useSections();
+
+  const [filteredItems, setFilteredItems] = useState<ResumeDto[]>([]);
+
+  useEffect(() => {
+    if (resumes) {
+      setFilteredItems(resumes);
+    }
+  }, [resumes]);
 
   return (
     <>
@@ -51,16 +65,23 @@ export const ResumesPage = () => {
             </TabsTrigger>
           </TabsList>
         </div>
+        {resumes && (
+          <SearchBar<ResumeDto>
+            items={resumes}
+            filterKeys={resumeFilterKeys}
+            onFilter={setFilteredItems}
+          />
+        )}
 
         <ScrollArea
           allowOverflow
           className="h-[calc(100vh-140px)] overflow-visible lg:h-[calc(100vh-88px)]"
         >
           <TabsContent value="grid">
-            <ResumeGridView />
+            <ResumeGridView resumes={filteredItems} loading={loading} />
           </TabsContent>
           <TabsContent value="list">
-            <ResumeListView />
+            <ResumeListView resumes={filteredItems} loading={loading} />
           </TabsContent>
         </ScrollArea>
       </Tabs>
