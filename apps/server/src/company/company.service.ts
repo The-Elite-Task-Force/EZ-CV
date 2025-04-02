@@ -7,8 +7,9 @@ import {
   EmployeeDto,
   UpdateCompanyDto,
 } from "@reactive-resume/dto";
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { Role } from "libs/dto/src/company/types/types";
 import { PrismaService } from "nestjs-prisma";
-
 @Injectable()
 export class CompanyService {
   constructor(private readonly prisma: PrismaService) {}
@@ -34,7 +35,7 @@ export class CompanyService {
   }
 
   async create(id: string, createCompanyDto: CreateCompanyDto) {
-    return this.prisma.company.create({
+    const company = await this.prisma.company.create({
       data: {
         name: createCompanyDto.name,
         ownerId: id,
@@ -42,6 +43,18 @@ export class CompanyService {
         location: "",
       },
     });
+
+    await this.prisma.companyMapping.create({
+      data: {
+        company: { connect: { id: company.id } },
+        user: { connect: { id } },
+        role: { connect: { id: Role.Owner.getId() } },
+        status: COMPANY_STATUS.ACCEPTED,
+        invitedAt: new Date().toString(),
+      },
+    });
+
+    return company;
   }
 
   async update(updateCompanyDto: UpdateCompanyDto) {
@@ -134,6 +147,7 @@ export class CompanyService {
         company: { connect: { id: companyId } },
         user: { connect: { id: userId } },
         invitedAt: new Date().toString(),
+        role: { connect: { id: Role.User.getId() } },
       },
     });
   }
@@ -162,5 +176,12 @@ export class CompanyService {
     } catch (error) {
       throw new Error(`Error occurred while fetching invitations: ${error}`);
     }
+  }
+
+  async getMapping(userId: string, companyId: string) {
+    return this.prisma.companyMapping.findUnique({
+      where: { userId_companyId: { userId, companyId } },
+      include: { role: true },
+    });
   }
 }

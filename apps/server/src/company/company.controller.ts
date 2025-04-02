@@ -26,6 +26,7 @@ import { TwoFactorGuard } from "@/server/auth/guards/two-factor.guard";
 import { CompanyService } from "@/server/company/company.service";
 
 import { User } from "../user/decorators/user.decorator";
+import { CompanyAdminGuard } from "./guards/company.admin.guard";
 
 @ApiTags("Company")
 @Controller("company")
@@ -83,7 +84,7 @@ export class CompanyController {
   }
 
   @Patch()
-  @UseGuards(TwoFactorGuard)
+  @UseGuards(TwoFactorGuard, CompanyAdminGuard)
   async update(@User() user: UserEntity, @Body() updateCompanyDto: UpdateCompanyDto) {
     try {
       return await this.companyService.update(updateCompanyDto);
@@ -116,7 +117,7 @@ export class CompanyController {
   }
 
   @Delete(":id/remove")
-  @UseGuards(TwoFactorGuard)
+  @UseGuards(TwoFactorGuard, CompanyAdminGuard)
   async removeUserFromCompany(@Param("id") companyId: string, @Body("username") username: string) {
     try {
       return await this.companyService.removeUserFromCompany(companyId, username);
@@ -127,7 +128,7 @@ export class CompanyController {
   }
 
   @Post("invite")
-  @UseGuards(TwoFactorGuard)
+  @UseGuards(TwoFactorGuard, CompanyAdminGuard)
   async linkUserToCompany(@Body() data: CreateCompanyMappingDto) {
     try {
       await this.companyService.inviteUserToCompany(data);
