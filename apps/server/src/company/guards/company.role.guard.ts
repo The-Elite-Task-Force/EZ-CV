@@ -1,10 +1,4 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  ForbiddenException,
-  Injectable,
-  Logger,
-} from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { SetMetadata } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { Request } from "express";
@@ -22,8 +16,6 @@ export class CompanyRoleGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    Logger.log("-----CompanyRoleGuard-------");
-
     const allowedRoles = this.reflector.get<string[]>(ALLOWED_ROLES_KEY, context.getHandler());
     if (!allowedRoles || allowedRoles.length === 0) {
       // If no roles specified, allow access

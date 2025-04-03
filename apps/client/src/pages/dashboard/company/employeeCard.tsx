@@ -8,9 +8,10 @@ import { assignRole, removeUserFromCompany } from "@/client/services/company";
 type EmployeeCardProps = {
   employee: EmployeeDto;
   company: CompanyDto;
+  refetchEmployees: () => void;
 };
 
-const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company }) => {
+const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company, refetchEmployees }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [roleDropdownPosition, setRoleDropdownPosition] = useState("left-full"); // default position
@@ -21,11 +22,12 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company }) => {
   // Example roles – adjust as needed
   const availableRoles = ["Owner", "Admin", "Bidmanager", "User"];
 
-  const handleRemoveUser = () => {
-    void removeUserFromCompany({
+  const handleRemoveUser = async () => {
+    await removeUserFromCompany({
       companyId: company.id,
       username: employee.username,
     });
+    refetchEmployees();
   };
 
   const handleAssignRole = async (role: string) => {
@@ -34,6 +36,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company }) => {
       userId: employee.id,
       roleId: role,
     });
+    refetchEmployees();
     setRoleDropdownOpen(false);
     setDropdownOpen(false);
   };
