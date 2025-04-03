@@ -3,6 +3,8 @@ import slugify from "@sindresorhus/slugify";
 import { createZodDto } from "nestjs-zod/dto";
 import { z } from "zod";
 
+import { languageEnum } from "./resume";
+
 export const createResumeSchema = z.object({
   title: z.string().min(1),
   slug: z
@@ -15,6 +17,7 @@ export const createResumeSchema = z.object({
     })
     .optional(),
   visibility: z.enum(["public", "private"]).default("private"),
+  language: languageEnum,
 });
 
 export class CreateResumeDto extends createZodDto(createResumeSchema) {}

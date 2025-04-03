@@ -1,4 +1,7 @@
 /* eslint-disable lingui/no-unlocalized-strings */
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import "/node_modules/flag-icons/css/flag-icons.min.css";
+
 import { t } from "@lingui/macro";
 import {
   CopySimple,
@@ -8,7 +11,7 @@ import {
   PencilSimple,
   TrashSimple,
 } from "@phosphor-icons/react";
-import type { ResumeDto } from "@reactive-resume/dto";
+import type { LANGUAGE, ResumeDto } from "@reactive-resume/dto";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,9 +23,12 @@ import { cn } from "@reactive-resume/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
+import { LocaleComboboxPopover } from "@/client/components/locale-combobox";
 import { setDefault } from "@/client/services/resume";
+import { updateResume } from "@/client/services/resume";
 import { useAuthStore } from "@/client/stores/auth";
 import { useDialog } from "@/client/stores/dialog";
 
@@ -38,6 +44,17 @@ export const ResumeCard = ({ resume }: Props) => {
   const { open: lockOpen } = useDialog<ResumeDto>("lock");
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
+
+  const [resumeLanguage, setResumeLanguage] = useState<LANGUAGE>(resume.language);
+
+  useEffect(() => {
+    const update = async () => {
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      await updateResume({ ...resume, language: resumeLanguage });
+    };
+
+    void update();
+  }, [resumeLanguage]);
 
   const template = resume.data.metadata.template;
   const lastUpdated = dayjs().to(resume.updatedAt);
@@ -85,6 +102,13 @@ export const ResumeCard = ({ resume }: Props) => {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            <div className={cn("absolute right-2 top-2 z-10")}>
+              {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
+              <span
+                className={cn("fi", `fi-${resume.language.slice(-2).toLowerCase()}`, "text-xl")}
+              ></span>
+            </div>
             <div
               className={cn(
                 "absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end space-y-0.5 p-4 pt-12",
@@ -92,10 +116,11 @@ export const ResumeCard = ({ resume }: Props) => {
               )}
             >
               {resume.id === user?.profileResumeId && (
-                <div className="absolute right-1 top-6 rounded border border-gray-700 bg-black px-2 py-1 text-xs font-bold text-white shadow-md">
+                <div className="absolute right-1 top-12 rounded border border-gray-700 bg-black px-2 py-1 text-xs font-bold text-white shadow-md">
                   ★ Profile
                 </div>
               )}
+
               <h4 className="line-clamp-2 font-medium">{resume.title}</h4>
               <p className="line-clamp-1 text-xs opacity-75">{t`Last updated ${lastUpdated}`}</p>
             </div>
@@ -120,6 +145,20 @@ export const ResumeCard = ({ resume }: Props) => {
           <DropdownMenuItem onClick={onDuplicate}>
             <CopySimple size={14} className="mr-2" />
             {t`Duplicate`}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            {/* <div className="w-full"> */}
+            <LocaleComboboxPopover
+              value={resumeLanguage}
+              onValueChange={(locale) => {
+                setResumeLanguage(locale as LANGUAGE);
+              }}
+            />
+            {/* </div> */}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={onSetDefault}>
             <FolderOpen size={14} className="mr-2" />

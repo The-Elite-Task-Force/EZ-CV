@@ -1,5 +1,6 @@
 import { t } from "@lingui/macro";
 import { CaretDown, Check } from "@phosphor-icons/react";
+import type { LANGUAGE } from "@reactive-resume/dto";
 import {
   Button,
   Command,
@@ -20,8 +21,8 @@ import { useMemo, useState } from "react";
 import { useLanguages } from "../services/resume/translation";
 
 type Props = {
-  value: string;
-  onValueChange: (locale: string) => void;
+  value: string | LANGUAGE;
+  onValueChange: (locale: string | LANGUAGE) => void;
 };
 
 export const LocaleCombobox = ({ value, onValueChange }: Props) => {

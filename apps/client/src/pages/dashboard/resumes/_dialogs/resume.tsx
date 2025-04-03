@@ -81,7 +81,12 @@ export const ResumeDialog = () => {
 
   const onSubmit = async (values: FormValues) => {
     if (isCreate) {
-      await createResume({ slug: values.slug, title: values.title, visibility: "private" });
+      await createResume({
+        slug: values.slug,
+        title: values.title,
+        visibility: "private",
+        language: "en-US",
+      });
     }
 
     if (isUpdate) {
@@ -107,6 +112,7 @@ export const ResumeDialog = () => {
         title: values.title,
         slug: values.slug,
         data: payload.item.data,
+        language: values.language,
       });
     }
 
@@ -142,6 +148,7 @@ export const ResumeDialog = () => {
       title: randomName,
       slug: slugify(randomName),
       data: sampleResume,
+      language: "en-US",
     });
 
     close();
