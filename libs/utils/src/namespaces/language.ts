@@ -294,7 +294,7 @@ export const languages: Language[] = [
     name: "Serbian (Cyrillic)",
     editorCode: "sr",
     locale: "sr-SP",
-    countryCode: "sp",
+    countryCode: "rs",
   },
   {
     id: "es-ES",

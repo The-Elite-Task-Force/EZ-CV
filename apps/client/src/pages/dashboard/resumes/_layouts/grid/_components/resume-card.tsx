@@ -3,6 +3,7 @@
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 
 import { t } from "@lingui/macro";
+import { Translate } from "@phosphor-icons/react";
 import {
   CopySimple,
   FolderOpen,
@@ -11,6 +12,11 @@ import {
   PencilSimple,
   TrashSimple,
 } from "@phosphor-icons/react";
+import {
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+} from "@radix-ui/react-dropdown-menu";
 import type { LANGUAGE, ResumeDto } from "@reactive-resume/dto";
 import {
   DropdownMenu,
@@ -33,11 +39,6 @@ import { useAuthStore } from "@/client/stores/auth";
 import { useDialog } from "@/client/stores/dialog";
 
 import { BaseCard } from "./base-card";
-import {
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-} from "@radix-ui/react-dropdown-menu";
 
 type Props = {
   resume: ResumeDto;
@@ -168,20 +169,21 @@ export const ResumeCard = ({ resume }: Props) => {
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-          >
-            {/* <div className="w-full"> */}
-            <LocaleComboboxPopover
-              value={resumeLanguage}
-              onValueChange={(locale) => {
-                setResumeLanguage(locale as LANGUAGE);
-              }}
-            />
-            {/* </div> */}
-          </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger className="flex w-full cursor-pointer items-center px-2 py-1.5 text-sm hover:bg-[#27272a]">
+              <Translate size={14} className="mr-2" />
+              Set language
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent className="w-56 p-2">
+              <LocaleComboboxPopover
+                value={resumeLanguage}
+                onValueChange={(locale) => {
+                  setResumeLanguage(locale as LANGUAGE);
+                }}
+              />
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-error" onClick={onDelete}>
             <TrashSimple size={14} className="mr-2" />
