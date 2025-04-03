@@ -41,6 +41,7 @@ export class CompanyController {
   async get(@User() user: UserEntity) {
     try {
       const data = await this.companyService.getCompanies(user.id);
+      console.log("controller", data);
       return data;
     } catch (error) {
       Logger.log(error);

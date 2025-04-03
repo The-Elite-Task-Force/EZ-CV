@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import {
   COMPANY_STATUS,
   CompanyDto,
+  CompanyWithRoleDto,
   CreateCompanyDto,
   CreateCompanyMappingDto,
   EmployeeDto,
@@ -20,12 +21,17 @@ export class CompanyService {
     });
   }
 
-  async getCompanies(userId: string): Promise<CompanyDto[]> {
+  async getCompanies(userId: string): Promise<CompanyWithRoleDto[]> {
     const mappings = await this.prisma.companyMapping.findMany({
       where: { userId, status: COMPANY_STATUS.ACCEPTED },
-      include: { company: true },
+      include: { company: true, role: true },
     });
-    return mappings.map((mapping) => mapping.company);
+    console.log("get companies", mappings);
+
+    return mappings.map((mapping) => ({
+      ...mapping.company,
+      role: mapping.role, // returns the role object as is
+    }));
   }
 
   async getCompanyById(id: string): Promise<CompanyDto> {

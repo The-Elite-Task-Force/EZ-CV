@@ -3,6 +3,7 @@ import type {
   activeInvitationsDTO,
   COMPANY_STATUS,
   CompanyDto,
+  CompanyWithRoleDto,
   CreateCompanyMappingDto,
   EmployeeDto,
 } from "@reactive-resume/dto";
@@ -19,7 +20,7 @@ export const fetchOwnCompanies = async () => {
 };
 
 export const fetchCompanies = async () => {
-  const response = await axios.get<CompanyDto[], AxiosResponse<CompanyDto[]>>("/company");
+  const response = await axios.get<CompanyDto[], AxiosResponse<CompanyWithRoleDto[]>>("/company");
   return response.data;
 };
 

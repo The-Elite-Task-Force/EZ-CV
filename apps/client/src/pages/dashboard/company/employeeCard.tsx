@@ -13,14 +13,15 @@ type EmployeeCardProps = {
 const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
+  const [roleDropdownPosition, setRoleDropdownPosition] = useState("left-full"); // default position
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const roleDropdownRef = useRef<HTMLUListElement>(null);
   const navigate = useNavigate();
 
   // Example roles – adjust as needed
   const availableRoles = ["Owner", "Admin", "Bidmanager", "User"];
 
   const handleRemoveUser = () => {
-    // Placeholder function for removing user
     void removeUserFromCompany({
       companyId: company.id,
       username: employee.username,
@@ -33,13 +34,11 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company }) => {
       userId: employee.id,
       roleId: role,
     });
-    // Close both dropdowns after role assignment
     setRoleDropdownOpen(false);
     setDropdownOpen(false);
   };
 
   const handleViewProfile = () => {
-    // Redirect to the public profile page
     void navigate(`/publicprofile/${employee.username}`);
   };
 
@@ -55,7 +54,20 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dropdownRef]);
+  }, []);
+
+  // Adjust dropdown position on open
+  useEffect(() => {
+    if (roleDropdownOpen && roleDropdownRef.current) {
+      const rect = roleDropdownRef.current.getBoundingClientRect();
+      // If the dropdown would go off-screen on the right, change alignment.
+      if (rect.right > window.innerWidth) {
+        setRoleDropdownPosition("right-full");
+      } else {
+        setRoleDropdownPosition("left-full");
+      }
+    }
+  }, [roleDropdownOpen]);
 
   return (
     <li className="flex items-center space-x-4">
@@ -89,10 +101,10 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company }) => {
           ...
         </button>
         {dropdownOpen && (
-          <ul className="absolute right-0 mt-2 w-48 rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+          <ul className="absolute right-0 mt-2 w-48 rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-black">
             <li>
               <button
-                className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-black"
                 onClick={handleViewProfile}
               >
                 View Profile
@@ -100,7 +112,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company }) => {
             </li>
             <li className="relative">
               <button
-                className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-black"
                 onClick={() => {
                   setRoleDropdownOpen(!roleDropdownOpen);
                 }}
@@ -108,11 +120,14 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company }) => {
                 Assign Role
               </button>
               {roleDropdownOpen && (
-                <ul className="absolute left-full top-0 ml-2 mt-0 w-36 rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                <ul
+                  ref={roleDropdownRef}
+                  className={`absolute top-0 ml-2 mt-0 w-36 rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-black ${roleDropdownPosition}`}
+                >
                   {availableRoles.map((role) => (
                     <li key={role}>
                       <button
-                        className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                        className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-black"
                         onClick={() => handleAssignRole(role)}
                       >
                         {role}
@@ -124,7 +139,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company }) => {
             </li>
             <li>
               <button
-                className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-black"
                 onClick={handleRemoveUser}
               >
                 Remove User
