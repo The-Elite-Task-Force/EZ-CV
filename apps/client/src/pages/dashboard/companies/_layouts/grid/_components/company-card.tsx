@@ -59,14 +59,43 @@ export const CompanyCard = ({ company, role }: Props) => {
               </div>
             </div>
             <img src={company.picture ?? undefined} alt={""} className="rounded-sm opacity-80" />
-            {role === "owner" && (
-              <div className="absolute right-1 top-6 rounded border border-gray-700 bg-black px-2 py-1 text-xs font-bold text-white shadow-md">
-                <span role="img" aria-label="Crown">
-                  👑
-                </span>{" "}
-                Owner
-              </div>
-            )}
+            {(() => {
+              switch (role) {
+                case "owner": {
+                  return (
+                    <div className="absolute right-1 top-6 rounded border border-gray-700 bg-black px-2 py-1 text-xs font-bold text-white shadow-md">
+                      <span role="img" aria-label="Crown">
+                        👑
+                      </span>{" "}
+                      Owner
+                    </div>
+                  );
+                }
+                case "admin": {
+                  return (
+                    <div className="absolute right-1 top-6 rounded border border-gray-700 bg-blue-900 px-2 py-1 text-xs font-bold text-white shadow-md">
+                      <span role="img" aria-label="Admin">
+                        ⭐
+                      </span>{" "}
+                      Admin
+                    </div>
+                  );
+                }
+                case "bidmanager": {
+                  return (
+                    <div className="absolute right-1 top-6 rounded border border-gray-700 bg-green-900 px-2 py-1 text-xs font-bold text-white shadow-md">
+                      <span role="img" aria-label="Bidmanager">
+                        💼
+                      </span>{" "}
+                      Bidmanager
+                    </div>
+                  );
+                }
+                default: {
+                  return null;
+                }
+              }
+            })()}
           </BaseCard>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="pointer-events-auto">

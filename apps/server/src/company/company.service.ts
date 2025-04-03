@@ -26,7 +26,6 @@ export class CompanyService {
       where: { userId, status: COMPANY_STATUS.ACCEPTED },
       include: { company: true, role: true },
     });
-    console.log("get companies", mappings);
 
     return mappings.map((mapping) => ({
       ...mapping.company,
