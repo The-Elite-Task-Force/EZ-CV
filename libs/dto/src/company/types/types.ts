@@ -2,20 +2,21 @@ class Role {
   constructor(
     public readonly id: number,
     public readonly name: string,
+    public readonly key: string, // added key property
   ) {}
 
   toString() {
-    return this.name;
+    return this.key; // return the key instead
   }
 
   getId() {
     return this.id;
   }
 
-  static readonly Owner = new Role(1, "owner");
-  static readonly Admin = new Role(2, "admin");
-  static readonly Bidmanager = new Role(3, "bidmanager");
-  static readonly User = new Role(4, "user");
+  static readonly Owner = new Role(1, "owner", "Owner");
+  static readonly Admin = new Role(2, "admin", "Admin");
+  static readonly Bidmanager = new Role(3, "bidmanager", "Bidmanager");
+  static readonly User = new Role(4, "user", "User");
 
   // Optionally, get all roles as an array
   static all(): Role[] {
@@ -30,6 +31,15 @@ class Role {
       Bidmanager: Role.Bidmanager.toString(),
       User: Role.User.toString(),
     };
+  }
+
+  // Retrieve a role by its id. Throws an error if the id doesn't match any defined role.
+  static fromId(roleId: number): Role {
+    const role = Role.all().find((r) => r.id === roleId);
+    if (!role) {
+      throw new Error(`No role found for id: ${roleId}`);
+    }
+    return role;
   }
 }
 

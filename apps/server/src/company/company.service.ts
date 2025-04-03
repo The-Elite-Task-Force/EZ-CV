@@ -152,6 +152,16 @@ export class CompanyService {
     });
   }
 
+  async assignRole(companyId: string, userId: string, roleId: number | string) {
+    if (typeof roleId === "string") {
+      roleId = Role[roleId as "Owner" | "Admin" | "Bidmanager" | "User"].getId();
+    }
+    return this.prisma.companyMapping.update({
+      where: { userId_companyId: { userId, companyId } },
+      data: { roleId },
+    });
+  }
+
   async getActiveInvitations(userId: string) {
     try {
       const data = await this.prisma.companyMapping.findMany({

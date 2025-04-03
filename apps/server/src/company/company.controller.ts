@@ -121,10 +121,10 @@ export class CompanyController {
     }
   }
 
-  @Delete(":id/remove") // Remove a user from a company
+  @Delete(":id/remove/:username") // Removed the typo so username is a separate route parameter
   @UseGuards(TwoFactorGuard, CompanyRoleGuard)
   @AllowedRoles(Role.Admin.name, Role.Owner.name) // Only Admin and Owner can remove users
-  async removeUserFromCompany(@Param("id") companyId: string, @Body("username") username: string) {
+  async removeUserFromCompany(@Param("id") companyId: string, @Param("username") username: string) {
     try {
       return await this.companyService.removeUserFromCompany(companyId, username);
     } catch (error) {
@@ -140,6 +140,18 @@ export class CompanyController {
     try {
       await this.companyService.inviteUserToCompany(data);
       return { message: "User invited successfully" };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  @Patch("assignRole") // Assign a role to a user in a company
+  @UseGuards(TwoFactorGuard, CompanyRoleGuard)
+  @AllowedRoles(Role.Admin.name, Role.Owner.name) // Only Admin and Owner can assign roles
+  async assignRole(@Body() data: { companyId: string; userId: string; roleId: string | number }) {
+    try {
+      await this.companyService.assignRole(data.companyId, data.userId, data.roleId);
+      return { message: "Role assigned successfully" };
     } catch (error) {
       throw new BadRequestException(error.message);
     }
