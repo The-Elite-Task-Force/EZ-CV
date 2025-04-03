@@ -17,7 +17,7 @@ export const createResumeSchema = z.object({
     })
     .optional(),
   visibility: z.enum(["public", "private"]).default("private"),
-  language: languageEnum,
+  language: languageEnum.default("en-US"),
 });
 
 export class CreateResumeDto extends createZodDto(createResumeSchema) {}

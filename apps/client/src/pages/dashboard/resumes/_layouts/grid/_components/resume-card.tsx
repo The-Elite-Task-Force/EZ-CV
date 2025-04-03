@@ -33,6 +33,11 @@ import { useAuthStore } from "@/client/stores/auth";
 import { useDialog } from "@/client/stores/dialog";
 
 import { BaseCard } from "./base-card";
+import {
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+} from "@radix-ui/react-dropdown-menu";
 
 type Props = {
   resume: ResumeDto;
@@ -106,6 +111,7 @@ export const ResumeCard = ({ resume }: Props) => {
             <div className={cn("absolute right-2 top-2 z-10")}>
               {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
               <span
+                // eslint-disable-next-line tailwindcss/no-custom-classname
                 className={cn("fi", `fi-${resume.language.slice(-2).toLowerCase()}`, "text-xl")}
               ></span>
             </div>
@@ -146,20 +152,6 @@ export const ResumeCard = ({ resume }: Props) => {
             <CopySimple size={14} className="mr-2" />
             {t`Duplicate`}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-          >
-            {/* <div className="w-full"> */}
-            <LocaleComboboxPopover
-              value={resumeLanguage}
-              onValueChange={(locale) => {
-                setResumeLanguage(locale as LANGUAGE);
-              }}
-            />
-            {/* </div> */}
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={onSetDefault}>
             <FolderOpen size={14} className="mr-2" />
             Set as profile
@@ -175,6 +167,21 @@ export const ResumeCard = ({ resume }: Props) => {
               {t`Lock`}
             </DropdownMenuItem>
           )}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            {/* <div className="w-full"> */}
+            <LocaleComboboxPopover
+              value={resumeLanguage}
+              onValueChange={(locale) => {
+                setResumeLanguage(locale as LANGUAGE);
+              }}
+            />
+            {/* </div> */}
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-error" onClick={onDelete}>
             <TrashSimple size={14} className="mr-2" />

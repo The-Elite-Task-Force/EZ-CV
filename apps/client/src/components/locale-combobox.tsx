@@ -1,3 +1,6 @@
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import "/node_modules/flag-icons/css/flag-icons.min.css";
+
 import { t } from "@lingui/macro";
 import { CaretDown, Check } from "@phosphor-icons/react";
 import type { LANGUAGE } from "@reactive-resume/dto";
@@ -62,14 +65,27 @@ export const LocaleCombobox = ({ value, onValueChange }: Props) => {
                     onValueChange(result.original.locale);
                   }}
                 >
-                  <Check
-                    className={cn(
-                      "mr-2 size-4 opacity-0",
-                      value === original.locale && "opacity-100",
-                    )}
-                  />
-                  {original.name}{" "}
-                  <span className="ml-1 text-xs opacity-50">({original.locale})</span>
+                  <span className={"flex w-full items-center justify-between"}>
+                    <span className={"flex gap-2"}>
+                      <span
+                        // eslint-disable-next-line tailwindcss/no-custom-classname
+                        className={cn(
+                          "fi",
+                          `fi-${original.locale.slice(-2).toLowerCase()}`,
+                          "text-xl",
+                        )}
+                      ></span>
+                      {original.name}
+                      <span className="text-xs opacity-50">({original.locale})</span>
+                    </span>
+
+                    <Check
+                      className={cn(
+                        "mr-2 size-4 opacity-0",
+                        value === original.locale && "opacity-100",
+                      )}
+                    />
+                  </span>
                 </CommandItem>
               ))}
             </div>
@@ -94,7 +110,7 @@ export const LocaleComboboxPopover = ({ value, onValueChange }: Props) => {
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} modal={false} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           role="combobox"
@@ -102,8 +118,16 @@ export const LocaleComboboxPopover = ({ value, onValueChange }: Props) => {
           aria-expanded={open}
           className="w-full justify-between hover:bg-secondary/20 active:scale-100"
         >
-          <span className="line-clamp-1 text-left font-normal">
-            {selected?.name} <span className="ml-1 text-xs opacity-50">({selected?.locale})</span>
+          <span className={"flex w-full items-center justify-between"}>
+            <span className={"flex gap-2"}>
+              <span
+                className={cn("fi", `fi-${selected?.locale.slice(-2).toLowerCase()}`, "text-xl")}
+              ></span>
+              <span className="line-clamp-1 text-left font-normal">
+                {selected?.name}{" "}
+                <span className="ml-1 text-xs opacity-50">({selected?.locale})</span>
+              </span>
+            </span>
           </span>
           <CaretDown
             className={cn(
