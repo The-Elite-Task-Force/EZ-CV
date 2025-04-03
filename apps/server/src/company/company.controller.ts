@@ -21,20 +21,23 @@ import {
   UpdateCompanyDto,
 } from "@reactive-resume/dto";
 import { ERROR_MESSAGE } from "@reactive-resume/utils";
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { Role } from "libs/dto/src/company/types/types";
 
 import { TwoFactorGuard } from "@/server/auth/guards/two-factor.guard";
 import { CompanyService } from "@/server/company/company.service";
 
 import { User } from "../user/decorators/user.decorator";
 import { CompanyAdminGuard } from "./guards/company.admin.guard";
-
+import { AllowedRoles } from "./guards/company.role.guard";
+import { CompanyRoleGuard } from "./guards/company.role.guard";
 @ApiTags("Company")
 @Controller("company")
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @Get()
-  @UseGuards(TwoFactorGuard)
+  @UseGuards(TwoFactorGuard) // Get all companies for the user
   async get(@User() user: UserEntity) {
     try {
       const data = await this.companyService.getCompanies(user.id);
@@ -45,7 +48,7 @@ export class CompanyController {
     }
   }
 
-  @Get("/own")
+  @Get("/own") // Get companies owned by the user
   @UseGuards(TwoFactorGuard)
   async getByOwnerId(@User() user: UserEntity) {
     try {
@@ -57,7 +60,7 @@ export class CompanyController {
     }
   }
 
-  @Get(":id")
+  @Get(":id") // Get a company by ID
   @UseGuards(TwoFactorGuard)
   async getById(@User() user: UserEntity, @Param("id") id: string) {
     try {
@@ -68,7 +71,7 @@ export class CompanyController {
     }
   }
 
-  @Post()
+  @Post() // Create a new company
   @UseGuards(TwoFactorGuard)
   async create(@User() user: UserEntity, @Body() createCompanyDto: CreateCompanyDto) {
     try {
@@ -83,8 +86,9 @@ export class CompanyController {
     }
   }
 
-  @Patch()
-  @UseGuards(TwoFactorGuard, CompanyAdminGuard)
+  @Patch() // Update a company
+  @UseGuards(TwoFactorGuard, CompanyRoleGuard)
+  @AllowedRoles(Role.Admin.name, Role.Owner.name) // Only Admin and Owner can update a company
   async update(@User() user: UserEntity, @Body() updateCompanyDto: UpdateCompanyDto) {
     try {
       return await this.companyService.update(updateCompanyDto);
@@ -94,8 +98,9 @@ export class CompanyController {
     }
   }
 
-  @Delete(":id")
-  @UseGuards(TwoFactorGuard)
+  @Delete(":id") // Delete a company
+  @UseGuards(TwoFactorGuard, CompanyRoleGuard)
+  @AllowedRoles(Role.Owner.name) // Only Admin and Owner can delete a company
   delete(@User() user: UserEntity, @Param("id") id: string) {
     try {
       return this.companyService.delete(user.id, id);
@@ -105,7 +110,7 @@ export class CompanyController {
     }
   }
 
-  @Get(":id/employees")
+  @Get(":id/employees") // Get employees of a company
   @UseGuards(TwoFactorGuard)
   async getEmployees(@Param("id") companyId: string) {
     try {
@@ -116,8 +121,9 @@ export class CompanyController {
     }
   }
 
-  @Delete(":id/remove")
-  @UseGuards(TwoFactorGuard, CompanyAdminGuard)
+  @Delete(":id/remove") // Remove a user from a company
+  @UseGuards(TwoFactorGuard, CompanyRoleGuard)
+  @AllowedRoles(Role.Admin.name, Role.Owner.name) // Only Admin and Owner can remove users
   async removeUserFromCompany(@Param("id") companyId: string, @Body("username") username: string) {
     try {
       return await this.companyService.removeUserFromCompany(companyId, username);
@@ -127,8 +133,9 @@ export class CompanyController {
     }
   }
 
-  @Post("invite")
-  @UseGuards(TwoFactorGuard, CompanyAdminGuard)
+  @Post("invite") // Invite a user to a company
+  @UseGuards(TwoFactorGuard, CompanyRoleGuard)
+  @AllowedRoles(Role.Admin.name, Role.Owner.name) // Only Admin and Owner can invite users
   async linkUserToCompany(@Body() data: CreateCompanyMappingDto) {
     try {
       await this.companyService.inviteUserToCompany(data);
@@ -138,7 +145,7 @@ export class CompanyController {
     }
   }
 
-  @Patch("changeEmploymentStatus")
+  @Patch("changeEmploymentStatus") // Change employment status of a user in a company
   @UseGuards(TwoFactorGuard)
   async changeEmploymentStatus(@Body() data: { companyMappingId: string; status: COMPANY_STATUS }) {
     try {
@@ -149,7 +156,7 @@ export class CompanyController {
     }
   }
 
-  @Get("activeInvitations/:userId")
+  @Get("activeInvitations/:userId") // Get active invitations for a user
   @UseGuards(TwoFactorGuard)
   async getActiveInvitations(@Param("userId") userId: string) {
     try {
