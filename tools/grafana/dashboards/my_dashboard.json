@@ -29,6 +29,98 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "topk(5, max(scrape_duration_seconds) by (job))",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Scrape Duration",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "mode": "thresholds"
           },
           "mappings": [],
@@ -49,8 +141,8 @@
       },
       "gridPos": {
         "h": 11,
-        "w": 9,
-        "x": 0,
+        "w": 7,
+        "x": 8,
         "y": 0
       },
       "id": 1,
@@ -116,8 +208,8 @@
       },
       "gridPos": {
         "h": 11,
-        "w": 8,
-        "x": 9,
+        "w": 5,
+        "x": 15,
         "y": 0
       },
       "id": 2,
@@ -174,8 +266,8 @@
       },
       "gridPos": {
         "h": 11,
-        "w": 7,
-        "x": 17,
+        "w": 4,
+        "x": 20,
         "y": 0
       },
       "id": 7,
@@ -273,7 +365,7 @@
       },
       "gridPos": {
         "h": 12,
-        "w": 12,
+        "w": 8,
         "x": 0,
         "y": 11
       },
@@ -372,8 +464,8 @@
       },
       "gridPos": {
         "h": 12,
-        "w": 12,
-        "x": 12,
+        "w": 8,
+        "x": 8,
         "y": 11
       },
       "id": 4,
@@ -467,12 +559,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 23
+        "h": 12,
+        "w": 8,
+        "x": 16,
+        "y": 11
       },
-      "id": 3,
+      "id": 8,
       "options": {
         "legend": {
           "calcs": [],
@@ -489,14 +581,18 @@
       "pluginVersion": "11.6.0",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "topk(5, max(scrape_duration_seconds) by (job))",
-          "legendFormat": "__auto",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "nodejs_active_handles",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "{{type}}",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Scrape Duration",
+      "title": "Node: Active Handles",
       "type": "timeseries"
     },
     {
@@ -559,9 +655,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
+        "h": 12,
+        "w": 8,
+        "x": 0,
         "y": 23
       },
       "id": 5,
