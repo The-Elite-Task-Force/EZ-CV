@@ -9,8 +9,13 @@ import type {
 import { useQuery } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 
-import { COMPANIES_KEY } from "@/client/constants/query-keys";
+import { COMPANIES_KEY, OWNCOMPANIES_KEY } from "@/client/constants/query-keys";
 import { axios } from "@/client/libs/axios";
+
+export const fetchOwnCompanies = async () => {
+  const response = await axios.get<CompanyDto[], AxiosResponse<CompanyDto[]>>("/company/own");
+  return response.data;
+};
 
 export const fetchCompanies = async () => {
   const response = await axios.get<CompanyDto[], AxiosResponse<CompanyDto[]>>("/company");
@@ -30,6 +35,18 @@ export const useCompanies = () => {
   } = useQuery({
     queryKey: COMPANIES_KEY,
     queryFn: fetchCompanies,
+  });
+  return { companies, loading, error };
+};
+
+export const useOwnedCompanies = () => {
+  const {
+    error,
+    isPending: loading,
+    data: companies,
+  } = useQuery({
+    queryKey: OWNCOMPANIES_KEY,
+    queryFn: fetchOwnCompanies,
   });
   return { companies, loading, error };
 };

@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { FolderOpen, PencilSimple, TrashSimple } from "@phosphor-icons/react";
 import type { CompanyDto } from "@reactive-resume/dto";
@@ -17,9 +18,10 @@ import { useDialog } from "@/client/stores/dialog";
 
 type Props = {
   company: CompanyDto;
+  role?: string;
 };
 
-export const CompanyCard = ({ company }: Props) => {
+export const CompanyCard = ({ company, role }: Props) => {
   const navigate = useNavigate();
   const { open } = useDialog<CompanyDto>("company");
 
@@ -57,6 +59,14 @@ export const CompanyCard = ({ company }: Props) => {
               </div>
             </div>
             <img src={company.picture ?? undefined} alt={""} className="rounded-sm opacity-80" />
+            {role === "owner" && (
+              <div className="absolute right-1 top-6 rounded border border-gray-700 bg-black px-2 py-1 text-xs font-bold text-white shadow-md">
+                <span role="img" aria-label="Crown">
+                  👑
+                </span>{" "}
+                Owner
+              </div>
+            )}
           </BaseCard>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="pointer-events-auto">

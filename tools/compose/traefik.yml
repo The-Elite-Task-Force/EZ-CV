@@ -23,19 +23,14 @@ services:
       retries: 5
 
   # Storage (for image uploads)
-  minio:
-    image: minio/minio:latest
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
     restart: unless-stopped
-    command: server /data
+    command: azurite-blob --loose --blobHost 0.0.0.0
+    ports:
+      - "10000:10000" # Blob service (HTTP only)
     volumes:
-      - minio_data:/data
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.storage.rule=Host(`storage.example.com`)
-      - traefik.http.services.storage.loadbalancer.server.port=9000
+      - azurite_data:/data
 
   # Chrome Browser (for printing and previews)
   chrome:
@@ -139,5 +134,5 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
-  minio_data:
+  azurite_data:
   postgres_data:
