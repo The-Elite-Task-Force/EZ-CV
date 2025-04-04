@@ -16,3 +16,4 @@ export const SECTION_MAPPING_KEY: QueryKey = ["mappings", "id"];
 export const COMPANY_KEY: QueryKey = ["company"];
 export const COMPANIES_KEY: QueryKey = ["companies"];
 export const OWNCOMPANIES_KEY: QueryKey = ["owned-companies"];
+export const EMPLOYEES_KEY: QueryKey = ["employees"];

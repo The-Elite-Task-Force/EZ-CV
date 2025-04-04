@@ -574,7 +574,7 @@ model CompanyMapping {
   companyId String
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
-  roleId String?
+  roleId Int?
   role   Role?   @relation(fields: [roleId], references: [id], onDelete: Cascade)
 
   status       COMPANY_STATUS @default(PENDING)
@@ -606,8 +606,8 @@ model Company {
 }
 
 model Role {
-  id        String   @id @default(cuid())
-  name      String
+  id        Int      @id @unique
+  name      String   @unique
   updatedAt DateTime @updatedAt
 
   CompanyMapping CompanyMapping[]
