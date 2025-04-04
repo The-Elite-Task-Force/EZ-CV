@@ -328,10 +328,15 @@ export class ResumeService {
     return this.printerService.printPreview(resume);
   }
 
-  async setDefault(userId: string, resumeId: string) {
-    return await this.prisma.user.update({
-      where: { id: userId },
-      data: { profileResumeId: resumeId },
-    });
+  async setDefault(userId: string, resumeId: string | null, setDefaultProfile: boolean) {
+    return await (setDefaultProfile
+      ? this.prisma.user.update({
+          where: { id: userId },
+          data: { profileResumeId: resumeId },
+        })
+      : this.prisma.user.update({
+          where: { id: userId },
+          data: { profileResumeId: null },
+        }));
   }
 }

@@ -69,8 +69,9 @@ export class SearchService {
   async updateSearchIndex(user: UserEntity) {
     // Check if the user has a profile resume
     if (!user.profileResumeId) {
-      throw new InternalServerErrorException("User does not have a profile resume");
+      return;
     }
+
     const documentId = user.profileResumeId;
     const { data } = await this.prisma.resume.findUniqueOrThrow({ where: { id: documentId } });
     if (!data) {
@@ -85,7 +86,7 @@ export class SearchService {
       .then((embedding) => {
         return this.prisma.$queryRaw`
           INSERT INTO searchindex (document, "userId", embedding)
-          VALUES (${document}, ${user.id}, ${embedding}) ON CONFLICT ("userId") DO
+          VALUES (${document}, ${user.id}, ${embedding}) ON CONFLICT ("userId") DO<
           UPDATE
             SET document = EXCLUDED.document, embedding = EXCLUDED.embedding;
         `;

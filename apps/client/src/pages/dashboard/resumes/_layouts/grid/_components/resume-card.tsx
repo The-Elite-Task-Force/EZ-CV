@@ -50,9 +50,11 @@ export const ResumeCard = ({ resume }: Props) => {
     open("update", { id: "resume", item: resume });
   };
 
-  const onSetDefault = async () => {
+  const onSetDefault = async (setDefaultProfile: boolean) => {
     if (!user) return;
-    await setDefault({ resumeId: resume.id, userId: user.id });
+    await (setDefaultProfile
+      ? setDefault({ resumeId: resume.id, userId: user.id, setDefaultProfile: true })
+      : setDefault({ resumeId: resume.id, userId: user.id, setDefaultProfile: false }));
     await queryClient.invalidateQueries({ queryKey: ["user"] });
   };
 
@@ -121,10 +123,17 @@ export const ResumeCard = ({ resume }: Props) => {
             <CopySimple size={14} className="mr-2" />
             {t`Duplicate`}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={onSetDefault}>
-            <FolderOpen size={14} className="mr-2" />
-            Set as profile
-          </DropdownMenuItem>
+          {resume.id === user?.profileResumeId ? (
+            <DropdownMenuItem onClick={() => onSetDefault(false)}>
+              <FolderOpen size={14} className="mr-2" />
+              Remove as profile
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onClick={() => onSetDefault(true)}>
+              <FolderOpen size={14} className="mr-2" />
+              Set as profile
+            </DropdownMenuItem>
+          )}
           {resume.locked ? (
             <DropdownMenuItem onClick={onLockChange}>
               <LockOpen size={14} className="mr-2" />
