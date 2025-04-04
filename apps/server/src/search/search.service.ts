@@ -86,7 +86,7 @@ export class SearchService {
       .then((embedding) => {
         return this.prisma.$queryRaw`
           INSERT INTO searchindex (document, "userId", embedding)
-          VALUES (${document}, ${user.id}, ${embedding}) ON CONFLICT ("userId") DO<
+          VALUES (${document}, ${user.id}, ${embedding}) ON CONFLICT ("userId") DO
           UPDATE
             SET document = EXCLUDED.document, embedding = EXCLUDED.embedding;
         `;

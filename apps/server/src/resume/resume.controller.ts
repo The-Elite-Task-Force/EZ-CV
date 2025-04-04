@@ -163,16 +163,15 @@ export class ResumeController {
     }
   }
 
-  @Patch(":id/setDefault/:setDefaultProfile")
+  @Patch(":id/setDefault")
   @UseGuards(TwoFactorGuard)
   async setDefault(
     @User() user: UserEntity,
     @Param("id") id: string | null,
-    @Param("setDefaultProfile") setDefaultProfile: string,
+    @Body("setDefaultProfile") setDefaultProfile: boolean,
   ) {
     try {
-      const setDefaultBool = setDefaultProfile === "true";
-      user = await this.resumeService.setDefault(user.id, id, setDefaultBool);
+      user = await this.resumeService.setDefault(user.id, id, setDefaultProfile);
       try {
         await this.searchService.updateSearchIndex(user);
       } catch (error) {

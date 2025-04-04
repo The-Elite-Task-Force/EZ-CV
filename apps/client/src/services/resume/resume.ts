@@ -25,11 +25,9 @@ export const setDefault = async (data: {
   userId: string;
   setDefaultProfile: boolean;
 }) => {
-  const response = await axios.patch(
-    `/resume/${data.resumeId}/setDefault/${data.setDefaultProfile}`,
-    {
-      userId: data.userId,
-    },
-  );
+  const response = await axios.patch(`/resume/${data.resumeId}/setDefault`, {
+    userId: data.userId,
+    setDefaultProfile: data.setDefaultProfile,
+  });
   return response.data;
 };
