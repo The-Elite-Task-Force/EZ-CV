@@ -90,6 +90,7 @@ model Resume {
   updatedAt  DateTime    @updatedAt
   basicsItemId String?  
   basicsItem  BasicsItem? @relation(fields: [basicsItemId], references: [id], onDelete: SetNull)
+  language   String      @default("en-US")
 
   TeamsMapping                   TeamsMapping[]
   ResumeProfileItemMapping       ResumeProfileItemMapping[]
