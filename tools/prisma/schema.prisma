@@ -36,6 +36,8 @@ model User {
   provider Provider
   secrets  Secrets?
   resumes  Resume[]
+  variants ResumeVariant[] @relation("OwnerRelation")
+  variantsCreated ResumeVariant[] @relation("CreatorRelation")
 
   TeamsMapping   TeamsMapping[]
   CompanyMapping CompanyMapping[]
@@ -91,7 +93,6 @@ model Resume {
   basicsItemId String?  
   basicsItem  BasicsItem? @relation(fields: [basicsItemId], references: [id], onDelete: SetNull)
 
-  TeamsMapping                   TeamsMapping[]
   ResumeProfileItemMapping       ResumeProfileItemMapping[]
   ResumeWorkItemMapping          ResumeWorkItemMapping[]
   ResumeAwardItemMapping         ResumeAwardItemMapping[]
@@ -112,6 +113,28 @@ model Resume {
   @@index(fields: [userId])
 }
 
+model ResumeVariant {
+  id         String      @id @default(cuid())
+  title      String
+  slug       String
+  data       Json        @default("{}")
+  visibility Visibility  @default(private)
+  locked     Boolean     @default(false)
+  userId     String      // Original owner
+  user       User        @relation("OwnerRelation", fields: [userId], references: [id], onDelete: Cascade)
+  creatorId  String      // Creator ID 
+  creator    User?       @relation("CreatorRelation", fields: [creatorId], references: [id], onDelete: Cascade) 
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  teams TeamsMapping[]
+
+  @@unique([userId, id])
+  @@unique([userId, slug])
+  @@index(fields: [userId])
+  @@index(fields: [creatorId]) // Keep this if querying by creatorId is needed
+}
+
 model Statistics {
   id        String   @id @default(cuid())
   views     Int      @default(0)
@@ -123,6 +146,79 @@ model Statistics {
 
   @@unique([resumeId, id])
 }
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  // Owner of the team
+  userId    String
+  updatedAt DateTime @updatedAt
+
+  TeamsMapping TeamsMapping[]
+
+  @@unique([name, userId])
+}
+
+model TeamsMapping {
+  id       String  @id @default(cuid())
+  teamId   String
+  team     Team    @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resumeId String?
+  resume   ResumeVariant? @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+}
+
+model CompanyMapping {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  roleId String?
+  role   Role?   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  status       COMPANY_STATUS @default(PENDING)
+  invitedAt    String
+  respondedAt  String?
+  terminatedAt String?
+
+  @@unique([userId, companyId])
+}
+
+enum COMPANY_STATUS {
+  PENDING
+  ACCEPTED
+  REJECTED
+  TERMINATED
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  location    String
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  updatedAt   DateTime @updatedAt
+
+  picture        String?
+  CompanyMapping CompanyMapping[]
+}
+
+model Role {
+  id        String   @id @default(cuid())
+  name      String
+  updatedAt DateTime @updatedAt
+
+  CompanyMapping CompanyMapping[]
+}
+
 
 model WorkItem {
   id        String   @id @default(cuid())
@@ -541,74 +637,3 @@ model ResumeCustomItemMapping {
   @@unique([resumeId, customItemId])
 }
 
-model Team {
-  id        String   @id @default(cuid())
-  name      String
-  // Owner of the team
-  userId    String
-  updatedAt DateTime @updatedAt
-
-  TeamsMapping TeamsMapping[]
-
-  @@unique([name, userId])
-}
-
-model TeamsMapping {
-  id       String  @id @default(cuid())
-  teamId   String
-  team     Team    @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  userId   String
-  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  resumeId String?
-  resume   Resume? @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-
-  @@unique([teamId, userId])
-}
-
-model CompanyMapping {
-  id String @id @default(cuid())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  roleId String?
-  role   Role?   @relation(fields: [roleId], references: [id], onDelete: Cascade)
-
-  status       COMPANY_STATUS @default(PENDING)
-  invitedAt    String
-  respondedAt  String?
-  terminatedAt String?
-
-  @@unique([userId, companyId])
-}
-
-enum COMPANY_STATUS {
-  PENDING
-  ACCEPTED
-  REJECTED
-  TERMINATED
-}
-
-model Company {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  description String
-  location    String
-  ownerId     String
-  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  updatedAt   DateTime @updatedAt
-
-  picture        String?
-  CompanyMapping CompanyMapping[]
-}
-
-model Role {
-  id        String   @id @default(cuid())
-  name      String
-  updatedAt DateTime @updatedAt
-
-  CompanyMapping CompanyMapping[]
-}
