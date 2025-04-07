@@ -20,9 +20,14 @@ export const findPublicProfileResume = async (username: string) => {
   return response.data;
 };
 
-export const setDefault = async (data: { resumeId: string; userId: string }) => {
+export const setDefault = async (data: {
+  resumeId: string | null;
+  userId: string;
+  setDefaultProfile: boolean;
+}) => {
   const response = await axios.patch(`/resume/${data.resumeId}/setDefault`, {
     userId: data.userId,
+    setDefaultProfile: data.setDefaultProfile,
   });
   return response.data;
 };
