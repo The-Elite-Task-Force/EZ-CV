@@ -3,7 +3,7 @@ import { dateSchema } from "@reactive-resume/utils";
 import { createZodDto } from "nestjs-zod/dto";
 import { z } from "zod";
 
-import { Role } from "../company/types/types";
+import { Role } from "../company/types/roles";
 import { secretsSchema } from "../secrets";
 
 export const usernameSchema = z

@@ -22,13 +22,12 @@ import {
 } from "@reactive-resume/dto";
 import { ERROR_MESSAGE } from "@reactive-resume/utils";
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { Role } from "libs/dto/src/company/types/types";
+import { Role } from "libs/dto/src/company/types/roles";
 
 import { TwoFactorGuard } from "@/server/auth/guards/two-factor.guard";
 import { CompanyService } from "@/server/company/company.service";
 
 import { User } from "../user/decorators/user.decorator";
-import { CompanyAdminGuard } from "./guards/company.admin.guard";
 import { AllowedRoles } from "./guards/company.role.guard";
 import { CompanyRoleGuard } from "./guards/company.role.guard";
 @ApiTags("Company")

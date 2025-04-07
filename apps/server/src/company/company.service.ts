@@ -9,7 +9,7 @@ import {
   UpdateCompanyDto,
 } from "@reactive-resume/dto";
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { Role } from "libs/dto/src/company/types/types";
+import { Role } from "libs/dto/src/company/types/roles";
 import { PrismaService } from "nestjs-prisma";
 @Injectable()
 export class CompanyService {
@@ -152,14 +152,14 @@ export class CompanyService {
         company: { connect: { id: companyId } },
         user: { connect: { id: userId } },
         invitedAt: new Date().toString(),
-        role: { connect: { id: Role.User.getId() } },
+        role: { connect: { id: Role.Member.getId() } },
       },
     });
   }
 
   async assignRole(companyId: string, userId: string, roleId: number | string) {
     if (typeof roleId === "string") {
-      roleId = Role[roleId as "Owner" | "Admin" | "Bidmanager" | "User"].getId();
+      roleId = Role[roleId as "Owner" | "Admin" | "Bidmanager" | "Member"].getId();
     }
     return this.prisma.companyMapping.update({
       where: { userId_companyId: { userId, companyId } },

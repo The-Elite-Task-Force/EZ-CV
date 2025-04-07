@@ -19,8 +19,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, company, refetchE
   const roleDropdownRef = useRef<HTMLUListElement>(null);
   const navigate = useNavigate();
 
-  // Example roles – adjust as needed
-  const availableRoles = ["Owner", "Admin", "Bidmanager", "User"];
+  const availableRoles = ["Owner", "Admin", "Bidmanager", "Member"];
 
   const handleRemoveUser = async () => {
     await removeUserFromCompany({

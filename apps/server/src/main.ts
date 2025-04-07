@@ -65,16 +65,15 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("docs", app, document);
 
-  // Optionally, run the seed on startup but only in development
-  if (process.env.NODE_ENV === "development") {
-    try {
-      Logger.log("Seeding database on startup...");
-      await seedDatabase();
-      Logger.log("Database seeding completed.");
-    } catch (error) {
-      Logger.error("Database seeding failed:", error);
-    }
+  // Running seeds on startup, adds the roles to the database on startup
+  try {
+    Logger.log("Seeding database on startup...");
+    await seedDatabase();
+    Logger.log("Database seeding completed.");
+  } catch (error) {
+    Logger.error("Database seeding failed:", error);
   }
+
   // Port
   const port = configService.get<number>("PORT") ?? 3000;
 

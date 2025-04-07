@@ -1,7 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { Role } from "../../libs/dto/src/company/types/types"; // adjust as needed
+import { Role } from "../../libs/dto/src/company/types/roles"; // adjust as needed
 
 const prisma = new PrismaClient();
+
+// This script seeds the database with roles defined in the Role class
+// It uses the Prisma client to upsert each role, ensuring that it exists in the database
+// or creates it if it doesn't.
 
 export async function seedDatabase(): Promise<void> {
   const roles = Role.all();
