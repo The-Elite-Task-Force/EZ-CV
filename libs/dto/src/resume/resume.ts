@@ -1,62 +1,10 @@
 import { defaultResumeData, idSchema, resumeDataSchema } from "@reactive-resume/schema";
-import { dateSchema } from "@reactive-resume/utils";
+import { dateSchema, languageEnum } from "@reactive-resume/utils";
 import { createZodDto } from "nestjs-zod/dto";
 import { z } from "zod";
 
 import { userSchema } from "../user";
 
-export const languageEnum = z.enum([
-  "af-ZA",
-  "sq-AL",
-  "am-ET",
-  "ar-SA",
-  "bn-BD",
-  "bg-BG",
-  "ca-ES",
-  "zh-CN",
-  "zh-TW",
-  "cs-CZ",
-  "da-DK",
-  "nl-NL",
-  "en-US",
-  "fi-FI",
-  "fr-FR",
-  "de-DE",
-  "el-GR",
-  "he-IL",
-  "hi-IN",
-  "hu-HU",
-  "id-ID",
-  "it-IT",
-  "ja-JP",
-  "kn-IN",
-  "km-KH",
-  "ko-KR",
-  "lv-LV",
-  "lt-LT",
-  "ms-MY",
-  "ml-IN",
-  "mr-IN",
-  "ne-NP",
-  "no-NO",
-  "or-IN",
-  "fa-IR",
-  "pl-PL",
-  "pt-PT",
-  "pt-BR",
-  "ro-RO",
-  "ru-RU",
-  "sr-SP",
-  "es-ES",
-  "sv-SE",
-  "ta-IN",
-  "te-IN",
-  "th-TH",
-  "tr-TR",
-  "uk-UA",
-  "uz-UZ",
-  "vi-VN",
-]);
 export const resumeSchema = z.object({
   id: idSchema,
   title: z.string(),
@@ -69,8 +17,7 @@ export const resumeSchema = z.object({
   createdAt: dateSchema,
   updatedAt: dateSchema,
   basicsItemId: idSchema.optional(),
-  language: languageEnum,
+  language: languageEnum.default("en-US"),
 });
 
 export class ResumeDto extends createZodDto(resumeSchema) {}
-export type LANGUAGE = z.infer<typeof languageEnum>;

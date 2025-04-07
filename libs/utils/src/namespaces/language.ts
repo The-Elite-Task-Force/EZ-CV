@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 // Languages
 export type Language = {
   id: string;
@@ -360,3 +362,58 @@ export const languages: Language[] = [
     countryCode: "vn",
   },
 ];
+
+export const languageEnum = z.enum([
+  "af-ZA",
+  "sq-AL",
+  "am-ET",
+  "ar-SA",
+  "bn-BD",
+  "bg-BG",
+  "ca-ES",
+  "zh-CN",
+  "zh-TW",
+  "cs-CZ",
+  "da-DK",
+  "nl-NL",
+  "en-US",
+  "fi-FI",
+  "fr-FR",
+  "de-DE",
+  "el-GR",
+  "he-IL",
+  "hi-IN",
+  "hu-HU",
+  "id-ID",
+  "it-IT",
+  "ja-JP",
+  "kn-IN",
+  "km-KH",
+  "ko-KR",
+  "lv-LV",
+  "lt-LT",
+  "ms-MY",
+  "ml-IN",
+  "mr-IN",
+  "ne-NP",
+  "no-NO",
+  "or-IN",
+  "fa-IR",
+  "pl-PL",
+  "pt-PT",
+  "pt-BR",
+  "ro-RO",
+  "ru-RU",
+  "sr-SP",
+  "es-ES",
+  "sv-SE",
+  "ta-IN",
+  "te-IN",
+  "th-TH",
+  "tr-TR",
+  "uk-UA",
+  "uz-UZ",
+  "vi-VN",
+]);
+
+export type LANGUAGE = z.infer<typeof languageEnum>;

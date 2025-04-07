@@ -17,7 +17,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import type { LANGUAGE, ResumeDto } from "@reactive-resume/dto";
+import type { ResumeDto } from "@reactive-resume/dto";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@reactive-resume/ui";
+import type { LANGUAGE } from "@reactive-resume/utils";
 import { cn } from "@reactive-resume/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";

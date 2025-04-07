@@ -3,7 +3,6 @@ import "/node_modules/flag-icons/css/flag-icons.min.css";
 
 import { t } from "@lingui/macro";
 import { CaretDown, Check } from "@phosphor-icons/react";
-import type { LANGUAGE } from "@reactive-resume/dto";
 import {
   Button,
   Input,
@@ -12,6 +11,7 @@ import {
   PopoverTrigger,
   ScrollArea,
 } from "@reactive-resume/ui";
+import type { LANGUAGE } from "@reactive-resume/utils";
 import { cn } from "@reactive-resume/utils";
 import { useMemo, useState } from "react";
 
