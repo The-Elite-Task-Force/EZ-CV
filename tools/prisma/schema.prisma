@@ -108,6 +108,8 @@ model Resume {
   ResumeSummaryItemMapping       ResumeSummaryItemMapping[]
   ResumeCustomItemMapping        ResumeCustomItemMapping[]
 
+  variants        ResumeVariant[] @relation("ResumeToVariants")
+
   @@unique([userId, id])
   @@unique([userId, slug])
   @@index(fields: [userId])
@@ -126,7 +128,8 @@ model ResumeVariant {
   creator    User?       @relation("CreatorRelation", fields: [creatorId], references: [id], onDelete: Cascade) 
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
-
+  resumeId  String
+  resume    Resume @relation("ResumeToVariants", fields: [resumeId], references: [id], onDelete: Cascade)
   teams TeamsMapping[]
 
   @@unique([userId, id])
