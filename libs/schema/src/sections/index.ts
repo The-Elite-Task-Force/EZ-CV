@@ -153,6 +153,22 @@ export const defaultSections: Sections = {
   //custom: {},
 };
 
+export type SectionItemKeys =
+  | keyof z.infer<typeof basicsSchema>
+  | keyof z.infer<typeof summarySchema>
+  | keyof z.infer<typeof awardSchema>
+  | keyof z.infer<typeof certificationSchema>
+  | keyof z.infer<typeof educationSchema>
+  | keyof z.infer<typeof experienceSchema>
+  | keyof z.infer<typeof volunteerSchema>
+  | keyof z.infer<typeof interestSchema>
+  | keyof z.infer<typeof languageSchema>
+  | keyof z.infer<typeof profileSchema>
+  | keyof z.infer<typeof projectSchema>
+  | keyof z.infer<typeof publicationSchema>
+  | keyof z.infer<typeof referenceSchema>
+  | keyof z.infer<typeof skillSchema>;
+
 export * from "./award";
 export * from "./certification";
 export * from "./custom-section";
