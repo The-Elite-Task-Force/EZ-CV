@@ -16,6 +16,7 @@ import { User as UserEntity } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import {
   CreateResumeDto,
+  ImportResumeDto,
   importResumeSchema,
   ResumeDto,
   UpdateResumeDto,
@@ -72,6 +73,19 @@ export class ResumeController {
         throw new BadRequestException(error.message);
       }
       Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @Post("/translate")
+  @UseGuards(TwoFactorGuard)
+  async translate(@User() user: UserEntity, @Body() importResumeDto: ImportResumeDto) {
+    try {
+      this.resumeService.translate(user.id, importResumeDto);
+      return;
+    } catch (error) {
+      Logger.error(error);
+      console.error(error);
       throw new InternalServerErrorException(error);
     }
   }

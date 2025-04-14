@@ -343,4 +343,8 @@ export class ResumeService {
           data: { profileResumeId: null },
         }));
   }
+
+  translate(userId: string, resume: ImportResumeDto) {
+    console.log("resume", resume);
+  }
 }
