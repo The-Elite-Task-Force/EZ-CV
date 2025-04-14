@@ -42,6 +42,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { toast } from "@/client/hooks/use-toast";
 import { useCreateResume, useDeleteResume, useUpdateResume } from "@/client/services/resume";
 import { useImportResume } from "@/client/services/resume/import";
 import { useDialog } from "@/client/stores/dialog";
@@ -52,7 +53,6 @@ type FormValues = z.infer<typeof formSchema>;
 
 export const ResumeDialog = () => {
   const { isOpen, mode, payload, close } = useDialog<ResumeDto>("resume");
-
   const isCreate = mode === "create";
   const isUpdate = mode === "update";
   const isDelete = mode === "delete";
@@ -80,43 +80,58 @@ export const ResumeDialog = () => {
   }, [form.watch("title")]);
 
   const onSubmit = async (values: FormValues) => {
-    if (isCreate) {
-      await createResume({ slug: values.slug, title: values.title, visibility: "private" });
-    }
-
-    if (isUpdate) {
-      if (!payload.item?.id) return;
-
-      await updateResume({
-        id: payload.item.id,
-        title: values.title,
-        slug: values.slug,
-      });
-    }
-
-    if (isDuplicate) {
-      if (!payload.item?.id) return;
-      //Check if basics.id exist to get around validation
-      const {
-        data: { basics },
-      } = payload.item;
-      if (!basics.id) {
-        basics.id = createId();
+    try {
+      if (isCreate) {
+        await createResume({
+          slug: values.slug,
+          title: values.title,
+          visibility: "private",
+          language: values.language,
+        });
       }
-      await duplicateResume({
-        title: values.title,
-        slug: values.slug,
-        data: payload.item.data,
+
+      if (isUpdate) {
+        if (!payload.item?.id) return;
+
+        await updateResume({
+          id: payload.item.id,
+          title: values.title,
+          slug: values.slug,
+        });
+      }
+
+      if (isDuplicate) {
+        if (!payload.item?.id) return;
+        //Check if basics.id exist to get around validation
+        const {
+          data: { basics },
+        } = payload.item;
+        if (!basics.id) {
+          basics.id = createId();
+        }
+        await duplicateResume({
+          title: values.title,
+          slug: values.slug,
+          data: payload.item.data,
+          language: values.language,
+        });
+      }
+
+      if (isDelete) {
+        if (!payload.item?.id) return;
+
+        await deleteResume({ id: payload.item.id });
+      }
+
+      close();
+    } catch (error) {
+      toast({
+        variant: "error",
+        title: "An error occurred",
+        description:
+          error instanceof Error ? error.message : "Something went wrong. Please try again.",
       });
     }
-
-    if (isDelete) {
-      if (!payload.item?.id) return;
-
-      await deleteResume({ id: payload.item.id });
-    }
-
-    close();
   };
 
   const onReset = () => {
@@ -142,6 +157,7 @@ export const ResumeDialog = () => {
       title: randomName,
       slug: slugify(randomName),
       data: sampleResume,
+      language: "en-US",
     });
 
     close();
@@ -222,6 +238,7 @@ export const ResumeDialog = () => {
                   </FormControl>
                   <FormDescription>
                     {t`Tip: You can name the resume referring to the position you are applying for.`}
+                    <p>{isDuplicate && "Note: Selected resume language is not duplicated."}</p>
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

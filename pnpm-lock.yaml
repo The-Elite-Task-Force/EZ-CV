@@ -236,6 +236,9 @@ importers:
       file-saver:
         specifier: ^2.0.5
         version: 2.0.5
+      flag-icons:
+        specifier: ^7.3.2
+        version: 7.3.2
       framer-motion:
         specifier: ^11.18.2
         version: 11.18.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -7097,6 +7100,9 @@ packages:
   fixpack@4.0.0:
     resolution: {integrity: sha512-5SM1+H2CcuJ3gGEwTiVo/+nd/hYpNj9Ch3iMDOQ58ndY+VGQ2QdvaUTkd3otjZvYnd/8LF/HkJ5cx7PBq0orCQ==}
     hasBin: true
+
+  flag-icons@7.3.2:
+    resolution: {integrity: sha512-QkaZ6Zvai8LIjx+UNAHUJ5Dhz9OLZpBDwCRWxF6YErxIcR16jTkIFm3bFu54EkvKQy4+wicW+Gm7/0631wVQyQ==}
 
   flat-cache@3.2.0:
     resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}
@@ -20063,6 +20069,8 @@ snapshots:
       extend-object: 1.0.0
       rc: 1.2.8
     optional: true
+
+  flag-icons@7.3.2: {}
 
   flat-cache@3.2.0:
     dependencies:

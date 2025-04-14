@@ -34,6 +34,7 @@ export class ResumeService {
         title: createResumeDto.title,
         visibility: createResumeDto.visibility,
         slug: createResumeDto.slug ?? slugify(createResumeDto.title),
+        language: "en-US",
       },
     });
   }
@@ -56,6 +57,7 @@ export class ResumeService {
         title: title,
         slug: slugify(title),
         basicsItemId: basicItemResult.id,
+        language: importResumeDto.language,
       },
     });
 
@@ -207,6 +209,7 @@ export class ResumeService {
         data: defaultResumeData,
         title: title,
         slug: slugify(title),
+        language: "en-US",
       },
     });
   }
@@ -269,6 +272,7 @@ export class ResumeService {
           slug: updateResumeDto.slug,
           visibility: updateResumeDto.visibility,
           data: updateResumeDto.data,
+          language: updateResumeDto.language,
         },
         where: { userId_id: { userId, id } },
       });

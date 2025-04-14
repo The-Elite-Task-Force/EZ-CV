@@ -8,6 +8,8 @@ import session from "express-session";
 import helmet from "helmet";
 import { patchNestJsSwagger } from "nestjs-zod";
 
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { seedDatabase } from "../../../tools/prisma/seed"; // adjust relative path as needed
 import { AppModule } from "./app.module";
 import type { Config } from "./config/schema";
 
@@ -62,6 +64,15 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("docs", app, document);
+
+  // Running seeds on startup, adds the roles to the database on startup
+  try {
+    Logger.log("Seeding database on startup...");
+    await seedDatabase();
+    Logger.log("Database seeding completed.");
+  } catch (error) {
+    Logger.error("Database seeding failed:", error);
+  }
 
   // Port
   const port = configService.get<number>("PORT") ?? 3000;
