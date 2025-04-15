@@ -93,7 +93,7 @@ export const ResumeDialog = () => {
           slug: values.slug,
           title: values.title,
           visibility: "private",
-          language: values.language,
+          language: values.language ?? "en-US",
         });
       }
 

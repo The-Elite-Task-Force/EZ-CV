@@ -14,6 +14,7 @@ import { PrismaService } from "nestjs-prisma";
 
 import { PrinterService } from "@/server/printer/printer.service";
 
+import { translateSections } from "../ai/translator";
 import { StorageService } from "../storage/storage.service";
 
 @Injectable()
@@ -345,6 +346,7 @@ export class ResumeService {
   }
 
   translate(userId: string, resume: ImportResumeDto) {
-    console.log("resume", resume);
+    if (!resume.language) throw new BadRequestException(ERROR_MESSAGE.InvalidLanguage);
+    return translateSections(resume.data.sections, resume.language);
   }
 }

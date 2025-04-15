@@ -81,8 +81,10 @@ export class ResumeController {
   @UseGuards(TwoFactorGuard)
   async translate(@User() user: UserEntity, @Body() importResumeDto: ImportResumeDto) {
     try {
-      this.resumeService.translate(user.id, importResumeDto);
-      return;
+      const data = await this.resumeService.translate(user.id, importResumeDto);
+      console.log("Translation completed successfully.");
+      console.log(data);
+      return data;
     } catch (error) {
       Logger.error(error);
       console.error(error);

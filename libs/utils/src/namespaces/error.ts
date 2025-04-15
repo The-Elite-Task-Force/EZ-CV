@@ -19,4 +19,5 @@ export enum ERROR_MESSAGE {
   SomethingWentWrong = "SomethingWentWrong",
   CompanyNameAlreadyExists = "CompanyNameAlreadyExists",
   NOPUBLICRESUME = "NoPublicResume",
+  InvalidLanguage = "InvalidLanguage",
 }
