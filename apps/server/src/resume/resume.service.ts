@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { createId } from "@paralleldrive/cuid2";
 import { CreateResumeDto, ImportResumeDto, ResumeDto, UpdateResumeDto } from "@reactive-resume/dto";
-import { defaultResumeData, ResumeData } from "@reactive-resume/schema";
+import { defaultResumeData, ResumeData, Sections } from "@reactive-resume/schema";
 import { DeepPartial, ERROR_MESSAGE, generateRandomName } from "@reactive-resume/utils";
 import slugify from "@sindresorhus/slugify";
 import deepmerge from "deepmerge";
@@ -345,8 +345,10 @@ export class ResumeService {
         }));
   }
 
-  translate(userId: string, resume: ImportResumeDto) {
+  async translate(resume: ImportResumeDto) {
     if (!resume.language) throw new BadRequestException(ERROR_MESSAGE.InvalidLanguage);
-    return translateSections(resume.data.sections, resume.language);
+
+    resume.data.sections = await translateSections(resume.data.sections, resume.language);
+    return resume;
   }
 }

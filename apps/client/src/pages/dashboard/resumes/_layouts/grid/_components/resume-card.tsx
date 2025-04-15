@@ -200,7 +200,7 @@ export const ResumeCard = ({ resume }: Props) => {
               <LocaleComboboxPopover
                 value={resumeLanguage}
                 onValueChange={(locale) => {
-                  setResumeLanguage(locale as LANGUAGE);
+                  setResumeLanguage(locale);
                 }}
               />
             </DropdownMenuSubContent>
