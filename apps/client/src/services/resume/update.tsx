@@ -7,9 +7,21 @@ import { axios } from "@/client/libs/axios";
 import { queryClient } from "@/client/libs/query-client";
 
 export const updateResume = async (data: UpdateResumeDto) => {
+  let dataWithoutSections = data;
+  if (data.data) {
+    const {
+      data: { sections: _sections, ...restDataFields },
+      ...rest
+    } = data;
+
+    dataWithoutSections = {
+      ...rest,
+      data: restDataFields,
+    };
+  }
   const response = await axios.patch<ResumeDto, AxiosResponse<ResumeDto>, UpdateResumeDto>(
     `/resume/${data.id}`,
-    data,
+    dataWithoutSections,
   );
 
   queryClient.setQueryData<ResumeDto>(["resume", { id: response.data.id }], response.data);
