@@ -38,6 +38,7 @@ import { setDefault } from "@/client/services/resume";
 import { updateResume } from "@/client/services/resume";
 import { useAuthStore } from "@/client/stores/auth";
 import { useDialog } from "@/client/stores/dialog";
+import { useSectionMappingStore } from "@/client/stores/section-mapping";
 
 import { BaseCard } from "./base-card";
 
@@ -54,10 +55,12 @@ export const ResumeCard = ({ resume }: Props) => {
 
   const [resumeLanguage, setResumeLanguage] = useState<LANGUAGE>(resume.language);
 
+  const mappings = useSectionMappingStore((state) => state.mappings);
+
   useEffect(() => {
     const update = async () => {
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      await updateResume({ ...resume, language: resumeLanguage });
+      await updateResume({ ...resume, language: resumeLanguage }, mappings);
     };
 
     void update();

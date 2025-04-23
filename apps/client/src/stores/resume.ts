@@ -13,6 +13,7 @@ import { immer } from "zustand/middleware/immer";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 
 import { debouncedUpdateResume } from "../services/resume";
+import { useSectionMappingStore } from "./section-mapping";
 
 type ResumeStore = {
   resume: ResumeDto;
@@ -39,7 +40,9 @@ export const useResumeStore = create<ResumeStore>()(
             state.resume.data = _set(state.resume.data, path, value);
           }
 
-          void debouncedUpdateResume(JSON.parse(JSON.stringify(state.resume)));
+          const mappings = useSectionMappingStore((state) => state.mappings);
+
+          void debouncedUpdateResume(JSON.parse(JSON.stringify(state.resume)), mappings);
         });
       },
       addSection: () => {
@@ -55,7 +58,9 @@ export const useResumeStore = create<ResumeStore>()(
           state.resume.data.metadata.layout[lastPageIndex][0].push(`custom.${section.id}`);
           state.resume.data = _set(state.resume.data, `sections.custom.${section.id}`, section);
 
-          void debouncedUpdateResume(JSON.parse(JSON.stringify(state.resume)));
+          const mappings = useSectionMappingStore((state) => state.mappings);
+
+          void debouncedUpdateResume(JSON.parse(JSON.stringify(state.resume)), mappings);
         });
       },
       removeSection: (sectionId: SectionKey) => {
@@ -69,7 +74,9 @@ export const useResumeStore = create<ResumeStore>()(
             //OBS: FIX CUSTOM
             //delete state.resume.data.sections.custom[id];
 
-            void debouncedUpdateResume(JSON.parse(JSON.stringify(state.resume)));
+            const mappings = useSectionMappingStore((state) => state.mappings);
+
+            void debouncedUpdateResume(JSON.parse(JSON.stringify(state.resume)), mappings);
           });
         }
       },

@@ -1,27 +1,28 @@
-import type { ResumeDto, UpdateResumeDto } from "@reactive-resume/dto";
+import type { ResumeDto, SectionMappingDto, UpdateResumeDto } from "@reactive-resume/dto";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 import debounce from "lodash.debounce";
 
 import { axios } from "@/client/libs/axios";
 import { queryClient } from "@/client/libs/query-client";
+import { mapSections } from "@/client/pages/builder/page";
 
-export const updateResume = async (data: UpdateResumeDto) => {
-  let dataWithoutSections = data;
-  if (data.data) {
-    const {
-      data: { sections: _sections, ...restDataFields },
-      ...rest
-    } = data;
-
-    dataWithoutSections = {
-      ...rest,
-      data: restDataFields,
+export const updateResume = async (data: UpdateResumeDto, mappings: SectionMappingDto) => {
+  let resumeMappedSections = data;
+  if (data.data?.sections) {
+    const mappedSections = mapSections(data.data.sections, mappings);
+    resumeMappedSections = {
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...data,
+      data: {
+        ...data.data,
+        sections: mappedSections,
+      },
     };
   }
   const response = await axios.patch<ResumeDto, AxiosResponse<ResumeDto>, UpdateResumeDto>(
     `/resume/${data.id}`,
-    dataWithoutSections,
+    resumeMappedSections,
   );
 
   queryClient.setQueryData<ResumeDto>(["resume", { id: response.data.id }], response.data);
