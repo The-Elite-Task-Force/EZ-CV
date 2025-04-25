@@ -3,6 +3,7 @@ import { dateSchema } from "@reactive-resume/utils";
 import { createZodDto } from "nestjs-zod/dto";
 import { z } from "zod";
 
+import { Role } from "../company/types/roles";
 import { secretsSchema } from "../secrets";
 
 export const usernameSchema = z
@@ -13,6 +14,13 @@ export const usernameSchema = z
     message: "Usernames can only contain letters, numbers, periods, hyphens, and underscores.",
   })
   .transform((value) => value.toLowerCase());
+
+export const company = z.object({
+  id: idSchema,
+  name: z.string(),
+  role: z.nativeEnum(Role.asEnum()),
+});
+export const companyListSchema = z.array(company);
 
 export const userSchema = z.object({
   id: idSchema,
@@ -30,6 +38,7 @@ export const userSchema = z.object({
   provider: z.enum(["email", "github", "google", "openid", "microsoft"]).default("email"),
   createdAt: dateSchema,
   updatedAt: dateSchema,
+  companys: z.array(company).optional(),
 });
 
 export class UserDto extends createZodDto(userSchema) {}

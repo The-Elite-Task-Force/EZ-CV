@@ -10,7 +10,7 @@ import { SECTION_MAPPING_KEY } from "@/client/constants/query-keys";
 import { queryClient } from "@/client/libs/query-client";
 import { findResumeById } from "@/client/services/resume";
 import { useSections } from "@/client/services/section/sections";
-import { fetchSectionMappings } from "@/client/services/section-mapping";
+import { fetchSectionMappings, useSectionMappings } from "@/client/services/section-mapping";
 import { useBuilderStore } from "@/client/stores/builder";
 import { useResumeStore } from "@/client/stores/resume";
 import { useSectionMappingStore } from "@/client/stores/section-mapping";
@@ -52,6 +52,8 @@ export const BuilderPage = () => {
   const setMappings = useSectionMappingStore((state) => state.setMappings);
 
   useSections();
+
+  useSectionMappings(resume.id);
 
   const syncResumeToArtboard = useCallback(() => {
     const latestMappings = useSectionMappingStore.getState().mappings;

@@ -34,6 +34,7 @@ export class ResumeService {
         title: createResumeDto.title,
         visibility: createResumeDto.visibility,
         slug: createResumeDto.slug ?? slugify(createResumeDto.title),
+        language: "en-US",
       },
     });
   }
@@ -56,6 +57,7 @@ export class ResumeService {
         title: title,
         slug: slugify(title),
         basicsItemId: basicItemResult.id,
+        language: importResumeDto.language,
       },
     });
 
@@ -207,6 +209,7 @@ export class ResumeService {
         data: defaultResumeData,
         title: title,
         slug: slugify(title),
+        language: "en-US",
       },
     });
   }
@@ -269,6 +272,7 @@ export class ResumeService {
           slug: updateResumeDto.slug,
           visibility: updateResumeDto.visibility,
           data: updateResumeDto.data,
+          language: updateResumeDto.language,
         },
         where: { userId_id: { userId, id } },
       });
@@ -328,10 +332,15 @@ export class ResumeService {
     return this.printerService.printPreview(resume);
   }
 
-  async setDefault(userId: string, resumeId: string) {
-    return await this.prisma.user.update({
-      where: { id: userId },
-      data: { profileResumeId: resumeId },
-    });
+  async setDefault(userId: string, resumeId: string | null, setDefaultProfile: boolean) {
+    return await (setDefaultProfile
+      ? this.prisma.user.update({
+          where: { id: userId },
+          data: { profileResumeId: resumeId },
+        })
+      : this.prisma.user.update({
+          where: { id: userId },
+          data: { profileResumeId: null },
+        }));
   }
 }

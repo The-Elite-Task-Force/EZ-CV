@@ -1,5 +1,5 @@
 import { defaultResumeData, idSchema, resumeDataSchema } from "@reactive-resume/schema";
-import { dateSchema } from "@reactive-resume/utils";
+import { dateSchema, languageEnum } from "@reactive-resume/utils";
 import { createZodDto } from "nestjs-zod/dto";
 import { z } from "zod";
 
@@ -17,6 +17,7 @@ export const resumeSchema = z.object({
   createdAt: dateSchema,
   updatedAt: dateSchema,
   basicsItemId: idSchema.optional(),
+  language: languageEnum.default("en-US"),
 });
 
 export class ResumeDto extends createZodDto(resumeSchema) {}

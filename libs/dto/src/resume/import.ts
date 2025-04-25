@@ -1,5 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { resumeDataSchema } from "@reactive-resume/schema";
+import { languageEnum } from "@reactive-resume/utils";
 import slugify from "@sindresorhus/slugify";
 import { createZodDto } from "nestjs-zod/dto";
 import { z } from "zod";
@@ -17,6 +18,7 @@ export const importResumeSchema = z.object({
     .optional(),
   visibility: z.enum(["public", "private"]).default("private").optional(),
   data: resumeDataSchema,
+  language: languageEnum.default("en-US").optional(),
 });
 
 export class ImportResumeDto extends createZodDto(importResumeSchema) {}

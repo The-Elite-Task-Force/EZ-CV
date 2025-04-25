@@ -375,6 +375,6 @@ export class AuthService {
       secrets: { update: { twoFactorBackupCodes: backupCodes } },
     });
 
-    return user as UserWithSecrets;
+    return user;
   }
 }

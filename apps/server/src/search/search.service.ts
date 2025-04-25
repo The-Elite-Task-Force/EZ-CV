@@ -69,8 +69,9 @@ export class SearchService {
   async updateSearchIndex(user: UserEntity) {
     // Check if the user has a profile resume
     if (!user.profileResumeId) {
-      throw new InternalServerErrorException("User does not have a profile resume");
+      return;
     }
+
     const documentId = user.profileResumeId;
     const { data } = await this.prisma.resume.findUniqueOrThrow({ where: { id: documentId } });
     if (!data) {
