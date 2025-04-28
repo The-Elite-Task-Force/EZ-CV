@@ -9,9 +9,8 @@ export class MetricsController {
   constructor(private readonly metricsService: MetricsService) {}
 
   @Get()
-  @Header('Content-Type', 'text/plain') 
+  @Header("Content-Type", "text/plain")
   async getMetrics() {
-    const metrics = await this.metricsService.getMetrics();
-    return metrics;
+    return await this.metricsService.getMetrics();
   }
 }
