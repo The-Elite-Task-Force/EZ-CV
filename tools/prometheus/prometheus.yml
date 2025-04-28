@@ -6,4 +6,4 @@ scrape_configs:
     scheme: https
     metrics_path: '/api/metrics'
     static_configs:
-      - targets: ['dev.ezcv.thetechcollective.dev:443']
+      - targets: ['dev.ezcv.thetechcollective.dev']
