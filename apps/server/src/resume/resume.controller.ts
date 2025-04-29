@@ -77,18 +77,6 @@ export class ResumeController {
     }
   }
 
-  @Post("/translate")
-  @UseGuards(TwoFactorGuard)
-  async translate(@User() user: UserEntity, @Body() importResumeDto: ImportResumeDto) {
-    try {
-      const data = await this.resumeService.translate(importResumeDto);
-      return data;
-    } catch (error) {
-      Logger.error(error);
-      throw new InternalServerErrorException(error);
-    }
-  }
-
   @Get()
   @UseGuards(TwoFactorGuard)
   findAll(@User() user: UserEntity) {

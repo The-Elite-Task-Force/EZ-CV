@@ -12,22 +12,20 @@ export class AzureOpenAIClient implements ChatClient {
   constructor(apiKey: string, endpoint: string) {
     this.client = new OpenAI({
       apiKey,
-      baseURL: endpoint, // Important!
+      baseURL: endpoint,
       defaultHeaders: {
-        "api-key": apiKey, // Azure expects api-key, not Authorization: Bearer
+        "api-key": apiKey,
       },
     });
   }
 
   async chatCompletion(params: ChatCompletionParams): Promise<ChatCompletionResponse> {
-    console.log("checkasdaksjj");
     const response = await this.client.chat.completions.create({
       model: params.model, // For Azure, `model` is your Deployment Name
       messages: params.messages,
       temperature: params.temperature,
       stream: params.stream,
     });
-    console.log("checkasdaksjj", response);
     if ("choices" in response) {
       return response as ChatCompletionResponse;
     }

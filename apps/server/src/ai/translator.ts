@@ -7,7 +7,6 @@ import { prompts } from "./prompts";
 
 const chatClient = getChatClient();
 const OpenAIModel = process.env.OPENAI_MODEL ?? "gpt-4";
-const maxAttempts = 2;
 
 export async function translateBasicSection(
   basics: Sections["basics"],
@@ -89,40 +88,55 @@ export async function translateSummarySection(
     { role: "user", content: JSON.stringify(summary.items) },
   ];
 
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      const response = await chatClient.chatCompletion({
-        model: OpenAIModel,
-        messages,
-        temperature: 0.3,
-      });
-
-      const rawContent = response.choices[0].message.content;
-      console.log("summary rawContent", attempt, rawContent);
-
-      messages.push({
-        role: "assistant",
-        content: rawContent,
-      });
+  try {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       try {
-        const parsedItems = JSON.parse(rawContent);
-        const validatedSection = sectionsSchema.shape.summary.parse({
-          ...summary,
-          items: parsedItems,
+        const response = await chatClient.chatCompletion({
+          model: OpenAIModel,
+          messages,
+          temperature: 0.3,
         });
-        return validatedSection;
-      } catch (error) {
-        const errorMsg = `Error parsing JSON. PLEASE TRY AGAIN: ${error}`;
+        console.log("ChatCompletion Response:", response);
+        const rawContent = response.choices[0].message.content;
+
+        console.log("summary rawContent", attempt, rawContent);
         messages.push({
-          role: "user",
-          content: errorMsg,
+          role: "assistant",
+          content: rawContent,
         });
+
+        try {
+          const parsedItems = JSON.parse(rawContent);
+          const validatedSection = sectionsSchema.shape.summary.parse({
+            ...summary,
+            items: parsedItems,
+          });
+          return validatedSection;
+        } catch (error) {
+          const errorMsg = `Error parsing JSON in translateSummarySection: ${error.message}`;
+          Logger.error(errorMsg, error.stack);
+          messages.push({
+            role: "user",
+            content: `Error parsing JSON. PLEASE TRY AGAIN: ${error.message}`,
+          });
+        }
+      } catch (apiError) {
+        Logger.error(
+          `API Error in translateSummarySection (Attempt ${attempt}): ${apiError.message}`,
+          apiError.stack,
+        );
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
-    } catch {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
+  } catch (unexpectedError) {
+    Logger.error(
+      `Unexpected error in translateSummarySection: ${unexpectedError.message}`,
+      unexpectedError.stack,
+    );
+    throw new Error(`Unexpected error in translateSummarySection: ${unexpectedError.message}`);
   }
-  throw new Error("Unexpected error in translateSummarySection");
+
+  throw new Error("Failed to translate summary section after multiple attempts.");
 }
 
 export async function translateAwardsSection(
