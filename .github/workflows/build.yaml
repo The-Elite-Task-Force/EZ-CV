@@ -1,4 +1,4 @@
-name: Build
+name: Build and Test
 
 on:
   push:
@@ -26,6 +26,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Test
+        run: pnpm vitest --config ./vitest.config.ts run
 
       - name: Run build
         run: pnpm run build
