@@ -96,10 +96,9 @@ export async function translateSummarySection(
           messages,
           temperature: 0.3,
         });
-        console.log("ChatCompletion Response:", response);
+
         const rawContent = response.choices[0].message.content;
 
-        console.log("summary rawContent", attempt, rawContent);
         messages.push({
           role: "assistant",
           content: rawContent,
@@ -163,7 +162,6 @@ export async function translateAwardsSection(
       });
 
       const rawContent = response.choices[0].message.content;
-      console.log("awards rawContent", attempt, rawContent);
 
       messages.push({
         role: "assistant",
@@ -214,7 +212,6 @@ export async function translateCertificationsSection(
       });
 
       const rawContent = response.choices[0].message.content;
-      console.log("certifications rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -264,7 +261,7 @@ export async function translateEducationSection(
       });
 
       const rawContent = response.choices[0].message.content;
-      console.log("education rawContent", attempt, rawContent);
+      ////console.log("education rawContent", attempt, rawContent);
 
       messages.push({
         role: "assistant",
@@ -315,7 +312,7 @@ export async function translateExperienceSection(
       });
 
       const rawContent = response.choices[0].message.content;
-      console.log("experience rawContent", attempt, rawContent);
+      ////console.log("experience rawContent", attempt, rawContent);
 
       messages.push({
         role: "assistant",
@@ -367,8 +364,7 @@ export async function translateVolunteerSection(
       });
 
       const rawContent = response.choices[0].message.content;
-      // console.log("volunteer rawContent", attempt, rawContent);
-      console.log("volunteer rawContent", attempt, rawContent);
+      //console.log("volunteer rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -418,7 +414,7 @@ export async function translateInterestsSection(
       });
 
       const rawContent = response.choices[0].message.content;
-      console.log("interests rawContent", attempt, rawContent);
+      //console.log("interests rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -468,7 +464,7 @@ export async function translateLanguagesSection(
       });
 
       const rawContent = response.choices[0].message.content;
-      console.log("languages rawContent", attempt, rawContent);
+      //console.log("languages rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -518,7 +514,7 @@ export async function translateProfilesSection(
       });
 
       const rawContent = response.choices[0].message.content;
-      console.log("profiles rawContent", attempt, rawContent);
+      //console.log("profiles rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -568,7 +564,7 @@ export async function translateProjectsSection(
       });
 
       const rawContent = response.choices[0].message.content;
-      console.log("projects rawContent", attempt, rawContent);
+      //console.log("projects rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -618,7 +614,7 @@ export async function translatePublicationsSection(
       });
 
       const rawContent = response.choices[0].message.content;
-      console.log("publications rawContent", attempt, rawContent);
+      //console.log("publications rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -668,7 +664,7 @@ export async function translateReferencesSection(
       });
 
       const rawContent = response.choices[0].message.content;
-      console.log("references rawContent", attempt, rawContent);
+      //console.log("references rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,

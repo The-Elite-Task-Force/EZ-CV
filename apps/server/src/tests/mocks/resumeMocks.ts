@@ -422,3 +422,29 @@ export const mockSavedVariant = {
   createdAt: new Date(),
   language: "en",
 };
+
+// Mock Summary
+export const mockSummary = {
+  id: "summary",
+  items: [
+    {
+      id: "1",
+      content: "Original Summary",
+      name: "Summary Item",
+      userId: "userId123",
+      updatedAt: new Date(),
+      description: "Description of the summary item",
+    },
+  ],
+};
+
+// Mock Chat Completion Response
+export const mockResponse = {
+  choices: [
+    {
+      message: {
+        content: JSON.stringify(mockSummary.items), // Return the same structure as input
+      },
+    },
+  ],
+};
