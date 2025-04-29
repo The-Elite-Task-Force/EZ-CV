@@ -74,7 +74,7 @@ export const ResumeDialog = () => {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { title: "", slug: "", language: "en-US" }, // Default language
+    defaultValues: { title: "", slug: "", id: "", language: "en-US" }, // Default language
   });
 
   useEffect(() => {
@@ -131,6 +131,7 @@ export const ResumeDialog = () => {
           title: values.title,
           slug: values.slug,
           data: payload.item.data,
+          id: payload.item.id,
           language: values.language,
         });
       }

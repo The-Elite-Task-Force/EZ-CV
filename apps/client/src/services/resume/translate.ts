@@ -1,12 +1,12 @@
-import type { ImportResumeDto, ResumeDto } from "@reactive-resume/dto";
+import type { ResumeDto } from "@reactive-resume/dto";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 
 import { axios } from "@/client/libs/axios";
 
-export const translateResume = async (data: ImportResumeDto) => {
-  const response = await axios.post<ResumeDto, AxiosResponse<ResumeDto>, ImportResumeDto>(
-    "/resume/translate",
+export const translateResume = async (data: ResumeDto) => {
+  const response = await axios.post<ResumeDto, AxiosResponse<ResumeDto>, ResumeDto>(
+    "/variant/translate",
     data,
   );
 

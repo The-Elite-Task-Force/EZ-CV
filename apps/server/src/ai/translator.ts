@@ -1,10 +1,12 @@
+import { Logger } from "@nestjs/common";
 import type { Sections } from "@reactive-resume/schema";
 import { sectionsSchema } from "@reactive-resume/schema";
-import { OpenAI } from "openai";
 
+import { getChatClient } from "./chat-client-factory";
 import { prompts } from "./prompts";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const chatClient = getChatClient();
+const OpenAIModel = process.env.OPENAI_MODEL ?? "gpt-4";
 const maxAttempts = 2;
 
 export async function translateBasicSection(
@@ -15,46 +17,61 @@ export async function translateBasicSection(
   if (basics.items.length === 0) {
     return basics;
   }
-  // Create the messages array once.
+
   const basePrompt = prompts.projects.replace("{{lang}}", targetLang);
   const messages: { role: "system" | "user" | "assistant"; content: string }[] = [
     { role: "system", content: basePrompt },
     { role: "user", content: JSON.stringify(basics.items) },
   ];
 
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
-        messages,
-        temperature: 0.3,
-      });
-
-      const rawContent = response.choices[0].message.content ?? "[]";
-
-      messages.push({
-        role: "assistant",
-        content: rawContent,
-      });
+  try {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       try {
-        const parsedItems = JSON.parse(rawContent);
-        const validatedSection = sectionsSchema.shape.basics.parse({
-          ...basics,
-          items: parsedItems,
+        const response = await chatClient.chatCompletion({
+          model: OpenAIModel,
+          messages,
+          temperature: 0.3,
         });
-        return validatedSection;
-      } catch (error) {
-        const errorMsg = `Error parsing JSON. PLEASE TRY AGAIN: ${error}`;
+
+        const rawContent = response.choices[0].message.content;
+
         messages.push({
-          role: "user",
-          content: errorMsg,
+          role: "assistant",
+          content: rawContent,
         });
+
+        try {
+          const parsedItems = JSON.parse(rawContent);
+          const validatedSection = sectionsSchema.shape.basics.parse({
+            ...basics,
+            items: parsedItems,
+          });
+          return validatedSection;
+        } catch (error) {
+          const errorMsg = `Error parsing JSON in translateBasicsSection: ${error.message}`;
+          Logger.error(errorMsg, error.stack);
+          messages.push({
+            role: "user",
+            content: `Error parsing JSON. PLEASE TRY AGAIN: ${error.message}`,
+          });
+        }
+      } catch (apiError) {
+        Logger.error(
+          `API Error in translateBasicsSection (Attempt ${attempt}): ${apiError.message}`,
+          apiError.stack,
+        );
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
-    } catch {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
+  } catch (unexpectedError) {
+    Logger.error(
+      `Unexpected error in translateBasicsSection: ${unexpectedError.message}`,
+      unexpectedError.stack,
+    );
+    throw new Error(`Unexpected error in translateBasicsSection: ${unexpectedError.message}`);
   }
-  throw new Error("Unexpected error in translateBasicsSection");
+
+  throw new Error("Failed to translate basics section after multiple attempts.");
 }
 
 export async function translateSummarySection(
@@ -74,13 +91,14 @@ export async function translateSummarySection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
+      const rawContent = response.choices[0].message.content;
+      console.log("summary rawContent", attempt, rawContent);
 
       messages.push({
         role: "assistant",
@@ -124,13 +142,14 @@ export async function translateAwardsSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
+      const rawContent = response.choices[0].message.content;
+      console.log("awards rawContent", attempt, rawContent);
 
       messages.push({
         role: "assistant",
@@ -174,14 +193,14 @@ export async function translateCertificationsSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
-
+      const rawContent = response.choices[0].message.content;
+      console.log("certifications rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -224,13 +243,14 @@ export async function translateEducationSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
+      const rawContent = response.choices[0].message.content;
+      console.log("education rawContent", attempt, rawContent);
 
       messages.push({
         role: "assistant",
@@ -274,13 +294,14 @@ export async function translateExperienceSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
+      const rawContent = response.choices[0].message.content;
+      console.log("experience rawContent", attempt, rawContent);
 
       messages.push({
         role: "assistant",
@@ -325,14 +346,15 @@ export async function translateVolunteerSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
-
+      const rawContent = response.choices[0].message.content;
+      // console.log("volunteer rawContent", attempt, rawContent);
+      console.log("volunteer rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -375,14 +397,14 @@ export async function translateInterestsSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
-
+      const rawContent = response.choices[0].message.content;
+      console.log("interests rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -425,14 +447,14 @@ export async function translateLanguagesSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
-
+      const rawContent = response.choices[0].message.content;
+      console.log("languages rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -475,14 +497,14 @@ export async function translateProfilesSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
-
+      const rawContent = response.choices[0].message.content;
+      console.log("profiles rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -525,14 +547,14 @@ export async function translateProjectsSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
-
+      const rawContent = response.choices[0].message.content;
+      console.log("projects rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -575,14 +597,14 @@ export async function translatePublicationsSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
-
+      const rawContent = response.choices[0].message.content;
+      console.log("publications rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -625,14 +647,14 @@ export async function translateReferencesSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
-
+      const rawContent = response.choices[0].message.content;
+      console.log("references rawContent", attempt, rawContent);
       messages.push({
         role: "assistant",
         content: rawContent,
@@ -675,14 +697,13 @@ export async function translateSkillsSection(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
+      const response = await chatClient.chatCompletion({
+        model: OpenAIModel,
         messages,
         temperature: 0.3,
       });
 
-      const rawContent = response.choices[0].message.content ?? "[]";
-
+      const rawContent = response.choices[0].message.content;
       messages.push({
         role: "assistant",
         content: rawContent,
