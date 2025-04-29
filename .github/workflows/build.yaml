@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+env:
+  VITE_POSTGRES_PORT: ${{ secrets.VITE_POSTGRES_PORT }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
