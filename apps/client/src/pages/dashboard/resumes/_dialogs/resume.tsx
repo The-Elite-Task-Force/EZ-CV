@@ -40,7 +40,7 @@ import { cn, generateRandomName, languages } from "@reactive-resume/utils";
 import slugify from "@sindresorhus/slugify";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { date, z } from "zod";
 
 import { toast } from "@/client/hooks/use-toast";
 import { useCreateResume, useDeleteResume, useUpdateResume } from "@/client/services/resume";
@@ -132,7 +132,12 @@ export const ResumeDialog = () => {
           slug: values.slug,
           data: payload.item.data,
           id: payload.item.id,
-          language: values.language,
+          language: values.language ?? "en-US",
+          visibility: "private",
+          userId: "",
+          updatedAt: new Date(Date.now()),
+          locked: false,
+          createdAt: new Date(Date.now()),
         });
       }
 
