@@ -2,6 +2,7 @@ import { t } from "@lingui/macro";
 import {
   BuildingApartment,
   FadersHorizontal,
+  FolderSimpleUser,
   GithubLogo,
   MagnifyingGlass,
   ReadCvLogo,
@@ -17,8 +18,6 @@ import { Logo } from "@/client/components/logo";
 import { UserAvatar } from "@/client/components/user-avatar";
 import { UserOptions } from "@/client/components/user-options";
 import { useUser } from "@/client/services/user";
-
-import { ContactCard } from "../../builder/sidebars/right/sections/information";
 
 type Props = {
   className?: string;
@@ -99,6 +98,11 @@ export const Sidebar = ({ setOpen }: SidebarProps) => {
     setOpen?.(false);
   });
 
+  useKeyboardShortcut(["shift", "j"], () => {
+    void navigate("/dashboard/projects");
+    setOpen?.(false);
+  });
+
   // Define all SideBar Items that are NOT needed to be seen when logged in here
   const commonSideBarItems: SidebarItem[] = [
     {
@@ -140,6 +144,13 @@ export const Sidebar = ({ setOpen }: SidebarProps) => {
         icon: <UserAvatar />,
       },
       ...commonSideBarItems,
+      {
+        path: "/dashboard/projects",
+        // eslint-disable-next-line lingui/no-unlocalized-strings
+        name: "Projects",
+        shortcut: "⇧J",
+        icon: <FolderSimpleUser />,
+      },
     ];
   }
 
