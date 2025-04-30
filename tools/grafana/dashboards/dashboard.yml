@@ -1,0 +1,8 @@
+# grafana/provisioning/dashboards/dashboard.yml
+apiVersion: 1
+
+providers:
+  - name: 'Default'
+    updateIntervalSeconds: 5
+    options:
+      path: /etc/grafana/provisioning/dashboards

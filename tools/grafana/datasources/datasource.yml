@@ -1,0 +1,8 @@
+# grafana/provisioning/datasources/datasource.yml
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://ezcv-promethus.azurewebsites.net:9090

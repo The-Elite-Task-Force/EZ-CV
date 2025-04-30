@@ -37,13 +37,13 @@ module webApp './web-app.bicep' = {
     AZURE_ACCOUNT_NAME: kv.getSecret('AZURE-ACCOUNT-NAME')
     AZURE_STORAGE_CONTAINER: kv.getSecret('AZURE-STORAGe-CONTAINER')
     CHROME_TOKEN: kv.getSecret('CHROME-TOKEN')
-    CHROME_URL: kv.getSecret('CHROME-URL')
+    CHROME_URL: chromio.outputs.ip
     CHROME_PORT: kv.getSecret('CHROME-PORT')
     DATABASE_URL: kv.getSecret('DATABASE-URL')
     DOCKER_ENABLE_CI: kv.getSecret('DOCKER-ENABLE-CI')
     DOCKER_REGISTRY_SERVER_PASSWORD: kv.getSecret('DOCKER-REGISTRY-SERVER-PASSWORD')
-    DOCKER_REGISTRY_SERVER_URL: kv.getSecret('DOCKER-REGISTRY-SERVER-URL')
     DOCKER_REGISTRY_SERVER_USERNAME: kv.getSecret('DOCKER-REGISTRY-SERVER-USERNAME')
+    DOCKER_REGISTRY_SERVER_URL: kv.getSecret('DOCKER-REGISTRY-SERVER-URL')
     GITHUB_CALLBACK_URL: kv.getSecret('GITHUB-CALLBACK-URL')
     GITHUB_CLIENT_ID: kv.getSecret('GITHUB-CLIENT-ID')
     GITHUB_CLIENT_SECRET: kv.getSecret('GITHUB-CLIENT-SECRET')
@@ -107,5 +107,35 @@ module postgres './postgres.bicep' = {
     postgresVersion: '16'
     POSTGRES_USER: kv.getSecret('POSTGRES-USER')
     POSTGRES_PASSWORD: kv.getSecret('POSTGRES-PASSWORD')
+  }
+}
+
+module grafana 'grafana.bicep' = {
+  name: '${prefix}-${dockerTag}-grafana'
+  scope: rg
+  params: {
+    prefix: prefix
+    dockerTag: dockerTag
+    grafanaAdminPassword: kv.getSecret('GRAFANA-ADMIN-PASSWORD')
+    DOCKER_REGISTRY_SERVER_PASSWORD: kv.getSecret('DOCKER-REGISTRY-SERVER-PASSWORD')
+    DOCKER_REGISTRY_SERVER_USERNAME: kv.getSecret('DOCKER-REGISTRY-SERVER-USERNAME')
+    blobSttorageContainerName: kv.getSecret('SHARE-NAME')
+    blobStorageAccountName: kv.getSecret('STORAGE-ACCOUNT-NAME')
+    blobStorageAccountKey: kv.getSecret('STORAGE-ACCOUNT-KEY')
+  }
+}
+
+module prometheus 'prometheus.bicep' = {
+  name: '${prefix}-${dockerTag}-prometheus'
+  scope: rg
+  params: {
+    prefix: prefix
+    dockerTag: dockerTag
+    webAppUrl: webApp.outputs.webAppURL
+    DOCKER_REGISTRY_SERVER_PASSWORD: kv.getSecret('DOCKER-REGISTRY-SERVER-PASSWORD')
+    DOCKER_REGISTRY_SERVER_USERNAME: kv.getSecret('DOCKER-REGISTRY-SERVER-USERNAME')
+    blobSttorageContainerName: kv.getSecret('SHARE-NAME')
+    blobStorageAccountName: kv.getSecret('STORAGE-ACCOUNT-NAME')
+    blobStorageAccountKey: kv.getSecret('STORAGE-ACCOUNT-KEY')
   }
 }
