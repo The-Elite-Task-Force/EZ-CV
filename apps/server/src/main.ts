@@ -4,14 +4,17 @@ import { NestFactory } from "@nestjs/core";
 import type { NestExpressApplication } from "@nestjs/platform-express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import cookieParser from "cookie-parser";
+import type { NextFunction, Request, Response } from "express";
 import session from "express-session";
 import helmet from "helmet";
 import { patchNestJsSwagger } from "nestjs-zod";
+import client from "prom-client";
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { seedDatabase } from "../../../tools/prisma/seed"; // adjust relative path as needed
 import { AppModule } from "./app.module";
 import type { Config } from "./config/schema";
+import { MetricsService } from "./metrics/metrics.service";
 
 patchNestJsSwagger();
 
@@ -19,6 +22,31 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: process.env.NODE_ENV === "development" ? ["debug"] : ["error", "warn", "log"],
   });
+
+  const httpRequestDuration = new client.Histogram({
+    name: "http_request_duration_seconds",
+    help: "Duration of HTTP requests in seconds",
+    labelNames: ["method", "route", "code"],
+    registers: [MetricsService.register],
+  });
+
+  const metricsMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    const end = httpRequestDuration.startTimer();
+    res.on("finish", () => {
+      end({
+        method: req.method,
+        route: req.route?.path || req.path,
+        code: res.statusCode.toString(),
+      });
+    });
+    next();
+  };
+  
+
+  MetricsService.register.registerMetric(httpRequestDuration);
+  client.collectDefaultMetrics({ register: MetricsService.register });
+
+  app.use(metricsMiddleware);
 
   const configService = app.get(ConfigService<Config>);
 
@@ -55,9 +83,9 @@ async function bootstrap() {
   // Swagger (OpenAPI Docs)
   // This can be accessed by visiting {SERVER_URL}/api/docs
   const config = new DocumentBuilder()
-    .setTitle("Reactive Resume")
+    .setTitle("EZ CV")
     .setDescription(
-      "Reactive Resume is a free and open source resume builder that's built to make the mundane tasks of creating, updating and sharing your resume as easy as 1, 2, 3.",
+      "Ez CV is a free and open source resume builder that's built to make the mundane tasks of creating, updating and sharing your resume as easy as 1, 2, 3.",
     )
     .addCookieAuth("Authentication", { type: "http", in: "cookie", scheme: "Bearer" })
     .setVersion("4.0.0")

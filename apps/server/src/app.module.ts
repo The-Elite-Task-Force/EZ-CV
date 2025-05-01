@@ -15,6 +15,7 @@ import { DatabaseModule } from "./database/database.module";
 import { FeatureModule } from "./feature/feature.module";
 import { HealthModule } from "./health/health.module";
 import { MailModule } from "./mail/mail.module";
+import { MetricsModule } from "./metrics/metrics.module";
 import { PrinterModule } from "./printer/printer.module";
 import { ResumeModule } from "./resume/resume.module";
 import { SearchModule } from "./search/search.module";
@@ -44,6 +45,7 @@ import { UserModule } from "./user/user.module";
     SectionItemModule,
     SearchModule,
     CompanyModule,
+    MetricsModule,
 
     // Static Assets
     ServeStaticModule.forRoot({

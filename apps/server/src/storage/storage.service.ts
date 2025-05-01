@@ -34,7 +34,7 @@ export class StorageService implements OnModuleInit {
     if (storageType == "azurite") {
       this.logger.warn("Azurite storage type is not supported in production.");
       this.blobServiceClient = new BlobServiceClient(
-        `http://localhost:10000/${accountName}`,
+        `http://azurite:10000/${accountName}`,
         credentials,
       );
     } else {

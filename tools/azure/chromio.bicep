@@ -83,3 +83,5 @@ resource chromium_container_name_resource 'Microsoft.ContainerInstance/container
     osType: 'Linux'
   }
 }
+
+output ip string = chromium_container_name_resource.properties.ipAddress.ip

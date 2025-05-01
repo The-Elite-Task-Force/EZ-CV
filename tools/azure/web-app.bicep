@@ -438,3 +438,6 @@ resource dockerApp 'Microsoft.Web/sites/config@2024-04-01' = {
     azureStorageAccounts: {}
   }
 }
+
+output webAppURL string = sites.properties.defaultHostName
+output serverFarmId string = serverFarm.id
