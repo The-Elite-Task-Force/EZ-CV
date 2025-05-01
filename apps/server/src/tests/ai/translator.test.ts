@@ -15,7 +15,7 @@ describe("translateSummarySection", async () => {
   const { getChatClient } = await import("../../ai/chat-client-factory");
   beforeEach(() => {
     mockChatClient = vi.mocked(getChatClient());
-    mockChatClient.chatCompletion.mockResolvedValue(mockResponse); // Mock the response
+    mockChatClient.chatCompletion.mockResolvedValue(mockResponse);
   });
 
   afterEach(() => {
@@ -27,14 +27,6 @@ describe("translateSummarySection", async () => {
     const result = await translateSummarySection(emptySummary, "es");
 
     expect(result).toEqual(emptySummary);
-    expect(mockChatClient.chatCompletion).not.toHaveBeenCalled();
-  });
-
-  it("should translate the mock summary", async () => {
-    const summary = { id: "summary", items: [] };
-    const result = await translateSummarySection(summary, "es");
-
-    expect(result).toEqual(summary);
     expect(mockChatClient.chatCompletion).not.toHaveBeenCalled();
   });
 
