@@ -112,10 +112,6 @@ const Section = <T,>({
 
   return (
     <section id={section.id}>
-      {/* <div className="mb-2 border-b border-gray-300 pb-1 text-lg font-bold uppercase tracking-wide text-primary">
-        {section.name}
-      </div> */}
-
       <div
         className="grid gap-6"
         style={{ gridTemplateColumns: `repeat(${section.columns}, 1fr)` }}
