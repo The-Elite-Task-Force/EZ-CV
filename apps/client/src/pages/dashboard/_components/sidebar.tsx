@@ -177,7 +177,12 @@ export const Sidebar = ({ setOpen }: SidebarProps) => {
       </Button>
       <Separator className="opacity-50" />
       <UserOptions>
-        <Button size="lg" variant="ghost" className="w-full justify-start px-3">
+        <Button
+          data-cy="user-menu-button"
+          size="lg"
+          variant="ghost"
+          className="w-full justify-start px-3"
+        >
           <UserAvatar size={24} className="mr-3" />
           <span>{user?.name}</span>
         </Button>
