@@ -21,8 +21,8 @@ export const useTranslateResume = () => {
   } = useMutation({
     mutationFn: translateResume,
     onSuccess: (data) => {
-      // void queryClient.invalidateQueries({ queryKey: SECTIONS_KEY });
-      // void queryClient.invalidateQueries({ queryKey: SECTION_MAPPING_KEY });
+      // Add logic here to update the cache after translation
+      // Invalidate the Resumes and sections to refetch the data
     },
   });
 

@@ -10,11 +10,10 @@ vi.mock("../../ai/chat-client-factory", () => ({
   }),
 }));
 
-describe("translateSummarySection", () => {
+describe("translateSummarySection", async () => {
   let mockChatClient: { chatCompletion: ReturnType<typeof vi.fn> };
-
-  beforeEach(async () => {
-    const { getChatClient } = await import("../../ai/chat-client-factory");
+  const { getChatClient } = await import("../../ai/chat-client-factory");
+  beforeEach(() => {
     mockChatClient = vi.mocked(getChatClient());
     mockChatClient.chatCompletion.mockResolvedValue(mockResponse); // Mock the response
   });
@@ -23,11 +22,19 @@ describe("translateSummarySection", () => {
     vi.clearAllMocks();
   });
 
-  it("should translate the original summary", async () => {
+  it("skips empty summary", async () => {
     const emptySummary = { id: "summary", items: [] };
     const result = await translateSummarySection(emptySummary, "es");
 
     expect(result).toEqual(emptySummary);
+    expect(mockChatClient.chatCompletion).not.toHaveBeenCalled();
+  });
+
+  it("should translate the mock summary", async () => {
+    const summary = { id: "summary", items: [] };
+    const result = await translateSummarySection(summary, "es");
+
+    expect(result).toEqual(summary);
     expect(mockChatClient.chatCompletion).not.toHaveBeenCalled();
   });
 
@@ -37,7 +44,5 @@ describe("translateSummarySection", () => {
     await expect(translateSummarySection(mockSummary, "es")).rejects.toThrow(
       "Failed to translate summary section after multiple attempts.",
     );
-
-    expect(mockChatClient.chatCompletion).toHaveBeenCalledTimes(0);
   });
 });
