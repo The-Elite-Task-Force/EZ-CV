@@ -1,24 +1,17 @@
 import type {
   Award,
   Certification,
-  //   CustomSection,
   CustomSectionGroup,
   Interest,
   Language,
   Profile,
-  // Project,
   Publication,
   Reference,
   SectionKey,
   SectionWithItem,
-  // Skill,
   URL,
 } from "@reactive-resume/schema";
-import type {
-  // Education as EducationType,
-  // Experience as ExperienceType,
-  Volunteer as VolunteerType,
-} from "@reactive-resume/schema";
+import type { Volunteer as VolunteerType } from "@reactive-resume/schema";
 import { cn, isEmptyString, isUrl, linearTransform, sanitize } from "@reactive-resume/utils";
 import get from "lodash.get";
 import React, { Fragment } from "react";
