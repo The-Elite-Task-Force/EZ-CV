@@ -1,7 +1,7 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ResumeDto } from "@reactive-resume/dto";
+import { ResumeDto, VariantDto } from "@reactive-resume/dto";
 import { ERROR_MESSAGE } from "@reactive-resume/utils";
 import retry from "async-retry";
 import { PDFDocument } from "pdf-lib";
@@ -70,7 +70,7 @@ export class PrinterService {
     return url;
   }
 
-  async printPreview(resume: ResumeDto) {
+  async printPreview(resume: ResumeDto | VariantDto) {
     const start = performance.now();
 
     const url = await retry(() => this.generatePreview(resume), {

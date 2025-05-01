@@ -17,7 +17,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import type { ResumeDto } from "@reactive-resume/dto";
+import type { ResumeDto, VariantDto } from "@reactive-resume/dto";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,7 +42,7 @@ import { useDialog } from "@/client/stores/dialog";
 import { BaseCard } from "./base-card";
 
 type Props = {
-  resume: ResumeDto;
+  resume: ResumeDto | VariantDto;
 };
 
 export const ResumeCard = ({ resume }: Props) => {
@@ -53,7 +53,7 @@ export const ResumeCard = ({ resume }: Props) => {
   const queryClient = useQueryClient();
 
   const [resumeLanguage, setResumeLanguage] = useState<LANGUAGE>(resume.language);
-
+  const isVariant = "creatorId" in resume;
   useEffect(() => {
     const update = async () => {
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
@@ -131,6 +131,13 @@ export const ResumeCard = ({ resume }: Props) => {
                 </div>
               )}
 
+              {/* Green banner for variants */}
+              {isVariant && (
+                <div className="absolute left-2 top-2 z-10 rounded bg-green-600 px-2 py-1 text-xs font-bold text-white shadow-md">
+                  Variant
+                </div>
+              )}
+
               <h4 className="line-clamp-2 font-medium">{resume.title}</h4>
               <p className="line-clamp-1 text-xs opacity-75">{t`Last updated ${lastUpdated}`}</p>
             </div>
@@ -188,6 +195,7 @@ export const ResumeCard = ({ resume }: Props) => {
               <LocaleComboboxPopover
                 value={resumeLanguage}
                 onValueChange={(locale) => {
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                   setResumeLanguage(locale as LANGUAGE);
                 }}
               />

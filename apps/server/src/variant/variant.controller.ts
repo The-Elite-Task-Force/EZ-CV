@@ -12,12 +12,14 @@ import {
 import { ApiTags } from "@nestjs/swagger";
 import { createId } from "@paralleldrive/cuid2";
 import { User as UserEntity } from "@prisma/client";
-import { ResumeDto, CreateVariantDto, VariantDto } from "@reactive-resume/dto";
+import { CreateVariantDto, ResumeDto, VariantDto } from "@reactive-resume/dto";
 
+import { OptionalGuard } from "../auth/guards/optional.guard";
 import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
+import { Resume } from "../resume/decorators/resume.decorator";
+import { ResumeGuard } from "../resume/guards/resume.guard";
 import { User } from "../user/decorators/user.decorator";
 import { VariantService } from "./variant.service";
-import { Resume } from "../resume/decorators/resume.decorator";
 @ApiTags("Variant")
 @Controller("variant")
 export class VariantController {
@@ -52,19 +54,12 @@ export class VariantController {
     return await this.variantService.findAll(id);
   }
 
-  @Get("print/:preview")
-  @UseGuards(TwoFactorGuard)
-  async printPreview(@Resume() variant: VariantDto) {
+  @Get("/print/:id")
+  @UseGuards(OptionalGuard, ResumeGuard)
+  async printResume(@User("id") userId: string | undefined, @Resume() variant: VariantDto) {
     try {
-      const url =  await this.variantService.printPreview(variant);
-      return {url}
-  }
+      const url = await this.variantService.printResume(variant);
 
-  @Get("print/:id/preview")
-  @UseGuards(TwoFactorGuard)
-  async printResume(@User("id") userId: string | undefined, @Resume() variant: ResumeDto) {
-    try {
-      const url = await this.variantService.printResume(variant, userId);
       return { url };
     } catch (error) {
       Logger.error(error);
@@ -72,4 +67,16 @@ export class VariantController {
     }
   }
 
+  @Get("/print/:id/preview")
+  @UseGuards(TwoFactorGuard, ResumeGuard)
+  async printPreview(@Resume() variant: VariantDto) {
+    try {
+      const url = await this.variantService.printPreview(variant);
+
+      return { url };
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
 }
