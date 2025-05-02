@@ -1,6 +1,6 @@
 import { t } from "@lingui/macro";
 import { createId } from "@paralleldrive/cuid2";
-import type { ResumeDto } from "@reactive-resume/dto";
+import type { ResumeDto, VariantDto } from "@reactive-resume/dto";
 import type { CustomSectionGroup, SectionKey } from "@reactive-resume/schema";
 import { defaultSection } from "@reactive-resume/schema";
 import { removeItemInLayout } from "@reactive-resume/utils";
@@ -15,7 +15,7 @@ import { useStoreWithEqualityFn } from "zustand/traditional";
 import { debouncedUpdateResume } from "../services/resume";
 
 type ResumeStore = {
-  resume: ResumeDto;
+  resume: ResumeDto | VariantDto;
 
   // Actions
   setValue: (path: string, value: unknown) => void;
@@ -28,7 +28,7 @@ type ResumeStore = {
 export const useResumeStore = create<ResumeStore>()(
   temporal(
     immer((set) => ({
-      resume: {} as ResumeDto,
+      resume: {} as ResumeDto | VariantDto,
       setValue: (path, value) => {
         set((state) => {
           if (path === "visibility") {

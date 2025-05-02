@@ -218,26 +218,38 @@ export class ResumeService {
     return this.prisma.resume.findMany({ where: { userId }, orderBy: { updatedAt: "desc" } });
   }
 
-  findallResumesAndVariants(userId: string, filterHidden = false) {
-    const resumes = this.prisma.resume.findMany({
-      where: {
-        userId,
-        ...(filterHidden ? {} : { visibility: "public" }),
-      },
-    });
-
-    const variants = this.prisma.resumeVariant.findMany({
-      where: {
-        userId,
-        ...(filterHidden ? {} : { visibility: "public" }),
-      },
-    });
-
-    // return both resumes and sort them by updatedAt
-    return Promise.all([resumes, variants]).then(([resumes, variants]) => {
-      const allResumes = [...resumes, ...variants];
-      return allResumes.sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
-    });
+  async findallResumesAndVariants(userId: string, filterHidden = false) {
+    // Fetch resumes
+    let resumes;
+    let variants;
+    if (filterHidden) {
+      resumes = await this.prisma.resume.findMany({
+        where: {
+          userId,
+          visibility: "public",
+        },
+      });
+      variants = await this.prisma.resumeVariant.findMany({
+        where: {
+          userId,
+          visibility: "public",
+        },
+      });
+    } else {
+      resumes = await this.prisma.resume.findMany({
+        where: {
+          userId,
+        },
+      });
+      variants = await this.prisma.resumeVariant.findMany({
+        where: {
+          userId,
+        },
+      });
+    }
+    // Combine and sort results
+    const allResumes = [...resumes, ...variants];
+    return allResumes.sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
   }
 
   findOne(id: string, userId?: string) {

@@ -8,7 +8,7 @@ import { queryClient } from "@/client/libs/query-client";
 import { findResumeById } from "@/client/services/resume/resume";
 
 export const fetchResumes = async () => {
-  const response = await axios.get<ResumeDto[], AxiosResponse<ResumeDto[]>>("/resume");
+  const response = await axios.get<ResumeDto[], AxiosResponse<ResumeDto[]>>("/resume/all");
 
   return response.data;
 };

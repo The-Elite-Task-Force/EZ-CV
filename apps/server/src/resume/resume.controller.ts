@@ -1,3 +1,5 @@
+import { get } from "node:http";
+
 import {
   BadRequestException,
   Body,
@@ -80,6 +82,18 @@ export class ResumeController {
   @UseGuards(TwoFactorGuard)
   findAll(@User() user: UserEntity) {
     return this.resumeService.findAll(user.id);
+  }
+
+  @Get("all")
+  @UseGuards(TwoFactorGuard)
+  async findAllWithVariants(@User() user: UserEntity) {
+    console.log("findAllWithVariants", user.id);
+    try {
+      return await this.resumeService.findallResumesAndVariants(user.id);
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
   }
 
   @Get(":id")
