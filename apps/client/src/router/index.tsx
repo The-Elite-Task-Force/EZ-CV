@@ -92,9 +92,11 @@ export const routes = createRoutesFromElements(
       </Route>
 
       {/* Public Routes */}
-      <Route path=":username">
-        <Route path=":username" loader={publicProfileLoader} element={<PublicProfilePage />} />
-      </Route>
+      <Route
+        path="publicprofile/:username"
+        loader={publicProfileLoader}
+        element={<PublicProfilePage />}
+      />
     </Route>
   </Route>,
 );

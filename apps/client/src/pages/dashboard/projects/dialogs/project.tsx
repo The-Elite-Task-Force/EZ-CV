@@ -23,6 +23,7 @@ import {
 import { cn } from "@reactive-resume/utils";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useSearchParams } from "react-router";
 import type { z } from "zod";
 
 import { useCreateProject } from "@/client/services/project/create";
@@ -38,29 +39,38 @@ export const ProjectDialog = () => {
 
   const isCreate = mode === "create";
 
+  const [searchParams, _setSearchParams] = useSearchParams();
+
   const { createProject, loading: createLoading, error } = useCreateProject();
 
   const loading = createLoading;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "" },
+    defaultValues: { name: "", companyId: "" },
   });
 
   useEffect(() => {
     if (isOpen) onReset();
   }, [isOpen, payload]);
 
+  useEffect(() => {
+    const param = searchParams.get("company");
+    if (param && isOpen) {
+      form.setValue("companyId", param);
+    }
+  }, [searchParams, isOpen]);
+
   const onSubmit = async (values: FormValues): Promise<void> => {
     if (isCreate) {
-      await createProject({ name: values.name });
+      await createProject({ name: values.name, companyId: values.companyId });
     }
 
     close();
   };
 
   const onReset = () => {
-    if (isCreate) form.reset({ name: "" });
+    if (isCreate) form.reset({ name: "", companyId: "" });
   };
 
   return (

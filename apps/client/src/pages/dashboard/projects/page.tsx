@@ -12,20 +12,19 @@ import {
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { useSearchParams } from "react-router";
 
 import { useCompanies } from "@/client/services/company";
 import { useAuthStore } from "@/client/stores/auth";
 
 import { ProjectsGridView } from "./layouts/grid";
 import { ProjectListView } from "./layouts/list";
-import { useNavigate, useSearchParams } from "react-router";
 
 type Layout = "grid" | "list";
 
 export const ProjectsPage = () => {
   const [layout, setLayout] = useState<Layout>("grid");
   const [company, setCompany] = useState<string | undefined>();
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { user } = useAuthStore();
@@ -50,12 +49,6 @@ export const ProjectsPage = () => {
       setCompany(companies[0].id);
     }
   }, [companies, searchParams]);
-
-  useEffect(() => {
-    if (company) {
-      void navigate(`/projects/${company}`);
-    }
-  }, [company, navigate]);
 
   if (!user || loading) return;
 

@@ -121,14 +121,14 @@ export const Sidebar = ({ setOpen }: SidebarProps) => {
       // eslint-disable-next-line lingui/no-unlocalized-strings
       name: "Search",
       shortcut: "⇧F",
-      icon: <MagnifyingGlass />,
+      icon: <MagnifyingGlass size={20} />,
     },
     {
       path: "/dashboard/companies",
       // eslint-disable-next-line lingui/no-unlocalized-strings
       name: "Companies",
       shortcut: "⇧C",
-      icon: <BuildingApartment />,
+      icon: <BuildingApartment size={20} />,
     },
   ];
   // Define all SideBar Items that ARE needed to be logged in to be seen here
@@ -151,7 +151,7 @@ export const Sidebar = ({ setOpen }: SidebarProps) => {
               // eslint-disable-next-line lingui/no-unlocalized-strings
               name: "Projects",
               shortcut: "⇧J",
-              icon: <FolderSimpleUser />,
+              icon: <FolderSimpleUser size={20}/>,
             },
           ]),
       {

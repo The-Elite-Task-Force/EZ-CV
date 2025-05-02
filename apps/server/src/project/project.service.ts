@@ -11,6 +11,7 @@ export class ProjectService {
         name: createProjectDto.name,
         userId: id,
         description: "",
+        companyId: createProjectDto.companyId,
       },
     });
 
