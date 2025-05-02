@@ -1,13 +1,13 @@
 import { t } from "@lingui/macro";
 import { Plus } from "@phosphor-icons/react";
-import type { ResumeDto } from "@reactive-resume/dto";
+import type { ProjectDto } from "@reactive-resume/dto";
 import { KeyboardShortcut } from "@reactive-resume/ui";
 
 import { BaseListItem } from "@/client/pages/dashboard/resumes/_layouts/list/_components/base-item";
 import { useDialog } from "@/client/stores/dialog";
 
-export const CreateResumeListItem = () => {
-  const { open } = useDialog<ResumeDto>("project");
+export const CreateProjectListItem = () => {
+  const { open } = useDialog<ProjectDto>("project");
 
   return (
     <BaseListItem

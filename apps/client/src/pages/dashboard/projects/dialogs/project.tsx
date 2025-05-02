@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/macro";
 import { Plus } from "@phosphor-icons/react";
 import type { ProjectDto } from "@reactive-resume/dto";
-import { createCompanySchema } from "@reactive-resume/dto";
+import { createProjectSchema } from "@reactive-resume/dto";
 import { idSchema } from "@reactive-resume/schema";
 import {
   Button,
@@ -25,11 +25,11 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
-import { useCreateCompany } from "@/client/services/company";
+import { useCreateProject } from "@/client/services/project/create";
 import { useDialog } from "@/client/stores/dialog";
 import { formatErrorMessage } from "@/client/utils/format-error";
 
-const formSchema = createCompanySchema.extend({ id: idSchema.optional() });
+const formSchema = createProjectSchema.extend({ id: idSchema.optional() });
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -38,7 +38,7 @@ export const ProjectDialog = () => {
 
   const isCreate = mode === "create";
 
-  const { createCompany, loading: createLoading, error } = useCreateCompany();
+  const { createProject, loading: createLoading, error } = useCreateProject();
 
   const loading = createLoading;
 
@@ -53,7 +53,7 @@ export const ProjectDialog = () => {
 
   const onSubmit = async (values: FormValues): Promise<void> => {
     if (isCreate) {
-      await createCompany({ name: values.name });
+      await createProject({ name: values.name });
     }
 
     close();

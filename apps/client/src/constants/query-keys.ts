@@ -17,3 +17,6 @@ export const COMPANY_KEY: QueryKey = ["company"];
 export const COMPANIES_KEY: QueryKey = ["companies"];
 export const OWNCOMPANIES_KEY: QueryKey = ["owned-companies"];
 export const EMPLOYEES_KEY: QueryKey = ["employees"];
+
+export const PROJECT_KEY: QueryKey = ["project"];
+export const PROJECTS_KEY: QueryKey = ["projects"];

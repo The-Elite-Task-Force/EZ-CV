@@ -18,5 +18,6 @@ export enum ERROR_MESSAGE {
   ResumePreviewError = "ResumePreviewError",
   SomethingWentWrong = "SomethingWentWrong",
   CompanyNameAlreadyExists = "CompanyNameAlreadyExists",
+  ProjectNameAlreadyExists = "ProjectNameAlreadyExists",
   NOPUBLICRESUME = "NoPublicResume",
 }

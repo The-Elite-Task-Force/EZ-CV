@@ -9,6 +9,7 @@ import { Helmet } from "react-helmet-async";
 import { useAuthStore } from "@/client/stores/auth";
 
 import { ProjectsGridView } from "./layouts/grid";
+import { ProjectListView } from "./layouts/list";
 
 type Layout = "grid" | "list";
 
@@ -60,9 +61,7 @@ export const ProjectsPage = () => {
             <ProjectsGridView />
           </TabsContent>
           <TabsContent value="list">
-            {
-              // ProjectsListView
-            }
+            <ProjectListView />
           </TabsContent>
         </ScrollArea>
       </Tabs>

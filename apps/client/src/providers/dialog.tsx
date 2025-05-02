@@ -15,6 +15,7 @@ import { ReferencesDialog } from "../pages/builder/sidebars/left/dialogs/referen
 import { SkillsDialog } from "../pages/builder/sidebars/left/dialogs/skills";
 import { SummaryDialog } from "../pages/builder/sidebars/left/dialogs/summary";
 import { VolunteerDialog } from "../pages/builder/sidebars/left/dialogs/volunteer";
+import { ProjectDialog } from "../pages/dashboard/projects/dialogs/project";
 import { ImportDialog } from "../pages/dashboard/resumes/_dialogs/import";
 import { LockDialog } from "../pages/dashboard/resumes/_dialogs/lock";
 import { ResumeDialog } from "../pages/dashboard/resumes/_dialogs/resume";
@@ -38,6 +39,7 @@ export const DialogProvider = ({ children }: Props) => {
         <LockDialog />
         <ImportDialog />
         <TwoFactorDialog />
+        <ProjectDialog />
 
         {isResumeLoaded && (
           <>
