@@ -1,24 +1,63 @@
 /* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { List, SquaresFour } from "@phosphor-icons/react";
-import { ScrollArea, Tabs, TabsContent, TabsList, TabsTrigger } from "@reactive-resume/ui";
+import {
+  Combobox,
+  ScrollArea,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@reactive-resume/ui";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 
+import { useCompanies } from "@/client/services/company";
 import { useAuthStore } from "@/client/stores/auth";
 
 import { ProjectsGridView } from "./layouts/grid";
 import { ProjectListView } from "./layouts/list";
+import { useNavigate, useSearchParams } from "react-router";
 
 type Layout = "grid" | "list";
 
 export const ProjectsPage = () => {
   const [layout, setLayout] = useState<Layout>("grid");
+  const [company, setCompany] = useState<string | undefined>();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { user } = useAuthStore();
 
-  if (!user) return;
+  const { companies, loading } = useCompanies();
+
+  useEffect(() => {
+    if (company) {
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.set("company", company);
+        return newParams;
+      });
+    }
+  }, [company, setSearchParams]);
+
+  useEffect(() => {
+    const param = searchParams.get("company");
+    if (param) {
+      setCompany(param);
+    } else if (!company && companies && companies.length > 0) {
+      setCompany(companies[0].id);
+    }
+  }, [companies, searchParams]);
+
+  useEffect(() => {
+    if (company) {
+      void navigate(`/projects/${company}`);
+    }
+  }, [company, navigate]);
+
+  if (!user || loading) return;
 
   return (
     <div>
@@ -40,6 +79,19 @@ export const ProjectsPage = () => {
           >
             Projects
           </motion.h1>
+
+          <div className="w-full max-w-xs">
+            <Combobox
+              value={company}
+              options={
+                companies?.map((c) => ({
+                  label: c.name,
+                  value: c.id,
+                })) ?? []
+              }
+              onValueChange={setCompany}
+            />
+          </div>
 
           <TabsList>
             <TabsTrigger value="grid" className="size-8 p-0 sm:h-8 sm:w-auto sm:px-4">
