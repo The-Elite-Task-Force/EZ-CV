@@ -1,4 +1,4 @@
-/* eslint-disable lingui/no-unlocalized-strings */
+import { t } from "@lingui/macro";
 import { Plus } from "@phosphor-icons/react";
 import { KeyboardShortcut } from "@reactive-resume/ui";
 import { cn } from "@reactive-resume/utils";
@@ -6,8 +6,8 @@ import { cn } from "@reactive-resume/utils";
 import { BaseCard } from "@/client/pages/dashboard/resumes/_layouts/grid/_components/base-card";
 import { useDialog } from "@/client/stores/dialog";
 
-export const CreateCompanyCard = () => {
-  const { open } = useDialog("company");
+export const CreateProjectCard = () => {
+  const { open } = useDialog("project");
 
   return (
     <BaseCard
@@ -24,11 +24,12 @@ export const CreateCompanyCard = () => {
         )}
       >
         <h4 className="font-medium">
-          Create a new company
+          {t`Create a new project`}
+          {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
           <KeyboardShortcut className="ml-2">^N</KeyboardShortcut>
         </h4>
 
-        <p className="text-xs opacity-75">Start building from scratch</p>
+        <p className="text-xs opacity-75">{t`Start building from scratch`}</p>
       </div>
     </BaseCard>
   );

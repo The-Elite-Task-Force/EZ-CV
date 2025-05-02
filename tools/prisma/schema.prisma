@@ -155,6 +155,7 @@ model Statistics {
 model Project {
   id        String   @id @default(cuid())
   name      String
+  description String?
   // Owner of the project
   userId    String
   updatedAt DateTime @updatedAt
