@@ -1,4 +1,5 @@
 import type { ResumeDto } from "@reactive-resume/dto";
+import type { VariantDto } from "@reactive-resume/dto";
 import { sortByDate } from "@reactive-resume/utils";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -6,9 +7,14 @@ import { BaseCard } from "./_components/base-card";
 import { CreateResumeCard } from "./_components/create-card";
 import { ImportResumeCard } from "./_components/import-card";
 import { ResumeCard } from "./_components/resume-card";
+import { VariantCard } from "./_components/variant-card";
+
+function isVariantDto(item: ResumeDto | VariantDto): item is VariantDto {
+  return "creatorId" in item && "resumeId" in item;
+}
 
 type ResumeGridViewProps = {
-  resumes: ResumeDto[] | undefined;
+  resumes: (ResumeDto | VariantDto)[] | undefined;
   loading: boolean;
 };
 
@@ -49,7 +55,11 @@ export const ResumeGridView = ({ resumes, loading }: ResumeGridViewProps) => {
                 animate={{ opacity: 1, x: 0, transition: { delay: (index + 2) * 0.1 } }}
                 exit={{ opacity: 0, filter: "blur(8px)", transition: { duration: 0.5 } }}
               >
-                <ResumeCard resume={resume} />
+                {isVariantDto(resume) ? (
+                  <VariantCard key={resume.id} variant={resume} />
+                ) : (
+                  <ResumeCard key={resume.id} resume={resume} />
+                )}
               </motion.div>
             ))}
         </AnimatePresence>
