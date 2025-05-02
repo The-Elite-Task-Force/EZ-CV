@@ -8,9 +8,11 @@ export const variantSchema = resumeSchema.extend({
   resumeId: z.string(),
 });
 
-export const createVariantSchema = z.object({
+export const duplicateAsVariantSchema = z.object({
   resumeId: z.string(),
   userId: z.string(),
+  title: z.string(),
+  slug: z.string(),
   creatorId: z.string().optional(),
 });
 
@@ -22,4 +24,4 @@ export const deleteVariantSchema = z.object({
 
 export class UpdateVariantDto extends createZodDto(updateVariantSchema) {}
 export class VariantDto extends createZodDto(variantSchema) {}
-export class CreateVariantDto extends createZodDto(createVariantSchema) {}
+export class DuplicateAsVariantDto extends createZodDto(duplicateAsVariantSchema) {}

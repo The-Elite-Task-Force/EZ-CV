@@ -6,7 +6,12 @@ import {
 } from "@nestjs/common";
 import { createId } from "@paralleldrive/cuid2";
 import { Prisma } from "@prisma/client";
-import { CreateVariantDto, resumeSchema, UpdateResumeDto, VariantDto } from "@reactive-resume/dto";
+import {
+  DuplicateAsVariantDto,
+  resumeSchema,
+  UpdateResumeDto,
+  VariantDto,
+} from "@reactive-resume/dto";
 import { ERROR_MESSAGE } from "@reactive-resume/utils";
 import { PrismaService } from "nestjs-prisma";
 
@@ -21,7 +26,7 @@ export class VariantService {
     private readonly printerService: PrinterService,
   ) {}
 
-  async createVariant(createVariantDto: CreateVariantDto) {
+  async createVariant(createVariantDto: DuplicateAsVariantDto) {
     const { resumeId, userId, creatorId } = createVariantDto;
     try {
       const resume = await this.prisma.resume.findFirst({
@@ -43,18 +48,19 @@ export class VariantService {
         throw new BadRequestException("Invalid resume");
       }
 
-      // Transform the data to match Prisma's expected input
       const variantData: Prisma.ResumeVariantCreateInput = {
-        ...validatedResume.data,
-        id: createId(), // Generate a new ID for the variant
-        creator: { connect: { id: creatorId } }, // Connect the creator
-        resume: { connect: { id: resumeId } }, // Connect the resume
-        user: {
-          connect: { id: resume.userId }, // Properly structure the user property
-        },
+        title: createVariantDto.title,
+        slug: createVariantDto.slug,
+        data: validatedResume.data.data,
+        visibility: validatedResume.data.visibility,
+        locked: validatedResume.data.locked,
+        language: validatedResume.data.language,
+        creator: { connect: { id: creatorId } },
+        resume: { connect: { id: resumeId } },
+        user: { connect: { id: userId } },
       };
 
-      // Save the variant in the database
+      // Save variant
       const variant = await this.prisma.resumeVariant.create({
         data: variantData,
       });

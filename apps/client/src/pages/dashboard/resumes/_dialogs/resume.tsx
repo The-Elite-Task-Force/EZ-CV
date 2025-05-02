@@ -45,6 +45,7 @@ import { z } from "zod";
 import { toast } from "@/client/hooks/use-toast";
 import { useCreateResume, useDeleteResume, useUpdateResume } from "@/client/services/resume";
 import { useImportResume } from "@/client/services/resume/import";
+import { useCreateVariantFromResume } from "@/client/services/variant/create";
 import { useDialog } from "@/client/stores/dialog";
 
 const formSchema = createResumeSchema.extend({ id: idSchema.optional(), slug: z.string() });
@@ -57,13 +58,15 @@ export const ResumeDialog = () => {
   const isUpdate = mode === "update";
   const isDelete = mode === "delete";
   const isDuplicate = mode === "duplicate";
+  const isDuplicateAsVariant = mode === "duplicateAsVariant";
 
   const { createResume, loading: createLoading } = useCreateResume();
   const { updateResume, loading: updateLoading } = useUpdateResume();
   const { deleteResume, loading: deleteLoading } = useDeleteResume();
   const { importResume: duplicateResume, loading: duplicateLoading } = useImportResume();
-
-  const loading = createLoading || updateLoading || deleteLoading || duplicateLoading;
+  const { createVariant, loading: creatingVariantLoading } = useCreateVariantFromResume();
+  const loading =
+    createLoading || updateLoading || deleteLoading || duplicateLoading || creatingVariantLoading;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -123,6 +126,18 @@ export const ResumeDialog = () => {
         await deleteResume({ id: payload.item.id });
       }
 
+      if (isDuplicateAsVariant) {
+        console.log("Duplicate variant", payload.item);
+        if (!payload.item?.id) return;
+        await createVariant({
+          title: values.title,
+          slug: values.slug,
+          userId: payload.item.userId,
+          resumeId: payload.item.id,
+          creatorId: payload.item.userId,
+        });
+      }
+
       close();
     } catch (error) {
       toast({
@@ -142,6 +157,11 @@ export const ResumeDialog = () => {
       form.reset({ title: `${payload.item?.title} (Copy)`, slug: `${payload.item?.slug}-copy` });
     if (isDelete)
       form.reset({ id: payload.item?.id, title: payload.item?.title, slug: payload.item?.slug });
+    if (isDuplicateAsVariant)
+      form.reset({
+        title: `${payload.item?.title} (Variant)`,
+        slug: `${payload.item?.slug}-variant`,
+      });
   };
 
   const onGenerateRandomName = () => {
@@ -202,6 +222,7 @@ export const ResumeDialog = () => {
                     {isCreate && t`Create a new resume`}
                     {isUpdate && t`Update an existing resume`}
                     {isDuplicate && t`Duplicate an existing resume`}
+                    {isDuplicateAsVariant && t`Create a new variant from an existing resume`}
                   </h2>
                 </div>
               </DialogTitle>
@@ -209,6 +230,7 @@ export const ResumeDialog = () => {
                 {isCreate && t`Start building your resume by giving it a name.`}
                 {isUpdate && t`Changed your mind about the name? Give it a new one.`}
                 {isDuplicate && t`Give your old resume a new name.`}
+                {isDuplicateAsVariant && "Create a new variant from an existing resume."}
               </DialogDescription>
             </DialogHeader>
 
@@ -273,6 +295,7 @@ export const ResumeDialog = () => {
                   {isCreate && t`Create`}
                   {isUpdate && t`Save Changes`}
                   {isDuplicate && t`Duplicate`}
+                  {isDuplicateAsVariant && "Create Variant"}
                 </Button>
 
                 {isCreate && (

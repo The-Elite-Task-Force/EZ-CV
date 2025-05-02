@@ -12,12 +12,11 @@ import {
 import { ApiTags } from "@nestjs/swagger";
 import { createId } from "@paralleldrive/cuid2";
 import { User as UserEntity } from "@prisma/client";
-import { CreateVariantDto, ResumeDto, VariantDto } from "@reactive-resume/dto";
+import { DuplicateAsVariantDto, ResumeDto, VariantDto } from "@reactive-resume/dto";
 
 import { OptionalGuard } from "../auth/guards/optional.guard";
 import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
 import { Resume } from "../resume/decorators/resume.decorator";
-import { ResumeGuard } from "../resume/guards/resume.guard";
 import { User } from "../user/decorators/user.decorator";
 import { VariantService } from "./variant.service";
 @ApiTags("Variant")
@@ -25,8 +24,9 @@ import { VariantService } from "./variant.service";
 export class VariantController {
   constructor(private readonly variantService: VariantService) {}
   @UseGuards(TwoFactorGuard)
-  @Post()
-  async create(createVariantDto: CreateVariantDto, @User() user: UserEntity) {
+  @Post("/duplicateFromResume/")
+  async create(@Body() createVariantDto: DuplicateAsVariantDto, @User() user: UserEntity) {
+    console.log("createVariantDto", createVariantDto);
     try {
       return await this.variantService.createVariant(createVariantDto);
     } catch (error) {
@@ -55,7 +55,7 @@ export class VariantController {
   }
 
   @Get("/print/:id")
-  @UseGuards(OptionalGuard, ResumeGuard)
+  @UseGuards(OptionalGuard)
   async printResume(@User("id") userId: string | undefined, @Resume() variant: VariantDto) {
     try {
       const url = await this.variantService.printResume(variant);
@@ -68,7 +68,7 @@ export class VariantController {
   }
 
   @Get("/print/:id/preview")
-  @UseGuards(TwoFactorGuard, ResumeGuard)
+  @UseGuards(TwoFactorGuard)
   async printPreview(@Resume() variant: VariantDto) {
     try {
       const url = await this.variantService.printPreview(variant);
