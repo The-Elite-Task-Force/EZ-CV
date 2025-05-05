@@ -141,6 +141,6 @@ export class VariantService {
       this.storageService.deleteObject(userId, "previews", id),
     ]);
 
-    return this.prisma.resume.delete({ where: { userId_id: { userId, id } } });
+    return this.prisma.resumeVariant.delete({ where: { userId_id: { userId, id } } });
   }
 }
