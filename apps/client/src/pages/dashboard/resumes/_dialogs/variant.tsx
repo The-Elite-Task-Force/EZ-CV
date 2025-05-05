@@ -45,7 +45,6 @@ import { z } from "zod";
 import { toast } from "@/client/hooks/use-toast";
 import { useCreateResume, useDeleteResume, useUpdateResume } from "@/client/services/resume";
 import { useImportResume } from "@/client/services/resume/import";
-import { useDeleteVariant, useUpdateVariant } from "@/client/services/variant";
 import { useCreateVariantFromResume } from "@/client/services/variant/create";
 import { useDialog } from "@/client/stores/dialog";
 
@@ -54,9 +53,7 @@ const formSchema = createResumeSchema.extend({ id: idSchema.optional(), slug: z.
 type FormValues = z.infer<typeof formSchema>;
 
 export const ResumeDialog = () => {
-  const { isOpen, mode, payload, close } = useDialog<ResumeDto | VariantDto>("resume");
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const isVariant = "creatorId" in (payload?.item ?? {});
+  const { isOpen, mode, payload, close } = useDialog<VariantDto>("resume");
   const isCreate = mode === "create";
   const isUpdate = mode === "update";
   const isDelete = mode === "delete";
@@ -68,17 +65,8 @@ export const ResumeDialog = () => {
   const { deleteResume, loading: deleteLoading } = useDeleteResume();
   const { importResume: duplicateResume, loading: duplicateLoading } = useImportResume();
   const { createVariant, loading: creatingVariantLoading } = useCreateVariantFromResume();
-  const { deleteVariant, loading: deleteVariantLoading } = useDeleteVariant();
-  const { updateVariant, loading: updateVariantLoading } = useUpdateVariant();
-
   const loading =
-    createLoading ||
-    updateLoading ||
-    deleteLoading ||
-    duplicateLoading ||
-    creatingVariantLoading ||
-    deleteVariantLoading ||
-    updateVariantLoading;
+    createLoading || updateLoading || deleteLoading || duplicateLoading || creatingVariantLoading;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -108,17 +96,11 @@ export const ResumeDialog = () => {
       if (isUpdate) {
         if (!payload.item?.id) return;
 
-        await (isVariant
-          ? updateVariant({
-              id: payload.item.id,
-              title: values.title,
-              slug: values.slug,
-            })
-          : updateResume({
-              id: payload.item.id,
-              title: values.title,
-              slug: values.slug,
-            }));
+        await updateResume({
+          id: payload.item.id,
+          title: values.title,
+          slug: values.slug,
+        });
       }
 
       if (isDuplicate) {
@@ -140,9 +122,8 @@ export const ResumeDialog = () => {
 
       if (isDelete) {
         if (!payload.item?.id) return;
-        await (isVariant
-          ? deleteVariant({ id: payload.item.id })
-          : deleteResume({ id: payload.item.id }));
+
+        await deleteResume({ id: payload.item.id });
       }
 
       if (isDuplicateAsVariant) {

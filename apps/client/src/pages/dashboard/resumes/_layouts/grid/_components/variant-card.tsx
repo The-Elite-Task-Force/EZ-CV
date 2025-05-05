@@ -34,8 +34,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { LocaleComboboxPopover } from "@/client/components/locale-combobox";
-import { setDefault } from "@/client/services/resume";
-import { updateResume } from "@/client/services/resume";
+import { updateVariant } from "@/client/services/variant";
 import { useAuthStore } from "@/client/stores/auth";
 import { useDialog } from "@/client/stores/dialog";
 
@@ -47,8 +46,8 @@ type Props = {
 
 export const VariantCard = ({ variant }: Props) => {
   const navigate = useNavigate();
-  const { open } = useDialog<ResumeDto>("resume");
-  const { open: lockOpen } = useDialog<ResumeDto>("lock");
+  const { open } = useDialog<VariantDto>("resume");
+  const { open: lockOpen } = useDialog<VariantDto>("lock");
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
 
@@ -56,7 +55,7 @@ export const VariantCard = ({ variant }: Props) => {
   useEffect(() => {
     const update = async () => {
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      await updateResume({ ...variant, language: resumeLanguage });
+      await updateVariant({ ...variant, language: resumeLanguage });
     };
 
     void update();
@@ -66,19 +65,12 @@ export const VariantCard = ({ variant }: Props) => {
   const lastUpdated = dayjs().to(variant.updatedAt);
 
   const onOpen = () => {
-    void navigate(`/builder/${variant.id}`);
+    //insert logic to open Variant
+    console.log("open variant", variant);
   };
 
   const onUpdate = () => {
     open("update", { id: "resume", item: variant });
-  };
-
-  const onSetDefault = async (setDefaultProfile: boolean) => {
-    if (!user) return;
-    await (setDefaultProfile
-      ? setDefault({ resumeId: variant.id, userId: user.id, setDefaultProfile: true })
-      : setDefault({ resumeId: variant.id, userId: user.id, setDefaultProfile: false }));
-    await queryClient.invalidateQueries({ queryKey: ["user"] });
   };
 
   const onDuplicate = () => {
@@ -153,17 +145,7 @@ export const VariantCard = ({ variant }: Props) => {
             <CopySimple size={14} className="mr-2" />
             {t`Duplicate`}
           </DropdownMenuItem>
-          {variant.id === user?.profileResumeId ? (
-            <DropdownMenuItem onClick={() => onSetDefault(false)}>
-              <FolderOpen size={14} className="mr-2" />
-              Remove as profile
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem onClick={() => onSetDefault(true)}>
-              <FolderOpen size={14} className="mr-2" />
-              Set as profile
-            </DropdownMenuItem>
-          )}
+
           {variant.locked ? (
             <DropdownMenuItem onClick={onLockChange}>
               <LockOpen size={14} className="mr-2" />
@@ -185,6 +167,7 @@ export const VariantCard = ({ variant }: Props) => {
               <LocaleComboboxPopover
                 value={resumeLanguage}
                 onValueChange={(locale) => {
+                  //This type assertion is DEFINETLY NECESSARY, cannot build without it
                   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                   setResumeLanguage(locale as LANGUAGE);
                 }}

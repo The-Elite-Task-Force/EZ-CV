@@ -6,13 +6,14 @@ import {
   InternalServerErrorException,
   Logger,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { createId } from "@paralleldrive/cuid2";
 import { User as UserEntity } from "@prisma/client";
-import { DuplicateAsVariantDto, ResumeDto, VariantDto } from "@reactive-resume/dto";
+import { DuplicateAsVariantDto, UpdateVariantDto, VariantDto } from "@reactive-resume/dto";
 
 import { OptionalGuard } from "../auth/guards/optional.guard";
 import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
@@ -26,7 +27,6 @@ export class VariantController {
   @UseGuards(TwoFactorGuard)
   @Post("/duplicateFromResume/")
   async create(@Body() createVariantDto: DuplicateAsVariantDto, @User() user: UserEntity) {
-    console.log("createVariantDto", createVariantDto);
     try {
       return await this.variantService.createVariant(createVariantDto);
     } catch (error) {
@@ -38,7 +38,19 @@ export class VariantController {
   @Delete(":id")
   @UseGuards(TwoFactorGuard)
   remove(@User() user: UserEntity, @Param("id") id: string) {
+    console.log("deleting variant", id, user.id);
     return this.variantService.remove(id, user.id);
+  }
+
+  @Patch(":id")
+  @UseGuards(TwoFactorGuard)
+  update(
+    @User() user: UserEntity,
+    @Param("id") id: string,
+    @Body() updateResumeDto: UpdateVariantDto,
+  ) {
+    console.log("updating variant", id, user.id, updateResumeDto);
+    return this.variantService.update(user.id, id, updateResumeDto);
   }
 
   //Not sure how this works, but it should be similar to the resume controller

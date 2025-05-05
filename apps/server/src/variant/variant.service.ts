@@ -107,7 +107,7 @@ export class VariantService {
 
   async update(userId: string, id: string, updateVariantDto: UpdateResumeDto) {
     try {
-      const { locked } = await this.prisma.resume.findUniqueOrThrow({
+      const { locked } = await this.prisma.resumeVariant.findUniqueOrThrow({
         where: { id },
         select: { locked: true },
       });

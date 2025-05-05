@@ -87,7 +87,6 @@ export class ResumeController {
   @Get("all")
   @UseGuards(TwoFactorGuard)
   async findAllWithVariants(@User() user: UserEntity) {
-    console.log("findAllWithVariants", user.id);
     try {
       return await this.resumeService.findallResumesAndVariants(user.id);
     } catch (error) {
@@ -136,6 +135,7 @@ export class ResumeController {
     @Param("id") id: string,
     @Body() updateResumeDto: UpdateResumeDto,
   ) {
+    console.log("updating resume", id, user.id, updateResumeDto);
     return this.resumeService.update(user.id, id, updateResumeDto);
   }
 
@@ -148,6 +148,8 @@ export class ResumeController {
   @Delete(":id")
   @UseGuards(TwoFactorGuard)
   remove(@User() user: UserEntity, @Param("id") id: string) {
+    Logger.log("Deleting resume", id, user.id);
+    Logger.log("user", user.id);
     return this.resumeService.remove(user.id, id);
   }
 

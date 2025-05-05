@@ -1,12 +1,12 @@
-import type { CreateVariantDto, ResumeDto, VariantDto } from "@reactive-resume/dto";
+import type { DuplicateAsVariantDto, ResumeDto, VariantDto } from "@reactive-resume/dto";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 
 import { axios } from "@/client/libs/axios";
 import { queryClient } from "@/client/libs/query-client";
 
-export const createVariant = async (data: CreateVariantDto) => {
-  const response = await axios.post<CreateVariantDto, AxiosResponse<VariantDto>, CreateVariantDto>(
+export const createVariant = async (data: DuplicateAsVariantDto) => {
+  const response = await axios.post<VariantDto, AxiosResponse<VariantDto>, DuplicateAsVariantDto>(
     "/variant/duplicateFromResume/",
     data,
   );
