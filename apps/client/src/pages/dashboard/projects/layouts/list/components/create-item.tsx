@@ -14,7 +14,7 @@ export const CreateProjectListItem = () => {
       start={<Plus size={18} />}
       title={
         <>
-          <span>{t`Create a new project`}</span>
+          <span>{"Create a new project"}</span>
           {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
           <KeyboardShortcut className="ml-2">^N</KeyboardShortcut>
         </>

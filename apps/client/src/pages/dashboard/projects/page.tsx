@@ -55,7 +55,7 @@ export const ProjectsPage = () => {
   return (
     <div>
       <Helmet>
-        <title>{t`Projects`} - EzCV</title>
+        <title>Projects - EzCV</title>
       </Helmet>
       <Tabs
         value={layout}
