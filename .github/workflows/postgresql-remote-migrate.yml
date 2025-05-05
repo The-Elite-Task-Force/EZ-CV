@@ -12,6 +12,7 @@ env:
   POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
   POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
   POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  VITE_POSTGRES_PORT: ${{ secrets.VITE_POSTGRES_PORT }}
 
 jobs:
   deploy:
@@ -30,6 +31,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Test
+        run: pnpm vitest --config ./vitest.config.ts run
 
       - name: Set up migration files
         run: |

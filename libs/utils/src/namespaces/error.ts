@@ -20,4 +20,5 @@ export enum ERROR_MESSAGE {
   CompanyNameAlreadyExists = "CompanyNameAlreadyExists",
   ProjectNameAlreadyExists = "ProjectNameAlreadyExists",
   NOPUBLICRESUME = "NoPublicResume",
+  InvalidLanguage = "InvalidLanguage",
 }

@@ -86,6 +86,10 @@ export const ResumeCard = ({ resume }: Props) => {
     open("duplicate", { id: "resume", item: resume });
   };
 
+  const onTranslate = (locale: LANGUAGE) => {
+    open("translate", { id: "resume", item: resume });
+  };
+
   const onLockChange = () => {
     lockOpen(resume.locked ? "update" : "create", { id: "lock", item: resume });
   };
@@ -167,6 +171,14 @@ export const ResumeCard = ({ resume }: Props) => {
               Set as profile
             </DropdownMenuItem>
           )}
+          <DropdownMenuItem
+            onClick={() => {
+              onTranslate(resumeLanguage);
+            }}
+          >
+            <Translate size={14} className="mr-2" />
+            {t`Translate`}
+          </DropdownMenuItem>
           {resume.locked ? (
             <DropdownMenuItem onClick={onLockChange}>
               <LockOpen size={14} className="mr-2" />
@@ -188,7 +200,7 @@ export const ResumeCard = ({ resume }: Props) => {
               <LocaleComboboxPopover
                 value={resumeLanguage}
                 onValueChange={(locale) => {
-                  setResumeLanguage(locale as LANGUAGE);
+                  setResumeLanguage(locale);
                 }}
               />
             </DropdownMenuSubContent>

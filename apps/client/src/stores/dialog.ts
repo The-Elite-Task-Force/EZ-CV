@@ -8,9 +8,10 @@ export type DialogName =
   | "two-factor"
   | "company"
   | "project"
+  | "translate"
   | SectionKey;
 
-export type DialogMode = "create" | "update" | "duplicate" | "delete";
+export type DialogMode = "create" | "update" | "duplicate" | "delete" | "translate";
 
 export type DialogPayload<T = unknown> = {
   id: DialogName;
