@@ -4,11 +4,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ResumeService } from "../../resume/resume.service";
 import { VariantController } from "../../variant/variant.controller";
 import type { VariantService } from "../../variant/variant.service";
-import { mockResume, mockSavedVariant, mockTranslatedData, mockUser } from "../mocks/resumeMocks";
+import { mockUserWithoutPRI } from "../mocks/mocks";
+import { mockResume, mockSavedVariant, mockTranslatedData } from "../mocks/resumeMocks";
 
 describe("VariantController", () => {
   let controller: VariantController;
-  let mockVariantService: Partial<VariantService>;
+  let mockVariantService: Pick<VariantService, "translate" | "saveVariant">;
   let mockResumeService: Partial<ResumeService>;
 
   beforeEach(() => {
@@ -34,15 +35,15 @@ describe("VariantController", () => {
       vi.mocked(mockVariantService.translate).mockResolvedValue(mockTranslatedData);
       vi.mocked(mockVariantService.saveVariant).mockResolvedValue(mockSavedVariant);
 
-      const result = await controller.translate(mockUser, mockResume);
+      const result = await controller.translate(mockUserWithoutPRI, mockResume);
 
       expect(mockVariantService.translate).toHaveBeenCalledWith(mockResume);
       expect(mockVariantService.saveVariant).toHaveBeenCalledWith(
         expect.objectContaining({
           id: expect.any(String),
           resumeId: mockTranslatedData.id,
-          creatorId: mockUser.id,
-          userId: mockUser.id,
+          creatorId: mockUserWithoutPRI.id,
+          userId: mockUserWithoutPRI.id,
         }),
       );
       expect(result).toEqual(mockSavedVariant);
@@ -51,7 +52,7 @@ describe("VariantController", () => {
     it("should throw an InternalServerErrorException if translation fails", async () => {
       vi.mocked(mockVariantService.translate).mockRejectedValue(new Error("Translation failed"));
 
-      await expect(controller.translate(mockUser, mockResume)).rejects.toThrow(
+      await expect(controller.translate(mockUserWithoutPRI, mockResume)).rejects.toThrow(
         InternalServerErrorException,
       );
 

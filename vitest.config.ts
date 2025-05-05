@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { fileURLToPath } from "url";
 
 export default defineConfig({
   // @ts-ignore
@@ -12,31 +13,22 @@ export default defineConfig({
       reportsDirectory: "./VitestCoverage",
     },
     environment: "jsdom",
+  },
+  plugins: [react()],
+  resolve: {
     alias: {
-      // @ts-ignore
-      "@/artboard/*": new URL("./apps/artboard/src*", import.meta.url).pathname,
-      // @ts-ignore
-      "@/client/*": new URL("./apps/client/src/*", import.meta.url).pathname,
-      // @ts-ignore
-      "@/server/*": new URL("./apps/server/src/*", import.meta.url).pathname,
-      // @ts-ignore
-      "@reactive-resume/dto": new URL("./libs/dto/src", import.meta.url).pathname,
-      // @ts-ignore
-      "@reactive-resume/utils": new URL("./libs/utils/src", import.meta.url).pathname,
-      // @ts-ignore
-      "@reactive-resume/schema": new URL("./libs/schema/src", import.meta.url).pathname,
-      // @ts-ignore
-      "@/server/user/decorators/user.decorator": new URL(
-        "./apps/server/src/user/decorators/user.decorator",
-        // @ts-ignore
-        import.meta.url,
-      ).pathname,
-      // @ts-ignore
-      "@reactive-resume/hooks": new URL("./libs/hooks/src", import.meta.url).pathname,
-      // @ts-ignore
-      "@reactive-resume/parser": new URL("./libs/parser/src", import.meta.url).pathname,
-      // @ts-ignore
-      "@reactive-resume/ui": new URL("./libs/ui/src", import.meta.url).pathname,
+      "@/artboard": fileURLToPath(new URL("./apps/artboard/src", import.meta.url)),
+      "@/client": fileURLToPath(new URL("./apps/client/src", import.meta.url)),
+      "@/server": fileURLToPath(new URL("./apps/server/src", import.meta.url)),
+      "@reactive-resume/dto": fileURLToPath(new URL("./libs/dto/src", import.meta.url)),
+      "@reactive-resume/utils": fileURLToPath(new URL("./libs/utils/src", import.meta.url)),
+      "@reactive-resume/schema": fileURLToPath(new URL("./libs/schema/src", import.meta.url)),
+      "@/server/user/decorators/user.decorator": fileURLToPath(
+        new URL("./apps/server/src/user/decorators/user.decorator", import.meta.url)
+      ),
+      "@reactive-resume/hooks": fileURLToPath(new URL("./libs/hooks/src", import.meta.url)),
+      "@reactive-resume/parser": fileURLToPath(new URL("./libs/parser/src", import.meta.url)),
+      "@reactive-resume/ui": fileURLToPath(new URL("./libs/ui/src", import.meta.url)),
     },
   },
 });
