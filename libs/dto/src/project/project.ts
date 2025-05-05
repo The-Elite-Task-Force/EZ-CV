@@ -9,6 +9,7 @@ export const projectSchema = z.object({
   description: z.string().optional(),
   userId: idSchema,
   updatedAt: dateSchema,
+  companyId: idSchema,
 });
 
 export class ProjectDto extends createZodDto(projectSchema) {}
