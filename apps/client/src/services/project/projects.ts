@@ -1,5 +1,5 @@
 import type { ProjectDto } from "@reactive-resume/dto";
-import { type QueryFunctionContext,useQuery } from "@tanstack/react-query";
+import { type QueryFunctionContext, useQuery } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 
 import { axios } from "@/client/libs/axios";
