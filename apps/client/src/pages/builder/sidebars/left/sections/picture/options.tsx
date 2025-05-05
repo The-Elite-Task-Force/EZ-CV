@@ -2,8 +2,7 @@ import { t } from "@lingui/macro";
 import type { AspectRatio } from "@reactive-resume/ui";
 import { Checkbox, Input, Label, ToggleGroup, ToggleGroupItem, Tooltip } from "@reactive-resume/ui";
 import { useMemo } from "react";
-
-import { useResumeStore } from "@/client/stores/resume";
+import { useFormContext } from "react-hook-form";
 
 // Aspect Ratio Helpers
 const stringToRatioMap = {
@@ -36,8 +35,8 @@ const borderRadiusToStringMap = {
 type BorderRadius = keyof typeof stringToBorderRadiusMap;
 
 export const PictureOptions = () => {
-  const setValue = useResumeStore((state) => state.setValue);
-  const picture = useResumeStore((state) => state.resume.data.basics.picture);
+  const { setValue, watch } = useFormContext();
+  const picture = watch("picture");
 
   const aspectRatio = useMemo(() => {
     const ratio = picture.aspectRatio.toString() as keyof typeof ratioToStringMap;
@@ -46,7 +45,7 @@ export const PictureOptions = () => {
 
   const onAspectRatioChange = (value: string) => {
     if (!value) return;
-    setValue("basics.picture.aspectRatio", stringToRatioMap[value as AspectRatio]);
+    setValue("picture.aspectRatio", stringToRatioMap[value as AspectRatio]);
   };
 
   const borderRadius = useMemo(() => {
@@ -56,7 +55,7 @@ export const PictureOptions = () => {
 
   const onBorderRadiusChange = (value: string) => {
     if (!value) return;
-    setValue("basics.picture.borderRadius", stringToBorderRadiusMap[value as BorderRadius]);
+    setValue("picture.borderRadius", stringToBorderRadiusMap[value as BorderRadius]);
   };
 
   return (
@@ -70,7 +69,7 @@ export const PictureOptions = () => {
           value={picture.size}
           className="col-span-2"
           onChange={(event) => {
-            setValue("basics.picture.size", event.target.valueAsNumber);
+            setValue("picture.size", event.target.valueAsNumber);
           }}
         />
       </div>
@@ -114,7 +113,7 @@ export const PictureOptions = () => {
             onChange={(event) => {
               if (!event.target.valueAsNumber) return;
               if (Number.isNaN(event.target.valueAsNumber)) return;
-              setValue("basics.picture.aspectRatio", event.target.valueAsNumber);
+              setValue("picture.aspectRatio", event.target.valueAsNumber);
             }}
           />
         </div>
@@ -157,7 +156,7 @@ export const PictureOptions = () => {
             id="picture.borderRadius"
             value={picture.borderRadius}
             onChange={(event) => {
-              setValue("basics.picture.borderRadius", event.target.valueAsNumber);
+              setValue("picture.borderRadius", event.target.valueAsNumber);
             }}
           />
         </div>
@@ -174,7 +173,7 @@ export const PictureOptions = () => {
                 id="picture.effects.hidden"
                 checked={picture.effects.hidden}
                 onCheckedChange={(checked) => {
-                  setValue("basics.picture.effects.hidden", checked);
+                  setValue("picture.effects.hidden", checked);
                 }}
               />
               <Label htmlFor="picture.effects.hidden">{t`Hidden`}</Label>
@@ -185,7 +184,7 @@ export const PictureOptions = () => {
                 id="picture.effects.border"
                 checked={picture.effects.border}
                 onCheckedChange={(checked) => {
-                  setValue("basics.picture.effects.border", checked);
+                  setValue("picture.effects.border", checked);
                 }}
               />
               <Label htmlFor="picture.effects.border">{t`Border`}</Label>
@@ -196,7 +195,7 @@ export const PictureOptions = () => {
                 id="picture.effects.grayscale"
                 checked={picture.effects.grayscale}
                 onCheckedChange={(checked) => {
-                  setValue("basics.picture.effects.grayscale", checked);
+                  setValue("picture.effects.grayscale", checked);
                 }}
               />
               <Label htmlFor="picture.effects.grayscale">{t`Grayscale`}</Label>

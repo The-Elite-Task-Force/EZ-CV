@@ -3,6 +3,7 @@ export * from "./auth";
 export * from "./company";
 export * from "./contributors";
 export * from "./feature";
+export * from "./project";
 export * from "./resume";
 export * from "./secrets";
 export * from "./section";

@@ -16,6 +16,7 @@ import { VerifyOtpPage } from "../pages/auth/verify-otp/page";
 import { BuilderLayout } from "../pages/builder/layout";
 import { builderLoader, BuilderPage } from "../pages/builder/page";
 import { DashboardLayout } from "../pages/dashboard/layout";
+import { ProjectsPage } from "../pages/dashboard/projects/page";
 import { ResumesPage } from "../pages/dashboard/resumes/page";
 import { SearchPage } from "../pages/dashboard/search/page";
 import { SettingsPage } from "../pages/dashboard/settings/page";
@@ -74,6 +75,7 @@ export const routes = createRoutesFromElements(
             <Route path="resumes" element={<ResumesPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="search" element={<SearchPage />} /> {/* Add the new search route */}
+            <Route path="projects" element={<ProjectsPage />} />
             <Route index element={<Navigate replace to="/dashboard/resumes" />} />
           </Route>
         </Route>
@@ -90,9 +92,11 @@ export const routes = createRoutesFromElements(
       </Route>
 
       {/* Public Routes */}
-      <Route path=":username">
-        <Route path=":username" loader={publicProfileLoader} element={<PublicProfilePage />} />
-      </Route>
+      <Route
+        path="publicprofile/:username"
+        loader={publicProfileLoader}
+        element={<PublicProfilePage />}
+      />
     </Route>
   </Route>,
 );

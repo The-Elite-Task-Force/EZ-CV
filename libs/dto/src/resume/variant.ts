@@ -23,5 +23,5 @@ export const deleteVariantSchema = z.object({
 });
 
 export class UpdateVariantDto extends createZodDto(updateVariantSchema) {}
-export class VariantDto extends createZodDto(variantSchema) {}
 export class DuplicateAsVariantDto extends createZodDto(duplicateAsVariantSchema) {}
+export class VariantDto extends createZodDto(variantSchema) {}

@@ -36,20 +36,25 @@ import {
   Input,
   Tooltip,
 } from "@reactive-resume/ui";
-import { cn, generateRandomName } from "@reactive-resume/utils";
+import { cn, generateRandomName, languages } from "@reactive-resume/utils";
 import slugify from "@sindresorhus/slugify";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { date, z } from "zod";
 
 import { toast } from "@/client/hooks/use-toast";
 import { useCreateResume, useDeleteResume, useUpdateResume } from "@/client/services/resume";
 import { useImportResume } from "@/client/services/resume/import";
 import { useDeleteVariant, useUpdateVariant } from "@/client/services/variant";
 import { useCreateVariantFromResume } from "@/client/services/variant/create";
+import { useTranslateResume } from "@/client/services/resume/translate";
 import { useDialog } from "@/client/stores/dialog";
 
-const formSchema = createResumeSchema.extend({ id: idSchema.optional(), slug: z.string() });
+const formSchema = createResumeSchema.extend({
+  id: idSchema.optional(),
+  slug: z.string(),
+  language: z.string().optional(), // Add language field
+});
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -62,15 +67,17 @@ export const ResumeDialog = () => {
   const isDelete = mode === "delete";
   const isDuplicate = mode === "duplicate";
   const isDuplicateAsVariant = mode === "duplicateAsVariant";
+  const isTranslate = mode === "translate";
 
   const { createResume, loading: createLoading } = useCreateResume();
   const { updateResume, loading: updateLoading } = useUpdateResume();
   const { deleteResume, loading: deleteLoading } = useDeleteResume();
   const { importResume: duplicateResume, loading: duplicateLoading } = useImportResume();
+
   const { createVariant, loading: creatingVariantLoading } = useCreateVariantFromResume();
   const { deleteVariant, loading: deleteVariantLoading } = useDeleteVariant();
   const { updateVariant, loading: updateVariantLoading } = useUpdateVariant();
-
+  const { translateResume, loading: translateLoading } = useTranslateResume();
   const loading =
     createLoading ||
     updateLoading ||
@@ -78,11 +85,12 @@ export const ResumeDialog = () => {
     duplicateLoading ||
     creatingVariantLoading ||
     deleteVariantLoading ||
-    updateVariantLoading;
+    updateVariantLoading ||
+    translateLoading;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { title: "", slug: "" },
+    defaultValues: { title: "", slug: "", id: "", language: "en-US" }, // Default language
   });
 
   useEffect(() => {
@@ -101,7 +109,7 @@ export const ResumeDialog = () => {
           slug: values.slug,
           title: values.title,
           visibility: "private",
-          language: values.language,
+          language: values.language ?? "en-US",
         });
       }
 
@@ -138,6 +146,23 @@ export const ResumeDialog = () => {
         });
       }
 
+      if (isTranslate) {
+        if (!payload.item?.id) return;
+
+        await translateResume({
+          title: values.title,
+          slug: values.slug,
+          data: payload.item.data,
+          id: payload.item.id,
+          language: values.language ?? "en-US",
+          visibility: "private",
+          userId: "",
+          updatedAt: new Date(Date.now()),
+          locked: false,
+          createdAt: new Date(Date.now()),
+        });
+      }
+
       if (isDelete) {
         if (!payload.item?.id) return;
         await (isVariant
@@ -168,11 +193,27 @@ export const ResumeDialog = () => {
   };
 
   const onReset = () => {
-    if (isCreate) form.reset({ title: "", slug: "" });
+    if (isCreate) form.reset({ title: "", slug: "", language: "en-US" });
     if (isUpdate)
-      form.reset({ id: payload.item?.id, title: payload.item?.title, slug: payload.item?.slug });
+      form.reset({
+        id: payload.item?.id,
+        title: payload.item?.title,
+        slug: payload.item?.slug,
+        language: payload.item?.language,
+      });
     if (isDuplicate)
-      form.reset({ title: `${payload.item?.title} (Copy)`, slug: `${payload.item?.slug}-copy` });
+      form.reset({
+        title: `${payload.item?.title} (Copy)`,
+        slug: `${payload.item?.slug}-copy`,
+        language: payload.item?.language,
+      });
+    if (isTranslate)
+      form.reset({
+        id: payload.item?.id,
+        title: payload.item?.title,
+        slug: payload.item?.slug,
+        language: payload.item?.language,
+      });
     if (isDelete)
       form.reset({ id: payload.item?.id, title: payload.item?.title, slug: payload.item?.slug });
     if (isDuplicateAsVariant)
@@ -241,6 +282,7 @@ export const ResumeDialog = () => {
                     {isUpdate && t`Update an existing resume`}
                     {isDuplicate && t`Duplicate an existing resume`}
                     {isDuplicateAsVariant && t`Create a new variant from an existing resume`}
+                    {isTranslate && t`Translate resume`} {/* Add translate title */}
                   </h2>
                 </div>
               </DialogTitle>
@@ -249,6 +291,8 @@ export const ResumeDialog = () => {
                 {isUpdate && t`Changed your mind about the name? Give it a new one.`}
                 {isDuplicate && t`Give your old resume a new name.`}
                 {isDuplicateAsVariant && "Create a new variant from an existing resume."}
+                {isTranslate && t`Select a language to translate your resume.`}{" "}
+                {/* Add description */}
               </DialogDescription>
             </DialogHeader>
 
@@ -286,6 +330,32 @@ export const ResumeDialog = () => {
             />
 
             <FormField
+              name="language"
+              control={form.control}
+              render={
+                ({ field }) =>
+                  isTranslate ? ( // Only render the dropdown if in Translate mode
+                    <FormItem>
+                      <FormLabel>{t`Language`}</FormLabel>
+                      <FormControl>
+                        <select {...field} className="form-select">
+                          {languages.map((lang) => (
+                            <option key={lang.locale} value={lang.locale}>
+                              {lang.name}
+                            </option>
+                          ))}
+                        </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  ) : (
+                    // eslint-disable-next-line react/jsx-no-useless-fragment
+                    <></>
+                  ) // Return an empty fragment instead of null
+              }
+            />
+
+            <FormField
               disabled
               name="slug"
               control={form.control}
@@ -314,6 +384,7 @@ export const ResumeDialog = () => {
                   {isUpdate && t`Save Changes`}
                   {isDuplicate && t`Duplicate`}
                   {isDuplicateAsVariant && "Create Variant"}
+                  {isTranslate && t`Translate`}
                 </Button>
 
                 {isCreate && (

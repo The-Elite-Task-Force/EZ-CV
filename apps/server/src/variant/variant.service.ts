@@ -4,10 +4,10 @@ import {
   InternalServerErrorException,
   Logger,
 } from "@nestjs/common";
-import { createId } from "@paralleldrive/cuid2";
 import { Prisma } from "@prisma/client";
 import {
   DuplicateAsVariantDto,
+  ResumeDto,
   resumeSchema,
   UpdateResumeDto,
   VariantDto,
@@ -15,6 +15,7 @@ import {
 import { ERROR_MESSAGE } from "@reactive-resume/utils";
 import { PrismaService } from "nestjs-prisma";
 
+import { translateSections } from "../ai/translator";
 import { PrinterService } from "../printer/printer.service";
 import { StorageService } from "../storage/storage.service";
 
@@ -142,5 +143,34 @@ export class VariantService {
     ]);
 
     return this.prisma.resumeVariant.delete({ where: { userId_id: { userId, id } } });
+  }
+
+  async translate(resume: ResumeDto) {
+    if (!resume.language) throw new BadRequestException(ERROR_MESSAGE.InvalidLanguage);
+
+    resume.data.sections = await translateSections(resume.data.sections, resume.language);
+    return resume;
+  }
+
+  async saveVariant(resume: VariantDto) {
+    try {
+      const { id, slug, title, data, visibility, userId, creatorId, resumeId } = resume;
+      const variantData = await this.prisma.resumeVariant.create({
+        data: {
+          id,
+          slug,
+          title,
+          data,
+          visibility,
+          user: { connect: { id: userId } }, // Connect owner
+          creator: { connect: { id: creatorId } }, // Connect creator
+          resume: { connect: { id: resumeId } }, // Connect the related resume
+        },
+      });
+      return variantData;
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
   }
 }

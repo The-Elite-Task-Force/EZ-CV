@@ -33,6 +33,11 @@ export const TemplateSection = () => {
               )}
               onClick={() => {
                 setValue("metadata.template", template);
+                if (template === "torterra") {
+                  setValue("metadata.page.format", "a4Horizontal");
+                } else {
+                  setValue("metadata.page.format", "a4");
+                }
               }}
             >
               <img src={`/templates/jpg/${template}.jpg`} alt={template} className="rounded-sm" />

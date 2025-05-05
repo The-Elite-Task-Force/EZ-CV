@@ -1,12 +1,13 @@
 import { createId } from "@paralleldrive/cuid2";
 import { resumeDataSchema } from "@reactive-resume/schema";
+import { idSchema } from "@reactive-resume/schema";
 import { languageEnum } from "@reactive-resume/utils";
 import slugify from "@sindresorhus/slugify";
 import { createZodDto } from "nestjs-zod/dto";
 import { z } from "zod";
-
 export const importResumeSchema = z.object({
   title: z.string().optional(),
+  id: idSchema.optional(),
   slug: z
     .string()
     .min(1)

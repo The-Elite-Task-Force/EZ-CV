@@ -12,11 +12,7 @@ import EmployeeList from "./_layouts/employeeList";
 
 export const CompanyPage = () => {
   const [companyState, setCompanyState] = useState<CompanyDto>(useLoaderData());
-  const {
-    data: employees = [],
-    isLoading,
-    refetch,
-  } = useQuery<EmployeeDto[]>({
+  const { data: employees = [], refetch } = useQuery<EmployeeDto[]>({
     queryKey: [EMPLOYEES_KEY, companyState.id],
     queryFn: () => fetchEmployees(companyState.id),
   });

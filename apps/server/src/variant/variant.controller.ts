@@ -14,12 +14,14 @@ import { ApiTags } from "@nestjs/swagger";
 import { createId } from "@paralleldrive/cuid2";
 import { User as UserEntity } from "@prisma/client";
 import { DuplicateAsVariantDto, UpdateVariantDto, VariantDto } from "@reactive-resume/dto";
+import { ResumeDto } from "@reactive-resume/dto";
 
 import { OptionalGuard } from "../auth/guards/optional.guard";
 import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
 import { Resume } from "../resume/decorators/resume.decorator";
 import { User } from "../user/decorators/user.decorator";
 import { VariantService } from "./variant.service";
+
 @ApiTags("Variant")
 @Controller("variant")
 export class VariantController {
@@ -86,6 +88,27 @@ export class VariantController {
       const url = await this.variantService.printPreview(variant);
 
       return { url };
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @UseGuards(TwoFactorGuard)
+  @Post("/translate")
+  async translate(@User() user: UserEntity, @Body() resume: ResumeDto) {
+    try {
+      const translatedData = await this.variantService.translate(resume);
+
+      const variantDto = {
+        // eslint-disable-next-line @typescript-eslint/no-misused-spread
+        ...translatedData,
+        id: createId(),
+        resumeId: translatedData.id,
+        creatorId: user.id,
+        userId: user.id,
+      };
+      return await this.variantService.saveVariant(variantDto);
     } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException(error);
