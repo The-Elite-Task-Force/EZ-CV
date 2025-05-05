@@ -1,4 +1,4 @@
-import type { DeleteDto } from "@reactive-resume/dto";
+import type { DeleteDto, ResumeDto, VariantDto } from "@reactive-resume/dto";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 
@@ -20,9 +20,9 @@ export const useDeleteVariant = () => {
   } = useMutation({
     mutationFn: deleteVariant,
     onSuccess: (data) => {
-      queryClient.removeQueries({ queryKey: ["variant", data.id] });
+      queryClient.removeQueries({ queryKey: ["resumes", data.id] });
 
-      queryClient.setQueryData<DeleteDto[]>(["variants"], (cache) => {
+      queryClient.setQueryData<VariantDto[]>(["resumes"], (cache) => {
         if (!cache) return [];
         return cache.filter((variant) => variant.id !== data.id);
       });

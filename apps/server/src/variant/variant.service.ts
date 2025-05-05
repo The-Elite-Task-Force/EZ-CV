@@ -141,8 +141,16 @@ export class VariantService {
       this.storageService.deleteObject(userId, "resumes", id),
       this.storageService.deleteObject(userId, "previews", id),
     ]);
-
-    return this.prisma.resumeVariant.delete({ where: { userId_id: { userId, id } } });
+    try {
+      return await this.prisma.resumeVariant.delete({
+        where: { userId_id: { userId, id } }, // Use the composite key
+      });
+    } catch (error) {
+      if (error.code === "P2025") {
+        throw new BadRequestException(error);
+      }
+      throw error;
+    }
   }
 
   async translate(resume: ResumeDto) {

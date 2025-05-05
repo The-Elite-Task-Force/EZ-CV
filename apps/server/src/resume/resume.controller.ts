@@ -136,7 +136,6 @@ export class ResumeController {
     @Param("id") id: string,
     @Body() updateResumeDto: UpdateResumeDto,
   ) {
-    console.log("updating resume", id, user.id, updateResumeDto);
     return this.resumeService.update(user.id, id, updateResumeDto);
   }
 

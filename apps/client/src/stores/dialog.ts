@@ -16,7 +16,8 @@ export type DialogMode =
   | "update"
   | "duplicate"
   | "delete"
-  | "duplicateAsVariant, translate";
+  | "duplicateAsVariant"
+  | "translate";
 
 export type DialogPayload<T = unknown> = {
   id: DialogName;

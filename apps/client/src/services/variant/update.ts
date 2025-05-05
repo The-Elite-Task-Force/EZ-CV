@@ -12,9 +12,9 @@ export const updateVariant = async (data: UpdateVariantDto) => {
     data,
   );
 
-  queryClient.setQueryData<VariantDto>(["variant", { id: response.data.id }], response.data);
+  queryClient.setQueryData<VariantDto>(["resumes", { id: response.data.id }], response.data);
 
-  queryClient.setQueryData<VariantDto[]>(["variants"], (cache) => {
+  queryClient.setQueryData<VariantDto[]>(["resumes"], (cache) => {
     if (!cache) return [response.data];
     return cache.map((resume) => {
       if (resume.id === response.data.id) return response.data;

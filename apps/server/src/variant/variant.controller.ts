@@ -40,8 +40,7 @@ export class VariantController {
   @Delete(":id")
   @UseGuards(TwoFactorGuard)
   remove(@User() user: UserEntity, @Param("id") id: string) {
-    console.log("deleting variant", id, user.id);
-    return this.variantService.remove(id, user.id);
+    return this.variantService.remove(user.id, id);
   }
 
   @Patch(":id")
@@ -51,7 +50,6 @@ export class VariantController {
     @Param("id") id: string,
     @Body() updateResumeDto: UpdateVariantDto,
   ) {
-    console.log("updating variant", id, user.id, updateResumeDto);
     return this.variantService.update(user.id, id, updateResumeDto);
   }
 
