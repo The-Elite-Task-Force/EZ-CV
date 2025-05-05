@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/macro";
 import { Plus } from "@phosphor-icons/react";
@@ -82,11 +83,11 @@ export const ProjectDialog = () => {
               <DialogTitle>
                 <div className="flex items-center space-x-2.5">
                   <Plus />
-                  <h2>{isCreate && t`Create a new project`}</h2>
+                  <h2>{isCreate && "Create a new project"}</h2>
                 </div>
               </DialogTitle>
               <DialogDescription>
-                {isCreate && t`Start building your project by giving it a name.`}
+                {isCreate && "Start building your project by giving it a name."}
               </DialogDescription>
             </DialogHeader>
 

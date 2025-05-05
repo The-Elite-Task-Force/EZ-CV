@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { Plus } from "@phosphor-icons/react";
 import { KeyboardShortcut } from "@reactive-resume/ui";
@@ -24,8 +25,7 @@ export const CreateProjectCard = () => {
         )}
       >
         <h4 className="font-medium">
-          {t`Create a new project`}
-          {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
+          {"Create a new project"}
           <KeyboardShortcut className="ml-2">^N</KeyboardShortcut>
         </h4>
 
