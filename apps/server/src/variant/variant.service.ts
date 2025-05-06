@@ -11,6 +11,7 @@ import {
   resumeSchema,
   UpdateResumeDto,
   VariantDto,
+  variantSchema,
 } from "@reactive-resume/dto";
 import { ERROR_MESSAGE } from "@reactive-resume/utils";
 import { PrismaService } from "nestjs-prisma";
@@ -66,7 +67,12 @@ export class VariantService {
         data: variantData,
       });
 
-      return variant;
+      const validationResult = variantSchema.safeParse(variant);
+      if (!validationResult.success) {
+        throw new Error("Variant does not match VariantDto schema");
+      }
+
+      return validationResult.data as VariantDto;
     } catch (error) {
       Logger.error("Error creating variant", error);
       throw new InternalServerErrorException("Error creating variant", error);

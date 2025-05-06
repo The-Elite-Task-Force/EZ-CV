@@ -7,7 +7,7 @@ export class OpenAIClient implements ChatClient {
   private client: OpenAI;
 
   constructor(apiKey: string) {
-    this.client = new OpenAI({ apiKey });
+    this.client = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
   }
 
   async chatCompletion(params: ChatCompletionParams): Promise<ChatCompletionResponse> {

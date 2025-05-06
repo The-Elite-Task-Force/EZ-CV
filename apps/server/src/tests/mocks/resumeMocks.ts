@@ -1,5 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
-import type { ResumeDto } from "@reactive-resume/dto";
+import type { ResumeDto, VariantDto } from "@reactive-resume/dto";
 
 // Mock Resume
 export const mockResume: ResumeDto = {
@@ -391,6 +391,14 @@ export const mockResume: ResumeDto = {
   createdAt: new Date(),
 };
 
+export enum Provider {
+  Email = "email",
+  GitHub = "github",
+  Google = "google",
+  OpenID = "openid",
+  Microsoft = "microsoft",
+}
+
 // Mock User
 export const mockUser = {
   id: "userId",
@@ -403,7 +411,7 @@ export const mockUser = {
   emailVerified: true,
   twoFactorEnabled: false,
   profileResumeId: null,
-  provider: "local",
+  provider: Provider.Email,
   createdAt: new Date(),
 };
 
@@ -412,7 +420,7 @@ export const mockUser = {
 export const mockTranslatedData = { ...mockResume, id: "translatedResumeId" };
 
 // Mock Saved Variant
-export const mockSavedVariant = {
+export const mockSavedVariant: VariantDto = {
   ...mockTranslatedData,
   id: createId(),
   creatorId: mockUser.id,
