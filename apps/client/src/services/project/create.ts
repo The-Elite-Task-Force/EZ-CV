@@ -22,13 +22,16 @@ export const useCreateProject = () => {
     mutateAsync: createProjectFn,
   } = useMutation({
     mutationFn: createProject,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      const { companyId } = data;
       queryClient.setQueryData<ProjectDto>([PROJECT_KEY[0], data.id], data);
 
       queryClient.setQueryData<ProjectDto[]>(PROJECTS_KEY, (cache) => {
         if (!cache) return [data];
         return [...cache, data];
       });
+
+      await queryClient.invalidateQueries({ queryKey: ["own-projects", companyId] });
     },
   });
 

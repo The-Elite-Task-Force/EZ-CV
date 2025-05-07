@@ -1,6 +1,7 @@
 /* eslint-disable lingui/no-unlocalized-strings */
 import { t } from "@lingui/macro";
 import { List, SquaresFour } from "@phosphor-icons/react";
+import type { ProjectDto } from "@reactive-resume/dto";
 import {
   Combobox,
   ScrollArea,
@@ -14,7 +15,10 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router";
 
+import { SearchBar } from "@/client/components/searchbar";
+import { projectFilterKeys } from "@/client/constants/search-filter-keys";
 import { useCompanies } from "@/client/services/company";
+import { useOwnProjectsByCompanyId } from "@/client/services/project/projects";
 import { useAuthStore } from "@/client/stores/auth";
 
 import { ProjectsGridView } from "./layouts/grid";
@@ -30,6 +34,16 @@ export const ProjectsPage = () => {
   const { user } = useAuthStore();
 
   const { companies, loading } = useCompanies();
+
+  const { projects, loading: loadingProjects } = useOwnProjectsByCompanyId(company ?? "");
+
+  const [filteredItems, setFilteredItems] = useState<ProjectDto[]>([]);
+
+  useEffect(() => {
+    if (projects) {
+      setFilteredItems(projects);
+    }
+  }, [projects]);
 
   useEffect(() => {
     if (company) {
@@ -50,7 +64,7 @@ export const ProjectsPage = () => {
     }
   }, [companies, searchParams]);
 
-  if (!user || loading) return;
+  if (!user || loading || loadingProjects) return;
 
   return (
     <div>
@@ -98,15 +112,23 @@ export const ProjectsPage = () => {
           </TabsList>
         </div>
 
+        {projects && (
+          <SearchBar<ProjectDto>
+            items={projects}
+            filterKeys={projectFilterKeys}
+            onFilter={setFilteredItems}
+          />
+        )}
+
         <ScrollArea
           allowOverflow
           className="h-[calc(100vh-140px)] overflow-visible lg:h-[calc(100vh-88px)]"
         >
           <TabsContent value="grid">
-            <ProjectsGridView />
+            <ProjectsGridView projects={filteredItems} loading={loadingProjects} />
           </TabsContent>
           <TabsContent value="list">
-            <ProjectListView />
+            <ProjectListView projects={filteredItems} loading={loadingProjects} />
           </TabsContent>
         </ScrollArea>
       </Tabs>

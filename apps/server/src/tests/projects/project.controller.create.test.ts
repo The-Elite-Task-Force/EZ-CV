@@ -1,12 +1,11 @@
 import { BadRequestException, InternalServerErrorException } from "@nestjs/common";
-import type { Project } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import type { CreateProjectDto } from "@reactive-resume/dto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ProjectController } from "../../project/project.controller";
 import type { ProjectService } from "../../project/project.service";
 import { mockUserWithoutPRI } from "../mocks/mocks";
+import { mockCreateProjectDto, mockProject } from "../mocks/project";
 
 describe("ProjectController", () => {
   let controller: ProjectController;
@@ -24,27 +23,13 @@ describe("ProjectController", () => {
     vi.resetAllMocks();
   });
 
-  const mockDto: CreateProjectDto = {
-    name: "My Project",
-    companyId: "company-456",
-  };
-
   it("should call projectService.create and return result", async () => {
-    const expectedResult: Project = {
-      id: "project-999",
-      name: mockDto.name,
-      companyId: mockDto.companyId,
-      updatedAt: new Date(),
-      userId: "user-123",
-      description: "",
-    };
+    vi.mocked(service.create).mockResolvedValue(mockProject);
 
-    vi.mocked(service.create).mockResolvedValue(expectedResult);
+    const result = await controller.create(mockUserWithoutPRI, mockCreateProjectDto);
 
-    const result = await controller.create(mockUserWithoutPRI, mockDto);
-
-    expect(service.create).toHaveBeenCalledWith(mockUserWithoutPRI.id, mockDto);
-    expect(result).toEqual(expectedResult);
+    expect(service.create).toHaveBeenCalledWith(mockUserWithoutPRI.id, mockCreateProjectDto);
+    expect(result).toEqual(mockProject);
   });
 
   it("should throw BadRequestException if project name already exists", async () => {
@@ -55,7 +40,7 @@ describe("ProjectController", () => {
 
     vi.mocked(service.create).mockRejectedValue(prismaError);
 
-    await expect(controller.create(mockUserWithoutPRI, mockDto)).rejects.toThrow(
+    await expect(controller.create(mockUserWithoutPRI, mockCreateProjectDto)).rejects.toThrow(
       BadRequestException,
     );
   });
@@ -63,7 +48,7 @@ describe("ProjectController", () => {
   it("should throw InternalServerErrorException on unknown error", async () => {
     vi.mocked(service.create).mockRejectedValue(new Error("Something went wrong"));
 
-    await expect(controller.create(mockUserWithoutPRI, mockDto)).rejects.toThrow(
+    await expect(controller.create(mockUserWithoutPRI, mockCreateProjectDto)).rejects.toThrow(
       InternalServerErrorException,
     );
   });

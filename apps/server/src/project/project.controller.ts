@@ -2,8 +2,10 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
   Logger,
+  Param,
   Post,
   UseGuards,
 } from "@nestjs/common";
@@ -36,6 +38,17 @@ export class ProjectController {
       }
 
       Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+  @Get("/own/:id") // Get projects owned by the user from a specific company
+  @UseGuards(TwoFactorGuard)
+  async getOwnByCompanyId(@User() user: UserEntity, @Param("id") companyId: string) {
+    try {
+      const data = await this.projectService.getUserProjectsByCompanyId(user.id, companyId);
+      return data;
+    } catch (error) {
+      Logger.log(error);
       throw new InternalServerErrorException(error);
     }
   }
