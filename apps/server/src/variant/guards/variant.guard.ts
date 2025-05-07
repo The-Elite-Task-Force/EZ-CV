@@ -1,10 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, NotFoundException } from "@nestjs/common";
-import { ResumeVariant } from "@prisma/client";
 import { UserWithSecrets } from "@reactive-resume/dto";
 import { ERROR_MESSAGE } from "@reactive-resume/utils";
 import { Request } from "express";
-
-import { Resume } from "@/server/resume/decorators/resume.decorator";
 
 import { VariantService } from "../variant.service";
 
@@ -24,7 +21,7 @@ export class VariantGuard implements CanActivate {
 
       // First check if the resume is publicpage, if yes, attach the resume to there request payload.
       if (variant.visibility === "public") {
-        request.payload = { variant: ResumeVariant };
+        request.payload = { variant };
       }
 
       // If the resume is private and the user is authenticated and is the owner of the resume, attach the resume to the request payload.

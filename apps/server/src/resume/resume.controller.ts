@@ -1,5 +1,3 @@
-import { get } from "node:http";
-
 import {
   BadRequestException,
   Body,
@@ -18,7 +16,6 @@ import { User as UserEntity } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import {
   CreateResumeDto,
-  ImportResumeDto,
   importResumeSchema,
   ResumeDto,
   UpdateResumeDto,

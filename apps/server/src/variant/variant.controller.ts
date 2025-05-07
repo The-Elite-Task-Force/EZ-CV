@@ -18,10 +18,10 @@ import { ResumeDto } from "@reactive-resume/dto";
 
 import { OptionalGuard } from "../auth/guards/optional.guard";
 import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
-import { Resume } from "../resume/decorators/resume.decorator";
 import { User } from "../user/decorators/user.decorator";
-import { VariantService } from "./variant.service";
+import { Variant } from "./decorators/variant.decorator";
 import { VariantGuard } from "./guards/variant.guard";
+import { VariantService } from "./variant.service";
 
 @ApiTags("Variant")
 @Controller("variant")
@@ -29,7 +29,7 @@ export class VariantController {
   constructor(private readonly variantService: VariantService) {}
   @UseGuards(TwoFactorGuard)
   @Post("/duplicateFromResume/")
-  async create(@Body() createVariantDto: DuplicateAsVariantDto, @User() user: UserEntity) {
+  async create(@Body() createVariantDto: DuplicateAsVariantDto) {
     try {
       return await this.variantService.createVariant(createVariantDto);
     } catch (error) {
@@ -54,10 +54,9 @@ export class VariantController {
     return this.variantService.update(user.id, id, updateResumeDto);
   }
 
-  //Not sure how this works, but it should be similar to the resume controller
   @Get(":id")
   @UseGuards(TwoFactorGuard, VariantGuard)
-  findOne(@Resume() variant: VariantDto) {
+  findOne(@Variant() variant: VariantDto) {
     return variant;
   }
 
@@ -68,8 +67,8 @@ export class VariantController {
   }
 
   @Get("/print/:id")
-  @UseGuards(OptionalGuard)
-  async printResume(@User("id") userId: string | undefined, @Resume() variant: VariantDto) {
+  @UseGuards(OptionalGuard, VariantGuard)
+  async printResume(@User("id") userId: string | undefined, @Variant() variant: VariantDto) {
     try {
       const url = await this.variantService.printResume(variant);
 
@@ -81,8 +80,8 @@ export class VariantController {
   }
 
   @Get("/print/:id/preview")
-  @UseGuards(TwoFactorGuard)
-  async printPreview(@Resume() variant: VariantDto) {
+  @UseGuards(TwoFactorGuard, VariantGuard)
+  async printPreview(@Variant() variant: VariantDto) {
     try {
       const url = await this.variantService.printPreview(variant);
 
