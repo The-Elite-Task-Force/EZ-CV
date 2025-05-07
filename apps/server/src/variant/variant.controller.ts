@@ -21,6 +21,7 @@ import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
 import { Resume } from "../resume/decorators/resume.decorator";
 import { User } from "../user/decorators/user.decorator";
 import { VariantService } from "./variant.service";
+import { VariantGuard } from "./guards/variant.guard";
 
 @ApiTags("Variant")
 @Controller("variant")
@@ -55,7 +56,7 @@ export class VariantController {
 
   //Not sure how this works, but it should be similar to the resume controller
   @Get(":id")
-  @UseGuards(TwoFactorGuard)
+  @UseGuards(TwoFactorGuard, VariantGuard)
   findOne(@Resume() variant: VariantDto) {
     return variant;
   }
