@@ -8,7 +8,7 @@ param DOCKER_REGISTRY_SERVER_PASSWORD string
 param DOCKER_REGISTRY_SERVER_USERNAME string 
 
 @secure()
-param blobSttorageContainerName string
+param blobStorageContainerName string
 @secure()
 param blobStorageAccountName string
 @secure()
@@ -85,7 +85,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-07-01'
       {
         name: 'grafana-config'
         azureFile: {
-          shareName: blobSttorageContainerName
+          shareName: blobStorageContainerName
           storageAccountName: blobStorageAccountName
           storageAccountKey: blobStorageAccountKey
         }
