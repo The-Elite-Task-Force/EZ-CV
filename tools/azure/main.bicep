@@ -119,7 +119,7 @@ module azureOpenAI './azure-openai.bicep' = {
   }
 }
 
-/*
+
 module grafana 'grafana.bicep' = {
   name: '${prefix}-${dockerTag}-grafana'
   scope: rg
@@ -149,4 +149,4 @@ module prometheus 'prometheus.bicep' = {
     blobStorageAccountKey: kv.getSecret('STORAGE-ACCOUNT-KEY')
   }
 }
-*/
+
