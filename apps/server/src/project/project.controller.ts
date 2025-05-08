@@ -2,8 +2,10 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
   Logger,
+  Param,
   Post,
   UseGuards,
 } from "@nestjs/common";
@@ -37,6 +39,16 @@ export class ProjectController {
         throw new BadRequestException(ERROR_MESSAGE.ProjectNameAlreadyExists);
       }
 
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @Get(":companyId")
+  async getProjectsFromCompany(@Param("companyId") companyId: string) {
+    try {
+      return await this.projectService.getProjectsFromCompany(companyId);
+    } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException(error);
     }

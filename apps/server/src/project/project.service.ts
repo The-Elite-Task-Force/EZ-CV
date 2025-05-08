@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CreateProjectDto } from "@reactive-resume/dto";
+import { CreateProjectDto, ProjectDto } from "@reactive-resume/dto";
 import { PrismaService } from "nestjs-prisma";
 @Injectable()
 export class ProjectService {
@@ -16,5 +16,13 @@ export class ProjectService {
     });
 
     return project;
+  }
+
+  async getProjectsFromCompany(companyId: string): Promise<ProjectDto[]> {
+    const mappings = await this.prisma.project.findMany({
+      where: { companyId: companyId },
+    });
+
+    return mappings;
   }
 }
