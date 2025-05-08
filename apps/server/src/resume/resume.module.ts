@@ -1,8 +1,7 @@
 import { Module } from "@nestjs/common";
 
-import { AuthModule } from "@/server/auth/auth.module";
-import { PrinterModule } from "@/server/printer/printer.module";
-
+import { AuthModule } from "../auth/auth.module";
+import { PrinterModule } from "../printer/printer.module";
 import { SearchModule } from "../search/search.module";
 import { StorageModule } from "../storage/storage.module";
 import { ResumeController } from "./resume.controller";

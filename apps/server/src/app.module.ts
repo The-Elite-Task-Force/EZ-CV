@@ -53,7 +53,7 @@ import { VariantModule } from "./variant/variant.module";
     ProjectModule,
     VariantModule,
     MetricsModule,
-
+    VariantModule,
     // Static Assets
     ServeStaticModule.forRoot({
       serveRoot: "/artboard",

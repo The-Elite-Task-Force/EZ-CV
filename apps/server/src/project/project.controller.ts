@@ -16,7 +16,8 @@ import { CreateProjectDto } from "@reactive-resume/dto";
 import { Role } from "@reactive-resume/dto";
 import { ERROR_MESSAGE } from "@reactive-resume/utils";
 
-import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
+import { TwoFactorGuard } from "@/server/auth/guards/two-factor.guard";
+
 import { AllowedRoles, CompanyRoleGuard } from "../company/guards/company.role.guard";
 import { User } from "../user/decorators/user.decorator";
 import { ProjectService } from "./project.service";
@@ -48,6 +49,17 @@ export class ProjectController {
       return await this.projectService.getProjectsFromCompany(companyId);
     } catch (error) {
       Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+  @Get("/own/:id") // Get projects owned by the user from a specific company
+  @UseGuards(TwoFactorGuard)
+  async getOwnByCompanyId(@User() user: UserEntity, @Param("id") companyId: string) {
+    try {
+      const data = await this.projectService.getUserProjectsByCompanyId(user.id, companyId);
+      return data;
+    } catch (error) {
+      Logger.log(error);
       throw new InternalServerErrorException(error);
     }
   }

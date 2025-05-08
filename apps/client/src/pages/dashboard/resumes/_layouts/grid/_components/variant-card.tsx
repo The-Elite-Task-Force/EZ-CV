@@ -34,71 +34,55 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { LocaleComboboxPopover } from "@/client/components/locale-combobox";
-import { setDefault } from "@/client/services/resume";
-import { updateResume } from "@/client/services/resume";
+import { updateVariant } from "@/client/services/variant";
 import { useAuthStore } from "@/client/stores/auth";
 import { useDialog } from "@/client/stores/dialog";
 
 import { BaseCard } from "./base-card";
 
 type Props = {
-  resume: ResumeDto | VariantDto;
+  variant: VariantDto;
 };
 
-export const ResumeCard = ({ resume }: Props) => {
+export const VariantCard = ({ variant }: Props) => {
   const navigate = useNavigate();
-  const { open } = useDialog<ResumeDto>("resume");
-  const { open: lockOpen } = useDialog<ResumeDto>("lock");
+  const { open } = useDialog<VariantDto>("resume");
+  const { open: lockOpen } = useDialog<VariantDto>("lock");
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
 
-  const [resumeLanguage, setResumeLanguage] = useState<LANGUAGE>(resume.language);
+  const [resumeLanguage, setResumeLanguage] = useState<LANGUAGE>(variant.language);
   useEffect(() => {
     const update = async () => {
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      await updateResume({ ...resume, language: resumeLanguage });
+      await updateVariant({ ...variant, language: resumeLanguage });
     };
 
     void update();
   }, [resumeLanguage]);
 
-  const template = resume.data.metadata.template;
-  const lastUpdated = dayjs().to(resume.updatedAt);
+  const template = variant.data.metadata.template;
+  const lastUpdated = dayjs().to(variant.updatedAt);
 
   const onOpen = () => {
-    void navigate(`/builder/${resume.id}`);
+    //insert logic to open Variant
+    console.log("open variant", variant);
   };
 
   const onUpdate = () => {
-    open("update", { id: "resume", item: resume });
-  };
-
-  const onCreateVariant = () => {
-    open("duplicateAsVariant", { id: "resume", item: resume });
-  };
-
-  const onSetDefault = async (setDefaultProfile: boolean) => {
-    if (!user) return;
-    await (setDefaultProfile
-      ? setDefault({ resumeId: resume.id, userId: user.id, setDefaultProfile: true })
-      : setDefault({ resumeId: resume.id, userId: user.id, setDefaultProfile: false }));
-    await queryClient.invalidateQueries({ queryKey: ["user"] });
+    open("update", { id: "resume", item: variant });
   };
 
   const onDuplicate = () => {
-    open("duplicate", { id: "resume", item: resume });
-  };
-
-  const onTranslate = (locale: LANGUAGE) => {
-    open("translate", { id: "resume", item: resume });
+    open("duplicate", { id: "resume", item: variant });
   };
 
   const onLockChange = () => {
-    lockOpen(resume.locked ? "update" : "create", { id: "lock", item: resume });
+    lockOpen(variant.locked ? "update" : "create", { id: "lock", item: variant });
   };
 
   const onDelete = () => {
-    open("delete", { id: "resume", item: resume });
+    open("delete", { id: "resume", item: variant });
   };
 
   return (
@@ -107,7 +91,7 @@ export const ResumeCard = ({ resume }: Props) => {
         <DropdownMenuTrigger className="pointer-events-none text-left">
           <BaseCard className="pointer-events-auto cursor-context-menu space-y-0">
             <AnimatePresence>
-              {resume.locked && (
+              {variant.locked && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -123,7 +107,7 @@ export const ResumeCard = ({ resume }: Props) => {
               {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
               <span
                 // eslint-disable-next-line tailwindcss/no-custom-classname
-                className={cn("fi", `fi-${resume.language.slice(-2).toLowerCase()}`, "text-xl")}
+                className={cn("fi", `fi-${variant.language.slice(-2).toLowerCase()}`, "text-xl")}
               ></span>
             </div>
             <div
@@ -132,13 +116,11 @@ export const ResumeCard = ({ resume }: Props) => {
                 "bg-gradient-to-t from-background/80 to-transparent",
               )}
             >
-              {resume.id === user?.profileResumeId && (
-                <div className="absolute right-1 top-12 rounded border border-gray-700 bg-black px-2 py-1 text-xs font-bold text-white shadow-md">
-                  ★ Profile
-                </div>
-              )}
+              <div className="absolute left-2 top-2 z-10 rounded bg-green-600 px-2 py-1 text-xs font-bold text-white shadow-md">
+                Variant
+              </div>
 
-              <h4 className="line-clamp-2 font-medium">{resume.title}</h4>
+              <h4 className="line-clamp-2 font-medium">{variant.title}</h4>
               <p className="line-clamp-1 text-xs opacity-75">{t`Last updated ${lastUpdated}`}</p>
             </div>
 
@@ -164,30 +146,7 @@ export const ResumeCard = ({ resume }: Props) => {
             {t`Duplicate`}
           </DropdownMenuItem>
 
-          <DropdownMenuItem onClick={onCreateVariant}>
-            <CopySimple size={14} className="mr-2" />
-            {`Create as variant`}
-          </DropdownMenuItem>
-          {resume.id === user?.profileResumeId ? (
-            <DropdownMenuItem onClick={() => onSetDefault(false)}>
-              <FolderOpen size={14} className="mr-2" />
-              Remove as profile
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem onClick={() => onSetDefault(true)}>
-              <FolderOpen size={14} className="mr-2" />
-              Set as profile
-            </DropdownMenuItem>
-          )}
-          <DropdownMenuItem
-            onClick={() => {
-              onTranslate(resumeLanguage);
-            }}
-          >
-            <Translate size={14} className="mr-2" />
-            {t`Translate`}
-          </DropdownMenuItem>
-          {resume.locked ? (
+          {variant.locked ? (
             <DropdownMenuItem onClick={onLockChange}>
               <LockOpen size={14} className="mr-2" />
               {t`Unlock`}
@@ -208,6 +167,8 @@ export const ResumeCard = ({ resume }: Props) => {
               <LocaleComboboxPopover
                 value={resumeLanguage}
                 onValueChange={(locale) => {
+                  //This type assertion is DEFINETLY NECESSARY, cannot build without it
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                   setResumeLanguage(locale as LANGUAGE);
                 }}
               />

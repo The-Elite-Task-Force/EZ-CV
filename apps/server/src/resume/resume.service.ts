@@ -218,6 +218,40 @@ export class ResumeService {
     return this.prisma.resume.findMany({ where: { userId }, orderBy: { updatedAt: "desc" } });
   }
 
+  async findallResumesAndVariants(userId: string, filterHidden = false) {
+    // Fetch resumes
+    let resumes;
+    let variants;
+    if (filterHidden) {
+      resumes = await this.prisma.resume.findMany({
+        where: {
+          userId,
+          visibility: "public",
+        },
+      });
+      variants = await this.prisma.resumeVariant.findMany({
+        where: {
+          userId,
+          visibility: "public",
+        },
+      });
+    } else {
+      resumes = await this.prisma.resume.findMany({
+        where: {
+          userId,
+        },
+      });
+      variants = await this.prisma.resumeVariant.findMany({
+        where: {
+          userId,
+        },
+      });
+    }
+    // Combine and sort results
+    const allResumes = [...resumes, ...variants];
+    return allResumes.sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
+  }
+
   findOne(id: string, userId?: string) {
     if (userId) {
       return this.prisma.resume.findUniqueOrThrow({ where: { userId_id: { userId, id } } });

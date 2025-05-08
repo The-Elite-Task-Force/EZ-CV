@@ -11,7 +11,13 @@ export type DialogName =
   | "translate"
   | SectionKey;
 
-export type DialogMode = "create" | "update" | "duplicate" | "delete" | "translate";
+export type DialogMode =
+  | "create"
+  | "update"
+  | "duplicate"
+  | "delete"
+  | "duplicateAsVariant"
+  | "translate";
 
 export type DialogPayload<T = unknown> = {
   id: DialogName;

@@ -33,4 +33,15 @@ export class ProjectService {
 
     return mappings;
   }
+
+  async getUserProjectsByCompanyId(userId: string, companyId: string) {
+    const projects = await this.prisma.project.findMany({
+      where: {
+        userId,
+        companyId,
+      },
+    });
+
+    return projects;
+  }
 }

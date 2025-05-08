@@ -9,9 +9,9 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiTags } from "@nestjs/swagger";
 
-import { TwoFactorGuard } from "@/server/auth/guards/two-factor.guard";
 import { User } from "@/server/user/decorators/user.decorator";
 
+import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
 import { StorageService } from "./storage.service";
 
 @ApiTags("Storage")
