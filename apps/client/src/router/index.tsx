@@ -23,6 +23,7 @@ import { SettingsPage } from "../pages/dashboard/settings/page";
 import { HomeLayout } from "../pages/home/layout";
 import { HomePage } from "../pages/home/page";
 import { PublicProfilePage } from "../pages/profilepage/page";
+import { ProjectPage } from "../pages/projects/page";
 import { Providers } from "../providers";
 import { AuthGuard } from "./guards/auth";
 import { GuestGuard } from "./guards/guest";
@@ -76,6 +77,7 @@ export const routes = createRoutesFromElements(
             <Route path="settings" element={<SettingsPage />} />
             <Route path="search" element={<SearchPage />} /> {/* Add the new search route */}
             <Route path="projects" element={<ProjectsPage />} />
+            <Route path="projects/:id" element={<ProjectPage />} />
             <Route index element={<Navigate replace to="/dashboard/resumes" />} />
           </Route>
         </Route>

@@ -14,23 +14,22 @@ import {
 } from "@reactive-resume/ui";
 import { cn } from "@reactive-resume/utils";
 import dayjs from "dayjs";
-import { useNavigate } from "react-router";
 
 import { BaseCard } from "@/client/pages/dashboard/resumes/_layouts/grid/_components/base-card";
 import { useDialog } from "@/client/stores/dialog";
 
 type Props = {
   project: ProjectDto;
+  onOpenProject: (projectId: string) => void;
 };
 
-export const ProjectCard = ({ project }: Props) => {
-  const navigate = useNavigate();
+export const ProjectCard = ({ project, onOpenProject }: Props) => {
   const { open } = useDialog<ProjectDto>("project");
 
   const lastUpdated = dayjs().to(project.updatedAt);
 
   const onOpen = () => {
-    void navigate(`/projects/${project.id}`);
+    onOpenProject(project.id);
   };
 
   const onUpdate = () => {
