@@ -10,7 +10,7 @@ type SearchResultItemProps = {
 
 const SearchResultItem: React.FC<SearchResultItemProps> = ({ searchResult }) => {
   return (
-    <div className="mb-4 flex items-center rounded-xl border border-gray-300 p-4 shadow-md dark:border-gray-700">
+    <div className="mb-4 flex items-center rounded-xl border border-gray-300 p-4 shadow-md dark:border-gray-700 bg-secondary/50">
       <div className="shrink-0">
         <img
           className="size-16 rounded-full"
