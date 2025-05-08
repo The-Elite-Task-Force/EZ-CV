@@ -13,12 +13,10 @@ import { ApiTags } from "@nestjs/swagger";
 import { User as UserEntity } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { CreateProjectDto } from "@reactive-resume/dto";
+import { Role } from "@reactive-resume/dto";
 import { ERROR_MESSAGE } from "@reactive-resume/utils";
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { Role } from "libs/dto/src/company/types/roles";
 
-import { TwoFactorGuard } from "@/server/auth/guards/two-factor.guard";
-
+import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
 import { AllowedRoles, CompanyRoleGuard } from "../company/guards/company.role.guard";
 import { User } from "../user/decorators/user.decorator";
 import { ProjectService } from "./project.service";

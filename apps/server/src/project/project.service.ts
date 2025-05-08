@@ -19,6 +19,14 @@ export class ProjectService {
   }
 
   async getProjectsFromCompany(companyId: string): Promise<ProjectDto[]> {
+    const company = await this.prisma.company.findUnique({
+      where: { id: companyId },
+    });
+
+    if (!company) {
+      throw new Error(`Company with ID: ${companyId} - does not exist.`);
+    }
+
     const mappings = await this.prisma.project.findMany({
       where: { companyId: companyId },
     });

@@ -20,7 +20,7 @@ export const CompanyPage = () => {
     queryFn: () => fetchEmployees(companyState.id),
   });
 
-  const { data: projects = [], refetch: refetchProjects } = useQuery<ProjectDto[]>({
+  const { data: projects = [] } = useQuery<ProjectDto[]>({
     queryKey: [PROJECTS_KEY, companyState.id],
     queryFn: () => fetchProjectsFromCompany(companyState.id),
   });
@@ -35,7 +35,7 @@ export const CompanyPage = () => {
         refetchEmployees={refetchEmployees}
       />
       <InviteUserForm companyId={companyState.id} />
-      <ProjectList projects={projects} company={companyState} refetchProjects={refetchProjects} />
+      <ProjectList projects={projects} />
     </div>
   );
 };
