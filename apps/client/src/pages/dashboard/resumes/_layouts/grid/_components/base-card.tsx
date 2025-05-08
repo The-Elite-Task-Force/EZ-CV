@@ -17,7 +17,7 @@ export const BaseCard = forwardRef<HTMLDivElement, Props>(
       <Card
         ref={ref}
         className={cn(
-          "scale-510cursor-pointer relative flex aspect-[1/1.4142] items-center justify-center bg-secondary/50 p-0 transition-transform active:scale-95",
+          "relative flex aspect-[1/1.4142] scale-100 cursor-pointer items-center justify-center bg-secondary/50 p-0 transition-transform active:scale-95",
           className,
         )}
         onClick={onClick}
