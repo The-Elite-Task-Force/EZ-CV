@@ -6,10 +6,12 @@ import { useSearch } from "@/client/services/search/search";
 
 import SearchResultItem from "../dashboard/search/search-result";
 import { SearchBar } from "../dashboard/search/searchbar";
+import { useResetSearchCache } from "../dashboard/search/use-reset-search-cache";
 
 export const ProjectPage = () => {
   const [query, setQuery] = useState("");
   const [totalResults] = useState(10);
+  useResetSearchCache();
 
   const { data, isLoading, error, refetch } = useSearch(query, totalResults);
 
@@ -41,7 +43,7 @@ export const ProjectPage = () => {
                 ))}
               </ul>
             ) : (
-              !isLoading && <p>No results found</p>
+              !isLoading && query && <p>No results found</p>
             )}
           </div>
         </div>
