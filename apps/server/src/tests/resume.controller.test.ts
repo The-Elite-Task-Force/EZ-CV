@@ -43,7 +43,7 @@ describe("ResumeController", async () => {
         message: "Resume set as profile successfully",
       });
 
-      expect(await resumeController.setDefault(user, profileResumeId)).toEqual({
+      expect(await resumeController.setDefault(user, profileResumeId, true)).toEqual({
         message: "Resume set as profile successfully",
       });
     });
@@ -57,7 +57,7 @@ describe("ResumeController", async () => {
         message: "Failed to set resume as profile",
       });
 
-      await expect(resumeController.setDefault(user, profileResumeId)).rejects.toThrow(
+      await expect(resumeController.setDefault(user, profileResumeId, true)).rejects.toThrow(
         "Failed to set resume as profile",
       );
     });

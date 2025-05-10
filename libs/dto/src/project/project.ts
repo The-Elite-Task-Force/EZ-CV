@@ -6,10 +6,10 @@ import { z } from "zod";
 export const projectSchema = z.object({
   id: idSchema,
   name: z.string(),
-  description: z.string().optional(),
+  description: z.string().nullable(),
   userId: idSchema,
-  updatedAt: dateSchema,
   companyId: idSchema,
+  updatedAt: dateSchema,
 });
 
 export class ProjectDto extends createZodDto(projectSchema) {}
