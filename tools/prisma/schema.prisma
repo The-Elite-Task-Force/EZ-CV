@@ -110,6 +110,7 @@ model Resume {
   ResumeCustomItemMapping        ResumeCustomItemMapping[]
 
   variants ResumeVariant[] @relation("ResumeToVariants")
+  projects   ProjectMapping[]
 
   @@unique([userId, id])
   @@unique([userId, slug])
@@ -132,7 +133,6 @@ model ResumeVariant {
   language   String            @default("en-US")
   resumeId   String
   resume     Resume            @relation("ResumeToVariants", fields: [resumeId], references: [id], onDelete: Cascade)
-  projects   ProjectMapping[]
 
   @@unique([userId, id])
   @@unique([userId, slug])
@@ -174,7 +174,7 @@ model ProjectMapping {
   userId    String
   user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   resumeId  String?
-  resume    ResumeVariant? @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  resume    Resume? @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   @@unique([projectId, userId])
 }

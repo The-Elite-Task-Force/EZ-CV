@@ -7,6 +7,7 @@ import {
   useCreateProjectMapping,
   useDeleteProjectMapping,
   useProjectMappingsByProjectId,
+  useUpdateProjectMapping,
 } from "@/client/services/project-mapping";
 import { useSearch } from "@/client/services/search/search";
 
@@ -23,6 +24,8 @@ export const ProjectPage = () => {
   const { data, isLoading, error, refetch } = useSearch(query, totalResults);
   const { createProjectMapping } = useCreateProjectMapping();
   const { deleteProjectMapping } = useDeleteProjectMapping();
+  const { updateProjectMapping } = useUpdateProjectMapping();
+
   const {
     data: members,
     loading: membersLoading,
@@ -42,6 +45,11 @@ export const ProjectPage = () => {
   const handleRemoveUser = async (userId: string) => {
     if (!projectId) return;
     await deleteProjectMapping({ userId, projectId });
+  };
+
+  const handleResumeDropdown = async (userId: string, resumeId: string) => {
+    if (!projectId) return;
+    await updateProjectMapping({ projectId, userId, resumeId });
   };
 
   // Just doing this so page shows some users on first load
@@ -73,6 +81,7 @@ export const ProjectPage = () => {
               usersLoading={isLoading}
               handleAddUser={handleAddUser}
               data={Boolean(query)}
+              handleResumeDropdown={handleResumeDropdown}
             />
           </div>
         </div>
@@ -82,8 +91,7 @@ export const ProjectPage = () => {
             <h2 className="text-3xl font-bold">CV Portfolio</h2>
             {membersLoading ? (
               <p className="pr-8 text-lg">Loading members...</p>
-            ) :
-            membersError ? (
+            ) : membersError ? (
               <p className="pr-8 text-lg text-red-500">Error loading members</p>
             ) : (
               <p className="pr-8 text-lg">Members count: {members?.length ?? 0}</p>
@@ -96,6 +104,7 @@ export const ProjectPage = () => {
               usersLoading={membersLoading}
               handleRemoveUser={handleRemoveUser}
               data={Boolean(members)}
+              handleResumeDropdown={handleResumeDropdown}
             />
           </div>
         </div>
