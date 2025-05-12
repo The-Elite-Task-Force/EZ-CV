@@ -23,6 +23,8 @@ import { SettingsPage } from "../pages/dashboard/settings/page";
 import { HomeLayout } from "../pages/home/layout";
 import { HomePage } from "../pages/home/page";
 import { PublicProfilePage } from "../pages/profilepage/page";
+import { VariantBuilderLayout } from "../pages/variant-builder/layout";
+import { variantBuilderLoader, VariantBuilderPage } from "../pages/variant-builder/page";
 import { Providers } from "../providers";
 import { AuthGuard } from "./guards/auth";
 import { GuestGuard } from "./guards/guest";
@@ -90,7 +92,15 @@ export const routes = createRoutesFromElements(
           </Route>
         </Route>
       </Route>
+      <Route path="variantBuilder">
+        <Route element={<AuthGuard />}>
+          <Route element={<VariantBuilderLayout />}>
+            <Route path=":id" loader={variantBuilderLoader} element={<VariantBuilderPage />} />
 
+            <Route index element={<Navigate replace to="/dashboard/resumes" />} />
+          </Route>
+        </Route>
+      </Route>
       {/* Public Routes */}
       <Route
         path="publicprofile/:username"

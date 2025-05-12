@@ -17,7 +17,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import type { ResumeDto, VariantDto } from "@reactive-resume/dto";
+import type { VariantDto } from "@reactive-resume/dto";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,8 +65,9 @@ export const VariantCard = ({ variant }: Props) => {
   const lastUpdated = dayjs().to(variant.updatedAt);
 
   const onOpen = () => {
-    //insert logic to open Variant
-    console.log("open variant", variant);
+    console.log("open", variant.id);
+    void navigate(`/variantBuilder/${variant.id}`);
+    console.log("opened", variant.id);
   };
 
   const onUpdate = () => {

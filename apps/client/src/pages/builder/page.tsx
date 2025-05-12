@@ -17,7 +17,6 @@ import { useSectionMappingStore } from "@/client/stores/section-mapping";
 
 export const mapSections = (sections: Sections, mapping: SectionMappingDto) => {
   const result = JSON.parse(JSON.stringify(sections));
-
   for (const [key, section] of Object.entries(sections)) {
     if (key === "basics") continue;
     if (key === "custom" && typeof section === "object") {
@@ -43,6 +42,8 @@ export const mapSections = (sections: Sections, mapping: SectionMappingDto) => {
 };
 
 export const BuilderPage = () => {
+  console.log("builder page", "-------------------------");
+
   const frameRef = useBuilderStore((state) => state.frame.ref);
   const setFrameRef = useBuilderStore((state) => state.frame.setRef);
 

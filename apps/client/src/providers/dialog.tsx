@@ -20,8 +20,21 @@ import { ImportDialog } from "../pages/dashboard/resumes/_dialogs/import";
 import { LockDialog } from "../pages/dashboard/resumes/_dialogs/lock";
 import { ResumeDialog } from "../pages/dashboard/resumes/_dialogs/resume";
 import { TwoFactorDialog } from "../pages/dashboard/settings/_dialogs/two-factor";
+import { VariantAwardsDialog } from "../pages/variant-builder/sidebars/left/dialogs/awards";
+//import { VariantBasicDialog } from "../pages/variant-builder/sidebars/left/dialogs/basic";
+import { VariantCertificationsDialog } from "../pages/variant-builder/sidebars/left/dialogs/certifications";
+import { VariantEducationDialog } from "../pages/variant-builder/sidebars/left/dialogs/education";
+import { VariantExperienceDialog } from "../pages/variant-builder/sidebars/left/dialogs/experience";
+import { VariantInterestsDialog } from "../pages/variant-builder/sidebars/left/dialogs/interests";
+import { VariantLanguagesDialog } from "../pages/variant-builder/sidebars/left/dialogs/languages";
+import { VariantProfilesDialog } from "../pages/variant-builder/sidebars/left/dialogs/profiles";
+import { VariantProjectsDialog } from "../pages/variant-builder/sidebars/left/dialogs/projects";
+import { VariantPublicationsDialog } from "../pages/variant-builder/sidebars/left/dialogs/publications";
+import { VariantReferencesDialog } from "../pages/variant-builder/sidebars/left/dialogs/references";
+import { VariantSkillsDialog } from "../pages/variant-builder/sidebars/left/dialogs/skills";
+//import { VariantSummaryDialog } from "../pages/variant-builder/sidebars/left/dialogs/summary";
+import { VariantVolunteerDialog } from "../pages/variant-builder/sidebars/left/dialogs/volunteer";
 import { useResumeStore } from "../stores/resume";
-
 type Props = {
   children: React.ReactNode;
 };
@@ -58,6 +71,21 @@ export const DialogProvider = ({ children }: Props) => {
             <SkillsDialog />
             <ReferencesDialog />
             <CustomSectionDialog />
+
+            <VariantAwardsDialog />
+            {/* <VariantBasicDialog /> */}
+            <VariantCertificationsDialog />
+            <VariantEducationDialog />
+            <VariantExperienceDialog />
+            <VariantInterestsDialog />
+            <VariantLanguagesDialog />
+            <VariantProfilesDialog />
+            <VariantProjectsDialog />
+            <VariantPublicationsDialog />
+            <VariantVolunteerDialog />
+            <VariantSkillsDialog />
+            {/* <VariantSummaryDialog /> */}
+            <VariantReferencesDialog />
           </>
         )}
       </div>

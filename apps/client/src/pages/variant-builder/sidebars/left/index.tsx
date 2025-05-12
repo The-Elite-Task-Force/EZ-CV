@@ -1,9 +1,8 @@
-//import { Plus, PlusCircle } from "@phosphor-icons/react";
+import { t } from "@lingui/macro";
+import { PlusCircle } from "@phosphor-icons/react";
 import type {
   Award,
-  Basics,
   Certification,
-  //CustomSection,
   Education,
   Experience,
   Interest,
@@ -13,35 +12,33 @@ import type {
   Publication,
   Reference,
   Skill,
-  Summary,
   Volunteer,
 } from "@reactive-resume/schema";
 import { Button, ScrollArea, Separator } from "@reactive-resume/ui";
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import { Link } from "react-router";
 
 import { Icon } from "@/client/components/icon";
 import { UserAvatar } from "@/client/components/user-avatar";
 import { UserOptions } from "@/client/components/user-options";
-import { useMapSectionsToResume } from "@/client/hooks/use-map-sections-to-resume";
+import { useResumeStore } from "@/client/stores/resume";
 
+import { BasicsSection } from "./sections/basics";
 import { SectionBase } from "./sections/shared/section-base";
 import { SectionIcon } from "./sections/shared/section-icon";
+import { SummarySection } from "./sections/summary";
 
 export const LeftSidebar = () => {
-  console.log("LeftSidebar");
-
+  console.log("Variant LeftSidebar");
   const containterRef = useRef<HTMLDivElement | null>(null);
 
-  //const addSection = useResumeStore((state) => state.addSection);
+  const addSection = useResumeStore((state) => state.addSection);
   //const customSections = useResumeStore((state) => state.resume.data.sections.custom);
 
   const scrollIntoView = (selector: string) => {
     const section = containterRef.current?.querySelector(selector);
     section?.scrollIntoView({ behavior: "smooth" });
   };
-
-  useMapSectionsToResume();
 
   return (
     <div className="flex bg-secondary-accent/30">
@@ -55,11 +52,11 @@ export const LeftSidebar = () => {
         <div className="flex flex-col items-center justify-center gap-y-2">
           <SectionIcon
             id="basics"
-            // name={t({
-            //   message: "Basics",
-            //   context:
-            //     "The basics sectionItem of a resume consists of User's Picture, Full Name, Location etc.",
-            // })}
+            name={t({
+              message: "Basics",
+              context:
+                "The basics section of a resume consists of User's Picture, Full Name, Location etc.",
+            })}
             onClick={() => {
               scrollIntoView("#basics");
             }}
@@ -142,18 +139,18 @@ export const LeftSidebar = () => {
               scrollIntoView("#references");
             }}
           />
-          {/*
-<SectionIcon
-  id="custom"
-  variant="outline"
-  name={t`Add a new section`}
-  icon={<Plus size={14} />}
-  onClick={() => {
-    addSection();
-    // eslint-disable-next-line lingui/no-unlocalized-strings
-    scrollIntoView("& > sectionItem:last-of-type");
-  }}
-/>
+          {/*}
+          <SectionIcon
+            id="custom"
+            variant="outline"
+            name={t`Add a new section`}
+            icon={<Plus size={14} />}
+            onClick={() => {
+              addSection();
+              // eslint-disable-next-line lingui/no-unlocalized-strings
+              scrollIntoView("& > section:last-of-type");
+            }}
+          />
 */}
         </div>
 
@@ -165,18 +162,10 @@ export const LeftSidebar = () => {
       </div>
 
       <ScrollArea orientation="vertical" className="h-screen flex-1 pb-16 lg:pb-0">
-        <div ref={containterRef} className="grid gap-y-2 p-6 @container/left">
-          <SectionBase<Basics>
-            id="basics"
-            title={(item) => item.name}
-            description={(item) => item.headline}
-          />
+        <div ref={containterRef} className="grid gap-y-10 p-6 @container/left">
+          <BasicsSection />
           <Separator />
-          <SectionBase<Summary>
-            id="summary"
-            title={(item) => item.name}
-            description={(item) => item.description}
-          />
+          <SummarySection />
           <Separator />
           <SectionBase<Profile>
             id="profiles"
@@ -255,8 +244,8 @@ export const LeftSidebar = () => {
             description={(item) => item.description}
           />
 
-          {/* Custom Sections */}
-          {/*{Object.values(customSections).map((section) => (
+          {/* Custom Sections 
+          {Object.values(customSections).map((section) => (
             <Fragment key={section.id}>
               <Separator />
 
@@ -267,14 +256,14 @@ export const LeftSidebar = () => {
               />
             </Fragment>
           ))}
+            */}
 
           <Separator />
-          
-<Button size="lg" variant="outline" onClick={addSection}>
-  <PlusCircle />
-  <span className="ml-2">{t`Add a new section`}</span>
-</Button>
-*/}
+
+          <Button size="lg" variant="outline" onClick={addSection}>
+            <PlusCircle />
+            <span className="ml-2">{t`Add a new section`}</span>
+          </Button>
         </div>
       </ScrollArea>
     </div>

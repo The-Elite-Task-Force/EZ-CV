@@ -38,7 +38,9 @@ export const useResumeStore = create<ResumeStore>()(
           } else {
             state.resume.data = _set(state.resume.data, path, value);
           }
-
+          console.log("debouncing resume update");
+          console.log(state.resume);
+          console.log(JSON.parse(JSON.stringify(state.resume)));
           void debouncedUpdateResume(JSON.parse(JSON.stringify(state.resume)));
         });
       },
