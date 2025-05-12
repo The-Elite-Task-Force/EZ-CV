@@ -12,7 +12,8 @@ import {
 import { ApiTags } from "@nestjs/swagger";
 import { User as UserEntity } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { CreateProjectDto, Role } from "@reactive-resume/dto";
+import { CreateProjectDto } from "@reactive-resume/dto";
+import { Role } from "@reactive-resume/dto";
 import { ERROR_MESSAGE } from "@reactive-resume/utils";
 
 import { TwoFactorGuard } from "@/server/auth/guards/two-factor.guard";
@@ -37,6 +38,16 @@ export class ProjectController {
         throw new BadRequestException(ERROR_MESSAGE.ProjectNameAlreadyExists);
       }
 
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @Get(":companyId")
+  async getProjectsFromCompany(@Param("companyId") companyId: string) {
+    try {
+      return await this.projectService.getProjectsFromCompany(companyId);
+    } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException(error);
     }
