@@ -1,10 +1,9 @@
 /* eslint-disable lingui/no-unlocalized-strings */
-import type { SearchResultDto } from "@reactive-resume/dto";
 import { useState } from "react";
 
 import { useSearch } from "@/client/services/search/search";
 
-import SearchResultItem from "./search-result";
+import { UserCardList } from "../../projects/user-card-list";
 import { SearchBar } from "./searchbar";
 import { useResetSearchCache } from "./use-reset-search-cache";
 
@@ -25,19 +24,12 @@ export const SearchPage = () => {
       <h1 className="mb-4 text-2xl font-bold">Search</h1>
       <SearchBar onSearch={handleSearch} />
       <div className="mt-4 w-full max-w-3xl">
-        {isLoading && <p>Loading...</p>}
-        {error && <p>Error: {error.message}</p>}
-        {!isLoading && data && data.length > 0 ? (
-          <ul>
-            {data.map((item: SearchResultDto, index: number) => (
-              <li key={index}>
-                <SearchResultItem searchResult={item} />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          !isLoading && query && <p>No results found</p>
-        )}
+        <UserCardList
+          users={data}
+          usersError={error}
+          usersLoading={isLoading}
+          data={Boolean(query)}
+        />
       </div>
     </div>
   );

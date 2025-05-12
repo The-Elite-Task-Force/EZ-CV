@@ -1,4 +1,4 @@
-import { EnvelopeSimple, Plus } from "@phosphor-icons/react";
+import { EnvelopeSimple, MinusCircle, Plus } from "@phosphor-icons/react";
 import type { SearchResultDto } from "@reactive-resume/dto";
 import React from "react";
 
@@ -6,9 +6,15 @@ import { DropdownCompanyInviter } from "@/client/pages/dashboard/companies/dm-in
 
 type SearchResultItemProps = {
   searchResult: SearchResultDto;
+  handleAddUser?: (userId: string) => void;
+  handleRemoveUser?: (userId: string) => void;
 };
 
-const SearchResultItem: React.FC<SearchResultItemProps> = ({ searchResult }) => {
+const SearchResultItem: React.FC<SearchResultItemProps> = ({
+  searchResult,
+  handleAddUser,
+  handleRemoveUser,
+}) => {
   return (
     <div className="mb-4 flex items-center rounded-xl border border-gray-300 bg-primary/10 p-4 shadow-md dark:border-gray-700">
       <div className="shrink-0">
@@ -33,11 +39,28 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({ searchResult }) => 
           <EnvelopeSimple size={24} />
         </button>
         <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-          <Plus size={24} />
-        </button>
-        <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
           <DropdownCompanyInviter invitedUserId={searchResult.id} />
         </button>
+        {handleAddUser ? (
+          <button
+            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            onClick={() => {
+              handleAddUser(searchResult.id);
+            }}
+          >
+            <Plus size={24} />
+          </button>
+        ) :
+        handleRemoveUser ? (
+          <button
+            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            onClick={() => {
+              handleRemoveUser(searchResult.id);
+            }}
+          >
+            <MinusCircle size={24} />
+          </button>
+        ) : null}
       </div>
     </div>
   );

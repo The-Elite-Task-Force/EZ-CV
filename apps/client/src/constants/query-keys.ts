@@ -20,3 +20,4 @@ export const EMPLOYEES_KEY: QueryKey = ["employees"];
 
 export const PROJECT_KEY: QueryKey = ["project"];
 export const PROJECTS_KEY: QueryKey = ["projects"];
+export const PROJECT_MAPPINGS_KEY: QueryKey = ["project-mappings", "projectId"];
