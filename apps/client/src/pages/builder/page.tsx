@@ -42,8 +42,6 @@ export const mapSections = (sections: Sections, mapping: SectionMappingDto) => {
 };
 
 export const BuilderPage = () => {
-  console.log("builder page", "-------------------------");
-
   const frameRef = useBuilderStore((state) => state.frame.ref);
   const setFrameRef = useBuilderStore((state) => state.frame.setRef);
 

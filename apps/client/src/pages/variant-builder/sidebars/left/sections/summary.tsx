@@ -29,24 +29,24 @@ export const SummarySection = () => {
       </header>
 
       <main className={cn(section.items && "opacity-50")}>
-        {section.items.map((item) => (
+        {
           <RichInput
-            key={item.id}
-            content={item.content}
+            key={section.items[0].id}
+            content={section.items[0].content}
             footer={(editor) => (
               <AiActions
                 value={editor.getText()}
                 onChange={(value) => {
                   editor.commands.setContent(value, true);
-                  setValue(`sections.summary.items.${item.id}.content`, value);
+                  setValue(`sections.summary.items.${section.items[0].id}.content`, value);
                 }}
               />
             )}
             onChange={(value) => {
-              setValue(`sections.summary.items.${item.id}.content`, value);
+              setValue(`sections.summary.items.${section.items[0].id}.content`, value);
             }}
           />
-        ))}
+        }
       </main>
     </section>
   );

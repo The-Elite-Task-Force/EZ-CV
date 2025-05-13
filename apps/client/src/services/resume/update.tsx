@@ -49,7 +49,18 @@ export const updateVariant = async (data: UpdateVariantDto) => {
   return response.data;
 };
 
-export const debouncedUpdateResume = debounce(updateVariant, 500);
+// Type guard to check if the data is UpdateVariantDto
+const isUpdateVariantDto = (data: UpdateVariantDto | UpdateResumeDto): data is UpdateVariantDto => {
+  return (
+    (data as UpdateVariantDto).resumeId !== undefined &&
+    (data as UpdateVariantDto).creatorId !== undefined
+  );
+};
+
+// Debounced function to handle both updateVariant and updateResume
+export const debouncedUpdateResume = debounce(async (data: UpdateVariantDto | UpdateResumeDto) => {
+  isUpdateVariantDto(data) ? await updateVariant(data) : await updateResume(data);
+}, 500);
 
 export const useUpdateResume = () => {
   const {

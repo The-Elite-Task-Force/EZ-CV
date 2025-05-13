@@ -6,7 +6,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { VariantController } from "../../variant/variant.controller";
 import type { VariantService } from "../../variant/variant.service";
 import { mockSavedVariant, mockUser } from "../mocks/resumeMocks";
-import { VariantDto } from "@reactive-resume/dto";
+import { VariantDto, UpdateVariantDto } from "@reactive-resume/dto";
+import { create } from "node:domain";
+import { createId } from "@paralleldrive/cuid2";
 
 describe("ProjectController", () => {
   let controller: VariantController;
@@ -88,7 +90,7 @@ describe("ProjectController", () => {
 
   it("should call service.update and return result", async () => {
     const mockId = "variant123";
-    const mockUpdateDto: UpdateVariantDto = { title: "Updated Variant" };
+    const mockUpdateDto: UpdateVariantDto = { title: "Updated Variant", userId: "userId" };
     const expectedResult = { id: mockId, ...mockUpdateDto };
 
     vi.mocked(service.update).mockResolvedValue(expectedResult);
@@ -101,7 +103,7 @@ describe("ProjectController", () => {
 
   it("should throw BadRequestException on invalid update data", async () => {
     const mockId = "variant123";
-    const mockUpdateDto: UpdateVariantDto = {};
+    const mockUpdateDto: UpdateVariantDto = { userId: createId() };
 
     vi.mocked(service.update).mockRejectedValue(new BadRequestException("Invalid data"));
 

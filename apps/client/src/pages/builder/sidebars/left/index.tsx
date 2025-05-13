@@ -29,8 +29,6 @@ import { SectionBase } from "./sections/shared/section-base";
 import { SectionIcon } from "./sections/shared/section-icon";
 
 export const LeftSidebar = () => {
-  console.log("LeftSidebar");
-
   const containterRef = useRef<HTMLDivElement | null>(null);
 
   //const addSection = useResumeStore((state) => state.addSection);

@@ -27,13 +27,10 @@ const filterVisibleSections = (sections: Sections) => {
       );
     }
   }
-  console.log("filteredSections", result);
   return result;
 };
 
 export const VariantBuilderPage = () => {
-  console.log("variant page", "-------------------------");
-
   const frameRef = useBuilderStore((state) => state.frame.ref);
   const setFrameRef = useBuilderStore((state) => state.frame.setRef);
 
@@ -106,7 +103,6 @@ export const variantBuilderLoader: LoaderFunction<ResumeDto> = async ({ params }
   try {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const id = params.id!;
-    console.log("variantBuilderLoader", id);
     const resume = await queryClient.fetchQuery({
       queryKey: ["resume", { id }],
       queryFn: () => findVariantById({ id }),
