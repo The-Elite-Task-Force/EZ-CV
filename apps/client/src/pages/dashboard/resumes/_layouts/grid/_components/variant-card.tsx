@@ -65,9 +65,7 @@ export const VariantCard = ({ variant }: Props) => {
   const lastUpdated = dayjs().to(variant.updatedAt);
 
   const onOpen = () => {
-    console.log("open", variant.id);
     void navigate(`/variantBuilder/${variant.id}`);
-    console.log("opened", variant.id);
   };
 
   const onUpdate = () => {

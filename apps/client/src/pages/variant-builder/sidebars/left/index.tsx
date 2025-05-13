@@ -29,7 +29,6 @@ import { SectionIcon } from "./sections/shared/section-icon";
 import { SummarySection } from "./sections/summary";
 
 export const LeftSidebar = () => {
-  console.log("Variant LeftSidebar");
   const containterRef = useRef<HTMLDivElement | null>(null);
 
   const addSection = useResumeStore((state) => state.addSection);
