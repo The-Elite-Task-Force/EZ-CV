@@ -44,9 +44,9 @@ export const VariantBuilderPage = () => {
       const message = {
         type: "SET_RESUME",
         payload: {
-          basics: resume.data.basics,
+          basics: latestResume.data.basics,
           sections: filterVisibleSections(latestResume.data.sections),
-          metadata: resume.data.metadata,
+          metadata: latestResume.data.metadata,
         },
       };
       frameRef.contentWindow.postMessage(message, "*");
