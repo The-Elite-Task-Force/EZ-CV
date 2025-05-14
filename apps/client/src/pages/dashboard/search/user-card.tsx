@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { EnvelopeSimple, MinusCircle, Plus } from "@phosphor-icons/react";
 import type { SearchResultDto } from "@reactive-resume/dto";
 import { Combobox } from "@reactive-resume/ui";
@@ -8,18 +9,22 @@ import { usePublicResumes } from "@/client/services/resume";
 
 type UserCardProps = {
   user: SearchResultDto;
-  handleAddUser?: (userId: string) => void;
+  projectResumeId?: string;
+  handleAddUser?: (userId: string, resumeId?: string) => void;
   handleRemoveUser?: (userId: string) => void;
   handleResumeDropdown?: (userId: string, resumeId: string) => void;
+  resumeDropdown?: boolean;
 };
 
 export const UserCard: React.FC<UserCardProps> = ({
   user,
+  projectResumeId,
   handleAddUser,
   handleRemoveUser,
   handleResumeDropdown,
+  resumeDropdown,
 }) => {
-  const [resume, setResume] = useState<string | undefined>();
+  const [resumeId, setResumeId] = useState<string | undefined>(projectResumeId);
   const { resumes, refetch } = usePublicResumes(user.id);
 
   return (
@@ -40,23 +45,25 @@ export const UserCard: React.FC<UserCardProps> = ({
         <div className="text-sm text-gray-500 dark:text-gray-400">{user.email}</div>
       </div>
       <div className="ml-auto flex space-x-4">
-        {handleResumeDropdown && (
+        {resumeDropdown && (
           <div
+            className="min-w-[160px] max-w-[160px] overflow-hidden"
             onClick={async () => {
               if (!resumes) await refetch();
             }}
           >
             <Combobox
-              value={resume}
+              value={resumeId}
               options={
                 resumes?.map((r) => ({
                   label: r.title,
                   value: r.id,
                 })) ?? []
               }
+              selectPlaceholder="Select resume"
               onValueChange={(value) => {
-                setResume(value);
-                handleResumeDropdown(user.id, value);
+                setResumeId(value);
+                handleResumeDropdown && handleResumeDropdown(user.id, value);
               }}
             />
           </div>
@@ -72,7 +79,7 @@ export const UserCard: React.FC<UserCardProps> = ({
           <button
             className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             onClick={() => {
-              handleAddUser(user.id);
+              handleAddUser(user.id, resumeId);
             }}
           >
             <Plus size={24} />

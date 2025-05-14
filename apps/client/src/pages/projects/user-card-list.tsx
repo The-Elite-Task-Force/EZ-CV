@@ -1,16 +1,18 @@
 /* eslint-disable lingui/no-unlocalized-strings */
-import type { SearchResultDto, UserDto } from "@reactive-resume/dto";
+import type { ProjectMappingDto, SearchResultDto } from "@reactive-resume/dto";
 
 import { UserCard } from "../dashboard/search/user-card";
+import type { NormalizedUser } from "./types/project";
 
 type UserCardListProps = {
-  users: { user: UserDto }[] | SearchResultDto[] | undefined;
+  users: ProjectMappingDto[] | SearchResultDto[] | undefined;
   usersLoading: boolean;
   usersError: Error | null;
   data: boolean;
-  handleAddUser?: (userId: string) => void;
+  handleAddUser?: (userId: string, resumeId?: string) => void;
   handleRemoveUser?: (userId: string) => void;
   handleResumeDropdown?: (userId: string, resumeId: string) => void;
+  resumeDropdown?: boolean;
 };
 
 export const UserCardList = ({
@@ -21,9 +23,10 @@ export const UserCardList = ({
   handleAddUser,
   handleRemoveUser,
   handleResumeDropdown,
+  resumeDropdown,
 }: UserCardListProps) => {
-  const normalizedUsers: UserDto[] | SearchResultDto[] | undefined = users?.map((item) =>
-    "user" in item ? item.user : item,
+  const normalizedUsers: NormalizedUser[] | undefined = users?.map((item) =>
+    "user" in item ? { user: item.user, resumeId: item.resumeId } : { user: item },
   );
 
   return (
@@ -32,13 +35,15 @@ export const UserCardList = ({
       {usersError && <p>Error: {usersError.message}</p>}
       {!usersLoading && normalizedUsers && normalizedUsers.length > 0 ? (
         <ul>
-          {normalizedUsers.map((user, index) => (
+          {normalizedUsers.map(({ user, resumeId }, index) => (
             <li key={index}>
               <UserCard
                 user={user}
+                projectResumeId={resumeId}
                 handleAddUser={handleAddUser}
                 handleRemoveUser={handleRemoveUser}
                 handleResumeDropdown={handleResumeDropdown}
+                resumeDropdown={resumeDropdown}
               />
             </li>
           ))}

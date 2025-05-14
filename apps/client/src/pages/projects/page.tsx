@@ -1,113 +1,48 @@
 /* eslint-disable lingui/no-unlocalized-strings */
-import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
-import { useParams } from "react-router";
+// ProjectPage.tsx
+import { useNavigate, useOutletContext } from "react-router";
 
-import {
-  useCreateProjectMapping,
-  useDeleteProjectMapping,
-  useProjectMappingsByProjectId,
-  useUpdateProjectMapping,
-} from "@/client/services/project-mapping";
-import { useSearch } from "@/client/services/search/search";
-
-import { SearchBar } from "../dashboard/search/searchbar";
-import { useResetSearchCache } from "../dashboard/search/use-reset-search-cache";
+import type { ProjectPageContext } from "./types/project";
 import { UserCardList } from "./user-card-list";
 
 export const ProjectPage = () => {
-  const { id: projectId } = useParams<{ id: string }>();
-  const [query, setQuery] = useState("");
-  const [totalResults] = useState(10);
-  useResetSearchCache();
+  const { members, membersLoading, membersError, handleRemoveUser, handleResumeDropdown, project } =
+    useOutletContext<ProjectPageContext>();
 
-  const { data, isLoading, error, refetch } = useSearch(query, totalResults);
-  const { createProjectMapping } = useCreateProjectMapping();
-  const { deleteProjectMapping } = useDeleteProjectMapping();
-  const { updateProjectMapping } = useUpdateProjectMapping();
+  const navigate = useNavigate();
 
-  const {
-    data: members,
-    loading: membersLoading,
-    error: membersError,
-  } = useProjectMappingsByProjectId(projectId);
-
-  const handleSearch = (searchQuery: string) => {
-    setQuery(searchQuery);
-    void refetch();
+  const handleManageClick = () => {
+    void navigate(`manage`);
   };
-
-  const handleAddUser = async (userId: string) => {
-    if (!projectId) return;
-    await createProjectMapping({ userId, projectId });
-  };
-
-  const handleRemoveUser = async (userId: string) => {
-    if (!projectId) return;
-    await deleteProjectMapping({ userId, projectId });
-  };
-
-  const handleResumeDropdown = async (userId: string, resumeId: string) => {
-    if (!projectId) return;
-    await updateProjectMapping({ projectId, userId, resumeId });
-  };
-
-  // Just doing this so page shows some users on first load
-  // without having to search for something
-  useEffect(() => {
-    void refetch();
-  }, []);
-
-  if (!projectId) return null;
-
-  const memberIds = new Set(members?.map((m) => m.user.id));
-  const filteredSearchResults = data?.filter((item) => !memberIds.has(item.id)) ?? [];
 
   return (
-    <div>
-      <Helmet>
-        <title>Projects - EzCV</title>
-      </Helmet>
-
-      <div className="flex h-screen items-stretch gap-12 p-8">
-        <div className="flex h-full w-1/2 flex-col">
-          <div className="w-full py-8">
-            <SearchBar onSearch={handleSearch} />
-          </div>
-          <div className="w-full grow overflow-auto rounded-2xl bg-secondary/70 p-6 shadow-md">
-            <UserCardList
-              users={filteredSearchResults}
-              usersError={error}
-              usersLoading={isLoading}
-              handleAddUser={handleAddUser}
-              data={Boolean(query)}
-              handleResumeDropdown={handleResumeDropdown}
-            />
-          </div>
-        </div>
-
-        <div className="flex h-full w-1/2 flex-col">
-          <div className="flex w-full items-center justify-between p-8">
-            <h2 className="text-3xl font-bold">CV Portfolio</h2>
-            {membersLoading ? (
-              <p className="pr-8 text-lg">Loading members...</p>
-            ) : membersError ? (
-              <p className="pr-8 text-lg text-red-500">Error loading members</p>
-            ) : (
-              <p className="pr-8 text-lg">Members count: {members?.length ?? 0}</p>
-            )}
-          </div>
-          <div className="w-full grow overflow-auto rounded-2xl bg-secondary/70 p-6 shadow-md">
-            <UserCardList
-              users={members}
-              usersError={membersError}
-              usersLoading={membersLoading}
-              handleRemoveUser={handleRemoveUser}
-              data={Boolean(members)}
-              handleResumeDropdown={handleResumeDropdown}
-            />
-          </div>
-        </div>
+    <div className="p-8">
+      <div className="mb-8 flex justify-between p-12">
+        <h2 className="text-4xl font-bold">{project.name}</h2>
+        {/* This is just placeholder stuff, to give an idea of the layout */}
+        <p className="max-h-[160px] min-h-[160px] min-w-[300px] max-w-[300px] bg-primary/20 p-4 text-lg">
+          {project.description ?? "Add description.."}
+        </p>
+      </div>
+      <div className="mb-8 flex justify-between p-4">
+        <h2 className="mb-4 text-3xl font-bold">Resume Portfolio</h2>
+        <button
+          className="rounded-lg bg-primary/20 px-6 py-3 text-base font-medium"
+          onClick={handleManageClick}
+        >
+          Manage Project
+        </button>
+      </div>
+      <div className="overflow-auto rounded-2xl bg-secondary/70 p-6 shadow-md">
+        <UserCardList
+          users={members}
+          usersError={membersError}
+          usersLoading={membersLoading}
+          handleRemoveUser={handleRemoveUser}
+          data={Boolean(members)}
+          handleResumeDropdown={handleResumeDropdown}
+          resumeDropdown={true}
+        />
       </div>
     </div>
   );

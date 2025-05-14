@@ -27,7 +27,7 @@ import { ProjectService } from "./project.service";
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
-  @Post() // Create a new project
+  @Post()
   @UseGuards(TwoFactorGuard, CompanyRoleGuard)
   @AllowedRoles(Role.Admin.name, Role.Owner.name, Role.Bidmanager.name)
   async create(@User() user: UserEntity, @Body() createProjectDto: CreateProjectDto) {
@@ -43,20 +43,32 @@ export class ProjectController {
     }
   }
 
-  @Get(":companyId")
-  async getProjectsFromCompany(@Param("companyId") companyId: string) {
+  @Get(":id")
+  async findOneByProjectId(@Param("id") projectId: string) {
     try {
-      return await this.projectService.getProjectsFromCompany(companyId);
+      const data = await this.projectService.findOneByProjectId(projectId);
+      return data;
+    } catch (error) {
+      Logger.log(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @Get("company/:companyId")
+  async findProjectsFromCompany(@Param("companyId") companyId: string) {
+    try {
+      return await this.projectService.findProjectsFromCompany(companyId);
     } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException(error);
     }
   }
-  @Get("/own/:id") // Get projects owned by the user from a specific company
+
+  @Get("own/:id")
   @UseGuards(TwoFactorGuard)
-  async getOwnByCompanyId(@User() user: UserEntity, @Param("id") companyId: string) {
+  async findOwnByCompanyId(@User() user: UserEntity, @Param("id") companyId: string) {
     try {
-      const data = await this.projectService.getUserProjectsByCompanyId(user.id, companyId);
+      const data = await this.projectService.findUserProjectsByCompanyId(user.id, companyId);
       return data;
     } catch (error) {
       Logger.log(error);

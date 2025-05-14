@@ -8,11 +8,11 @@ import { mockCompanyId, mockProjects } from "../mocks/project";
 
 describe("ProjectController - getOwnByCompanyId", () => {
   let controller: ProjectController;
-  let service: Pick<ProjectService, "getUserProjectsByCompanyId">;
+  let service: Pick<ProjectService, "findUserProjectsByCompanyId">;
 
   beforeEach(() => {
     service = {
-      getUserProjectsByCompanyId: vi.fn(),
+      findUserProjectsByCompanyId: vi.fn(),
     };
 
     controller = new ProjectController(service as ProjectService);
@@ -23,11 +23,11 @@ describe("ProjectController - getOwnByCompanyId", () => {
   });
 
   it("should return projects for the user and company", async () => {
-    vi.mocked(service.getUserProjectsByCompanyId).mockResolvedValue(mockProjects);
+    vi.mocked(service.findUserProjectsByCompanyId).mockResolvedValue(mockProjects);
 
-    const result = await controller.getOwnByCompanyId(mockUserWithoutPRI, mockCompanyId);
+    const result = await controller.findOwnByCompanyId(mockUserWithoutPRI, mockCompanyId);
 
-    expect(service.getUserProjectsByCompanyId).toHaveBeenCalledWith(
+    expect(service.findUserProjectsByCompanyId).toHaveBeenCalledWith(
       mockUserWithoutPRI.id,
       mockCompanyId,
     );
@@ -35,9 +35,9 @@ describe("ProjectController - getOwnByCompanyId", () => {
   });
 
   it("should throw InternalServerErrorException on error", async () => {
-    vi.mocked(service.getUserProjectsByCompanyId).mockRejectedValue(new Error("Unexpected"));
+    vi.mocked(service.findUserProjectsByCompanyId).mockRejectedValue(new Error("Unexpected"));
 
-    await expect(controller.getOwnByCompanyId(mockUserWithoutPRI, mockCompanyId)).rejects.toThrow(
+    await expect(controller.findOwnByCompanyId(mockUserWithoutPRI, mockCompanyId)).rejects.toThrow(
       InternalServerErrorException,
     );
   });
