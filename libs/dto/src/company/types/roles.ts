@@ -23,7 +23,7 @@ class Role {
     return [Role.Owner, Role.Admin, Role.Bidmanager, Role.Member];
   }
 
-  // Return an enum-like object of all role values½
+  // Return an enum-like object of all role values
   static asEnum(): Record<string, string> {
     return {
       Owner: Role.Owner.toString(),
