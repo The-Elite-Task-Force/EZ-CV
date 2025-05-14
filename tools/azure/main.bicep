@@ -13,15 +13,28 @@ param keyVaultResourceGroup string
 @secure()
 param subscriptionId string
 
+
 resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: 'ez-cv-keyVault'
   scope: resourceGroup(subscriptionId, keyVaultResourceGroup)
 }
 
+
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: '${prefix}-${dockerTag}-rg'
   location: deployment().location
 }
+
+
+module keyVaultModule './keyvault.bicep' = {
+  name: '${prefix}-${dockerTag}-kv' 
+  scope: rg
+  params: {
+    keyVaultName: '${prefix}-${dockerTag}-kv'
+    location: rg.location
+  }
+}
+
 
 module webApp './web-app.bicep' = {
   name: '${prefix}-${dockerTag}-webapp'
@@ -110,6 +123,7 @@ module postgres './postgres.bicep' = {
   }
 }
 
+/*
 module azureOpenAI './azure-openai.bicep' = {
   name: '${prefix}-${dockerTag}-openai-deploy'
   scope: rg
@@ -150,3 +164,4 @@ module prometheus 'prometheus.bicep' = {
   }
 }
 
+*/
