@@ -12,7 +12,6 @@ import { useBuilderStore } from "@/client/stores/builder";
 import { useResumeStore } from "@/client/stores/resume";
 
 const filterVisibleSections = (sections: Sections) => {
-  const filteredSections = sections;
   const result = JSON.parse(JSON.stringify(sections));
   for (const sectionKey of Object.keys(result)) {
     const section = result[sectionKey];
@@ -38,13 +37,15 @@ export const VariantBuilderPage = () => {
   const title = useResumeStore((state) => state.resume.title);
 
   const syncResumeToArtboard = useCallback(() => {
+    const latestResume = useResumeStore.getState().resume;
+
     setImmediate(() => {
       if (!frameRef?.contentWindow) return;
       const message = {
         type: "SET_RESUME",
         payload: {
           basics: resume.data.basics,
-          sections: filterVisibleSections(resume.data.sections),
+          sections: filterVisibleSections(latestResume.data.sections),
           metadata: resume.data.metadata,
         },
       };
