@@ -1,55 +1,83 @@
-targetScope = 'subscription'
+targetScope = 'resourceGroup'
 
-param prefix string = 'ezcv'
 @allowed([
   'latest'
   'beta'
   'prod'
 ])
 param dockerTag string = 'latest'
-param sku string = 'Standard'
+param prefix string = 'ezcv'
 @secure()
-param keyVaultResourceGroup string
+param POSTGRES_PASSWORD string = 'postgres'
 @secure()
-param subscriptionId string
-
+param POSTGRES_USER string = 'postgres'
+@secure()
+param rgName string 
+param kvRgName string = 'DefaultResourceGroup-NEU'
+param subscriptionId string 
 
 resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: 'ez-cv-keyVault'
-  scope: resourceGroup(subscriptionId, keyVaultResourceGroup)
+  scope: resourceGroup(subscriptionId, kvRgName)
 }
 
-
-
-
-resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: '${prefix}-${dockerTag}-rg'
-  location: deployment().location
+resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' existing = {
+  name: rgName
+  scope: subscription(subscriptionId)
 }
 
-module infra 'deployment.bicep' = {
-  name: '${prefix}-${dockerTag}-infra'
-  scope: rg
+// Create Key Vault
+resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
+  name: '${prefix}-${dockerTag}-kv'
+  location: resourceGroup().location
+  properties: {
+    tenantId: tenant().tenantId
+    sku: {
+      name: 'standard'
+      family: 'A'
+    }
+    accessPolicies: [] // TODO: add access policy for your web app later
+  }
+}
+
+// Deploy PostgreSQL
+module postgres './postgres.bicep' = {
+  name: '${prefix}-${dockerTag}-postgres'
   params: {
     prefix: prefix
     dockerTag: dockerTag
-    rgName: rg.name
-    kvRgName: keyVaultResourceGroup
-    subscriptionId: subscriptionId
+    POSTGRES_USER: POSTGRES_USER
+    POSTGRES_PASSWORD: POSTGRES_PASSWORD
+    postgresVersion: '16'
   }
 }
+
 /*
 
-module keyVaultModule './keyvault.bicep' = {
-  name: '${prefix}-${dockerTag}-kv' 
-  scope: rg
+// Save Postgres password in Key Vault
+resource postgresPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: keyVault
+  name: 'POSTGRES-PASSWORD'
+  properties: {
+    value: POSTGRES_PASSWORD
+  }
+  dependsOn: [
+    keyVault
+    postgres
+  ]
+}
+
+// Blob Storage
+module blobStorage './blob-storage.bicep' = {
+  name: '${prefix}-${dockerTag}-blob'
   params: {
-    keyVaultName: '${prefix}-${dockerTag}-kv'
-    location: rg.location
+    prefix: prefix
+    dockerTag: dockerTag
+    location: resourceGroup().location
   }
 }
 
-*/
+// Web App
 module webApp './web-app.bicep' = {
   name: '${prefix}-${dockerTag}-webapp'
   scope: rg
@@ -104,79 +132,54 @@ module webApp './web-app.bicep' = {
   }
 }
 
-module blobStorage './blob-storage.bicep' = {
-  name: '${prefix}-${dockerTag}-storage'
-  scope: rg
-  params: {
-    location: rg.location
-    prefix: prefix
-    dockerTag: dockerTag
-  }
-}
-
+// Chromio
 module chromio './chromio.bicep' = {
-  name: '${prefix}-${dockerTag}-appserviceplan'
-  scope: rg
-  params: {
-    prefix: prefix
-    location: rg.location
-    sku: sku
-    CHROME_TOKEN: kv.getSecret('CHROME-TOKEN')
-  }
-}
-
-/*
-module postgres './postgres.bicep' = {
-  name: '${prefix}-${dockerTag}-postgres'
-  scope: rg
+  name: '${prefix}-${dockerTag}-chromio'
   params: {
     prefix: prefix
     dockerTag: dockerTag
-    postgresVersion: '16'
-    POSTGRES_USER: kv.getSecret('POSTGRES-USER')
-    POSTGRES_PASSWORD: kv.getSecret('POSTGRES-PASSWORD')
+    location: resourceGroup().location
+    CHROME_TOKEN: '<some-placeholder-or-secret>'
   }
 }
-*/
-/*
+
+// Azure OpenAI
 module azureOpenAI './azure-openai.bicep' = {
-  name: '${prefix}-${dockerTag}-openai-deploy'
-  scope: rg
+  name: '${prefix}-${dockerTag}-openai'
   params: {
     prefix: prefix
     dockerTag: dockerTag
   }
+  
 }
-
-
-module grafana 'grafana.bicep' = {
+/*
+// Grafana
+module grafana './grafana.bicep' = {
   name: '${prefix}-${dockerTag}-grafana'
-  scope: rg
   params: {
     prefix: prefix
     dockerTag: dockerTag
-    grafanaAdminPassword: kv.getSecret('GRAFANA-ADMIN-PASSWORD')
-    DOCKER_REGISTRY_SERVER_PASSWORD: kv.getSecret('DOCKER-REGISTRY-SERVER-PASSWORD')
-    DOCKER_REGISTRY_SERVER_USERNAME: kv.getSecret('DOCKER-REGISTRY-SERVER-USERNAME')
-    blobStorageContainerName: kv.getSecret('SHARE-NAME')
-    blobStorageAccountName: kv.getSecret('STORAGE-ACCOUNT-NAME')
-    blobStorageAccountKey: kv.getSecret('STORAGE-ACCOUNT-KEY')
+    grafanaAdminPassword: '<secret>'
+    DOCKER_REGISTRY_SERVER_PASSWORD: '<secret>'
+    DOCKER_REGISTRY_SERVER_USERNAME: '<secret>'
+    blobStorageContainerName: '<secret>'
+    blobStorageAccountName: '<secret>'
+    blobStorageAccountKey: '<secret>'
   }
 }
 
-module prometheus 'prometheus.bicep' = {
+// Prometheus
+module prometheus './prometheus.bicep' = {
   name: '${prefix}-${dockerTag}-prometheus'
-  scope: rg
   params: {
     prefix: prefix
     dockerTag: dockerTag
     webAppUrl: webApp.outputs.webAppURL
-    DOCKER_REGISTRY_SERVER_PASSWORD: kv.getSecret('DOCKER-REGISTRY-SERVER-PASSWORD')
-    DOCKER_REGISTRY_SERVER_USERNAME: kv.getSecret('DOCKER-REGISTRY-SERVER-USERNAME')
-    blobStorageContainerName: kv.getSecret('SHARE-NAME')
-    blobStorageAccountName: kv.getSecret('STORAGE-ACCOUNT-NAME')
-    blobStorageAccountKey: kv.getSecret('STORAGE-ACCOUNT-KEY')
+    DOCKER_REGISTRY_SERVER_PASSWORD: '<secret>'
+    DOCKER_REGISTRY_SERVER_USERNAME: '<secret>'
+    blobStorageContainerName: '<secret>'
+    blobStorageAccountName: '<secret>'
+    blobStorageAccountKey: '<secret>'
   }
 }
-
 */

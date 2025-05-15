@@ -25,7 +25,9 @@ resource openAIAccount 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
   sku: {
     name: 'S0'
   }
-  properties: {}
+  properties: {
+    restore: true
+  }
 }
 
 // Deploy the GPT-4o-mini model to the OpenAI resource
