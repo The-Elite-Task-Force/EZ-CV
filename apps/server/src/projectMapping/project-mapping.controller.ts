@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  InternalServerErrorException,
+  Logger,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateProjectMappingDto } from "@reactive-resume/dto";
 
@@ -12,33 +23,53 @@ export class ProjectMappingController {
 
   @Post()
   @UseGuards(TwoFactorGuard)
-  create(@Body() dto: CreateProjectMappingDto) {
-    return this.service.create(dto);
+  async create(@Body() dto: CreateProjectMappingDto) {
+    try {
+      return await this.service.create(dto);
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
   }
 
   @Get(":projectId")
   @UseGuards(TwoFactorGuard)
-  findByProjectId(@Param("projectId") projectId: string) {
-    return this.service.findByProjectId(projectId);
+  async findByProjectId(@Param("projectId") projectId: string) {
+    try {
+      return await this.service.findByProjectId(projectId);
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
   }
 
   @Patch(":projectId/:userId")
   @UseGuards(TwoFactorGuard)
-  update(
+  async update(
     @Param("projectId") projectId: string,
     @Param("userId") userId: string,
     @Body() body: { resumeId?: string },
   ) {
-    return this.service.update({
-      projectId,
-      userId,
-      resumeId: body.resumeId,
-    });
+    try {
+      return await this.service.update({
+        projectId,
+        userId,
+        resumeId: body.resumeId,
+      });
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
   }
 
   @Delete(":projectId/:userId")
   @UseGuards(TwoFactorGuard)
-  delete(@Param("projectId") projectId: string, @Param("userId") userId: string) {
-    return this.service.delete({ projectId, userId });
+  async delete(@Param("projectId") projectId: string, @Param("userId") userId: string) {
+    try {
+      return await this.service.delete({ projectId, userId });
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
   }
 }

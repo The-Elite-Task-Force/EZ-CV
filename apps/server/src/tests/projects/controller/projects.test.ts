@@ -1,10 +1,10 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { ProjectController } from "@/server/project/project.controller";
 import type { ProjectService } from "@/server/project/project.service";
 
-import { ProjectController } from "../../project/project.controller";
-import { mockProjects } from "../mocks/projects";
+import { mockProjects } from "../../mocks/project";
 
 describe("ProjectController", () => {
   let controller: ProjectController;

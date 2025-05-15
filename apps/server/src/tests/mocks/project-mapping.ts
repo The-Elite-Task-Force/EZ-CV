@@ -9,8 +9,20 @@ export const mockProjectMapping = {
   user: mockUserWithoutPRI,
 };
 
-export const createProjectMappingDto = {
+export const mockProjectMapping2 = {
+  id: "mapping-2",
+  projectId: mockProjectId,
+  userId: mockUserWithoutPRI.id,
+  resumeId: "resume-456",
+  user: mockUserWithoutPRI,
+};
+
+export const mockCreateProjectMapping = {
   projectId: mockProjectId,
   userId: mockUserId,
   resumeId: "resume-1",
 };
+
+export const mockProjectMappingList = [mockProjectMapping, mockProjectMapping2];
+
+export const mockUpdateResumeId = "updated-resume-id";
