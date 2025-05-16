@@ -42,10 +42,8 @@ export const SectionOptions = ({ id }: Props) => {
   const setValue = useResumeStore((state) => state.setValue);
   const removeSection = useResumeStore((state) => state.removeSection);
 
-  // OBS: FIX CUSTOM
-  //const originalName = get(defaultSections, `${id}.name`, "") as SectionWithItem;
   const originalName = get(defaultSections, `${id}.name`, "") as unknown as SectionWithItem;
-  const section = useResumeStore((state) => get(state.resume.data.sections, id))!;
+  const section = useResumeStore((state) => get(state.resume.data.sections, id)) as SectionWithItem;
 
   const hasItems = useMemo(() => "items" in section, [section]);
   const isCustomSection = useMemo(() => id.startsWith("custom"), [id]);
@@ -56,6 +54,10 @@ export const SectionOptions = ({ id }: Props) => {
 
   const toggleSeperateLinks = (checked: boolean) => {
     setValue(`sections.${id}.separateLinks`, checked);
+  };
+
+  const toggleVisibility = () => {
+    setValue(`sections.${id}.visible`, !section.visible);
   };
 
   const onResetName = () => {
@@ -84,6 +86,10 @@ export const SectionOptions = ({ id }: Props) => {
       <DropdownMenuContent className="mr-4 w-48">
         {hasItems && (
           <>
+            <DropdownMenuItem onClick={onCreate}>
+              <Plus />
+              <span className="ml-2">{t`Add a new item`}</span>
+            </DropdownMenuItem>
             <DropdownMenuCheckboxItem
               checked={section.separateLinks}
               onCheckedChange={toggleSeperateLinks}
@@ -93,7 +99,12 @@ export const SectionOptions = ({ id }: Props) => {
             <DropdownMenuSeparator />
           </>
         )}
+
         <DropdownMenuGroup>
+          <DropdownMenuItem onClick={toggleVisibility}>
+            {section.visible ? <Eye /> : <EyeSlash />}
+            <span className="ml-2">{section.visible ? t`Hide` : t`Show`}</span>
+          </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <PencilSimple />

@@ -16,6 +16,10 @@ export type DialogMode =
   | "update"
   | "duplicate"
   | "delete"
+  | "variantCreate"
+  | "variantUpdate"
+  | "variantDuplicate"
+  | "variantDelete"
   | "duplicateAsVariant"
   | "translate";
 

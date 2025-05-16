@@ -38,7 +38,6 @@ export const useResumeStore = create<ResumeStore>()(
           } else {
             state.resume.data = _set(state.resume.data, path, value);
           }
-
           void debouncedUpdateResume(JSON.parse(JSON.stringify(state.resume)));
         });
       },
