@@ -21,24 +21,12 @@ resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   scope: resourceGroup(subscriptionId, kvRgName)
 }
 
+
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' existing = {
   name: rgName
   scope: subscription(subscriptionId)
 }
 
-// Create Key Vault
-resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
-  name: '${prefix}-${dockerTag}-kv'
-  location: resourceGroup().location
-  properties: {
-    tenantId: tenant().tenantId
-    sku: {
-      name: 'standard'
-      family: 'A'
-    }
-    accessPolicies: [] // TODO: add access policy for your web app later
-  }
-}
 
 // Deploy PostgreSQL
 module postgres './postgres.bicep' = {
@@ -49,6 +37,36 @@ module postgres './postgres.bicep' = {
     POSTGRES_USER: POSTGRES_USER
     POSTGRES_PASSWORD: POSTGRES_PASSWORD
     postgresVersion: '16'
+  }
+}
+
+
+//Blob Storage Account
+module blobStorage './blob-storage.bicep' = {
+  name: '${prefix}-${dockerTag}-blob'
+  params: {
+    prefix: prefix
+    dockerTag: dockerTag
+    location: resourceGroup().location
+  }
+}
+
+module chromio './chromio.bicep' = {
+  name: '${prefix}-${dockerTag}-chromio'
+  params: {
+    prefix: prefix
+    dockerTag: dockerTag
+    location: resourceGroup().location
+    CHROME_TOKEN: kv.getSecret('CHROME-TOKEN')
+  }
+}
+
+// Azure OpenAI
+module azureOpenAI './azure-openai.bicep' = {
+  name: '${prefix}-${dockerTag}-openai'
+  params: {
+    prefix: prefix
+    dockerTag: dockerTag
   }
 }
 
@@ -67,16 +85,7 @@ resource postgresPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' =
   ]
 }
 
-// Blob Storage
-module blobStorage './blob-storage.bicep' = {
-  name: '${prefix}-${dockerTag}-blob'
-  params: {
-    prefix: prefix
-    dockerTag: dockerTag
-    location: resourceGroup().location
-  }
-}
-
+*/
 // Web App
 module webApp './web-app.bicep' = {
   name: '${prefix}-${dockerTag}-webapp'
@@ -132,26 +141,8 @@ module webApp './web-app.bicep' = {
   }
 }
 
-// Chromio
-module chromio './chromio.bicep' = {
-  name: '${prefix}-${dockerTag}-chromio'
-  params: {
-    prefix: prefix
-    dockerTag: dockerTag
-    location: resourceGroup().location
-    CHROME_TOKEN: '<some-placeholder-or-secret>'
-  }
-}
 
-// Azure OpenAI
-module azureOpenAI './azure-openai.bicep' = {
-  name: '${prefix}-${dockerTag}-openai'
-  params: {
-    prefix: prefix
-    dockerTag: dockerTag
-  }
-  
-}
+
 /*
 // Grafana
 module grafana './grafana.bicep' = {

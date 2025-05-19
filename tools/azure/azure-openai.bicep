@@ -11,13 +11,13 @@ param prefix string
 ])
 param dockerTag string
 
-@description('Location for all resources')
+@description('OpenaI Service location, hardcoded to because of the OpenAI Service availability')
 var location = 'swedencentral'
 
 // Derive a unique name for the OpenAI Service account
 var openAIAccountName = '${prefix}-${dockerTag}-openai'
 
-// Azure OpenAI Service (Cognitive Services account)
+// Deploy OpenAi Azure OpenAI Service (Cognitive Services account)
 resource openAIAccount 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
   name: openAIAccountName
   location: location
@@ -26,7 +26,7 @@ resource openAIAccount 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
     name: 'S0'
   }
   properties: {
-    restore: true
+    restore: true // OpenAi reacts differently when destoryed, it doesn't get instantaniasly purged like the other resource and cannot be redeployed in this state unless recover is set to 'true'. 
   }
 }
 
