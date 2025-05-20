@@ -3,6 +3,11 @@
 @description('Prefix for all resources')
 param prefix string
 
+
+
+@description('Model Version, eg chatgpt-4o-mini, gpt-4, gpt-4o, it is also used as the deployment name for the Model to be deployed')
+param model string = 'gpt-4o-mini'
+
 @description('Deployment stage (e.g. latest, beta, prod)')
 @allowed([
   'latest'
@@ -10,6 +15,13 @@ param prefix string
   'prod'
 ])
 param dockerTag string
+
+@description('Key Vault Name')
+param keyVaultName string
+
+resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
+  name: keyVaultName
+}
 
 @description('OpenaI Service location, hardcoded to because of the OpenAI Service availability')
 var location = 'swedencentral'
@@ -32,7 +44,7 @@ resource openAIAccount 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
 
 // Deploy the GPT-4o-mini model to the OpenAI resource
 resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = {
-  name: 'gpt-4o-mini'
+  name: model
   parent: openAIAccount
   sku: {
     name: 'Standard'
@@ -40,7 +52,7 @@ resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10
   }
   properties: {
     model: {
-      name: 'gpt-4o-mini'
+      name: model
       version: '2024-07-18'
       format: 'OpenAI'
     }
@@ -49,6 +61,35 @@ resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10
   }
 }
 
-// Outputs
-output openAIEndpoint string = openAIAccount.properties.endpoint
-output openAIName string = openAIAccount.name
+//Save the OpenAI key in Key Vault
+resource openAIKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'AZURE_OPENAI_API_KEY'
+  properties: {
+    value: openAIAccount.listKeys().key1
+  }
+}
+//Save The OpenAI endpoint in Key Vault
+resource openAIEndpointSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'AZURE_OPENAI_ENDPOINT'
+  properties: {
+    value: openAIAccount.properties.endpoint
+  }
+  dependsOn: [
+    kv
+  ]
+}
+
+// Save the OpenAI deployment name in Key Vault
+resource openAIDeploymentNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'OPENAI_MODEL'
+  properties: {
+    value: gptDeployment.name
+  }
+  dependsOn: [
+    kv
+  ]
+}
+

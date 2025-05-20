@@ -16,6 +16,9 @@ param postgresVersion string = '16'
 ])
 param dockerTag string = 'latest'
 
+param keyVaultName string = 'ez-cv-keyVault'
+
+
 
 
 
@@ -74,4 +77,63 @@ resource database 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2024-11-0
   }
 }
 
-output connectionString string = 'postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${flexibleServers.name}.postgres.database.azure.com:5432/${dbName}?sslmode=require'
+
+// retrieve the Key Vault resource
+resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
+  name: keyVaultName
+}
+
+// Save the Postgres password in Key Vault
+resource postgresPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'POSTGRES_PASSWORD'
+  properties: {
+    value: POSTGRES_PASSWORD
+  }
+  dependsOn: [
+    kv
+    flexibleServers
+  ]
+}
+// Save the Postgres username in Key Vault
+resource postgresUsernameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'POSTGRES_USER'
+  properties: {
+    value: POSTGRES_USER
+  }
+  dependsOn: [
+    kv
+    flexibleServers
+  ]
+}
+
+// Save the Postgres database name in Key Vault
+resource postgresDatabaseNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'POSTGRES_DB'
+  properties: {
+    value: dbName
+  }
+  dependsOn: [
+    kv
+    flexibleServers
+  ]
+}
+
+// Save the Postgres port in Key Vault
+resource postgresPortSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'POSTGRES_PORT'
+  properties: {
+    value: '5432'
+  }
+  dependsOn: [
+    kv
+    flexibleServers
+  ]
+}
+
+// Save the postgres 
+
+

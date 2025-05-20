@@ -20,6 +20,9 @@ param prefix string = 'ezcv'
 ])
 param dockerTag string = 'latest'
 
+@description('Key Vault Name')
+param keyVaultName string
+
 resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-07-01' = {
   name: '${prefix}-${dockerTag}-prometheus-container'
   location: resourceGroup().location

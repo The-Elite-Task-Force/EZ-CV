@@ -1,7 +1,6 @@
 @secure()
 param grafanaAdminPassword string
-//@secure()
-//param DOCKER_REGISTRY_SERVER_URL string 
+
 @secure()
 param DOCKER_REGISTRY_SERVER_PASSWORD string 
 @secure()
@@ -13,6 +12,9 @@ param blobStorageContainerName string
 param blobStorageAccountName string
 @secure()
 param blobStorageAccountKey string
+
+@description('Key Vault Name')
+param keyVaultName string
 
 param prefix string = 'ezcv'
 @allowed([

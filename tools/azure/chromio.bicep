@@ -11,6 +11,8 @@ param dockerTag string = 'latest'
 param location string = resourceGroup().location
 param sku string = 'Standard'
 
+
+
 param name string = '${prefix}-${dockerTag}-chromium-container'
 
 resource chromium_container_name_resource 'Microsoft.ContainerInstance/containerGroups@2024-10-01-preview' = {

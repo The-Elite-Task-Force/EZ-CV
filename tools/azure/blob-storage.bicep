@@ -11,6 +11,13 @@ param sku object = {
   tier: 'Standard'
 }
 
+@description('Key Vault Name')
+param keyVaultName string
+
+resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
+  name: keyVaultName
+}
+
 var name = '${prefix}${dockerTag}blobstorage'
 
 resource storageAccounts_sta_resource 'Microsoft.Storage/storageAccounts@2023-05-01' = {
@@ -119,4 +126,41 @@ resource images 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-
     denyEncryptionScopeOverride: false
     publicAccess: 'Blob'
   }
+}
+
+
+// Save the storage account key in Key Vault
+resource storageAccountKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'AZURE_ACCOUNT_KEY'
+  properties: {
+    value: storageAccounts_sta_resource.listKeys().keys[0].value
+  }
+  dependsOn: [
+    kv
+  ]
+}
+
+//Save the storage account name in Key Vault
+resource storageAccountNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'AZURE_ACCOUNT_NAME'
+  properties: {
+    value: storageAccounts_sta_resource.name
+  }
+  dependsOn: [
+    kv
+  ]
+}
+
+//Save the container name in Key Vault
+resource containerNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'AZURE_STORAGE_CONTAINER'
+  properties: {
+    value: images.name
+  }
+  dependsOn: [
+    kv
+  ]
 }
