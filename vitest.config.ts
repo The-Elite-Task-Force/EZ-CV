@@ -19,7 +19,6 @@ export default defineConfig({
         "**/apps/artboard/**",
         "**/libs/hooks/**",
         "**/.nx/**",
-        "**/*.d.ts",
         "**/*.config.*",
         "**/*.config.ts",
         "**/*.config.js",
