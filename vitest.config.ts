@@ -24,6 +24,7 @@ export default defineConfig({
         "**/*.config.js",
         "**/*.preset.js",
         "**/ui/**",
+        "**/libs/utils/src/namespaces/**",
       ],
     },
     environment: "jsdom",
