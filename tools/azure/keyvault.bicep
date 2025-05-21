@@ -36,7 +36,7 @@ resource kv 'Microsoft.KeyVault/vaults@2023-07-01' = {
 // Save Secrets in Key Vault
 resource dockerRegistryServerUsernameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: kv
-  name: 'DOCKER_REGISTRY_SERVER_USERNAME'
+  name: 'DOCKER-REGISTRY-SERVER-USERNAME'
   properties: {
     value: DOCKER_REGISTRY_SERVER_USERNAME
   }
@@ -44,7 +44,7 @@ resource dockerRegistryServerUsernameSecret 'Microsoft.KeyVault/vaults/secrets@2
 
 resource dockerRegistryServerPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: kv
-  name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
+  name: 'DOCKER-REGISTRY-SERVER-PASSWORD'
   properties: {
     value: DOCKER_REGISTRY_SERVER_PASSWORD
   }
