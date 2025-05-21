@@ -1,91 +1,5 @@
-@secure()
-param ACCESS_TOKEN_SECRET string
-@secure()
-param APPLICATIONINSIGHTS_CONNECTION_STRING string 
-@secure()
-param ApplicationInsightsAgent_EXTENSION_VERSION string
-@secure()
-param AZURE_ACCOUNT_KEY string 
-@secure()
-param AZURE_ACCOUNT_NAME string 
-@secure()
-param AZURE_STORAGE_CONTAINER string 
-@secure()
-param CHROME_TOKEN string 
-@secure()
-param CHROME_PORT string 
-@secure()
-param CHROME_URL string 
-@secure()
-param DATABASE_URL string 
-@secure()
-param DOCKER_ENABLE_CI string 
-@secure()
-param DOCKER_REGISTRY_SERVER_PASSWORD string 
-@secure()
-param DOCKER_REGISTRY_SERVER_USERNAME string 
-@secure()
-param DOCKER_REGISTRY_SERVER_URL string 
-@secure()
-param GITHUB_CALLBACK_URL string
-@secure()
-param GITHUB_CLIENT_ID string
-@secure()
-param GITHUB_CLIENT_SECRET string
-@secure()
-param GOOGLE_CALLBACK_URL string
-@secure()
-param GOOGLE_CLIENT_ID string
-@secure()
-param GOOGLE_CLIENT_SECRET string
-@secure()
-param MICROSOFT_AUTHORIZATION_URL string 
-@secure()
-param MICROSOFT_CALLBACK_URL string
-@secure()
-param MICROSOFT_CLIENT_ID string
-@secure()
-param MICROSOFT_CLIENT_SECRET string
-@secure()
-param MICROSOFT_SCOPE string
-@secure()
-param MICROSOFT_TOKEN_URL string 
-@secure()
-param MICROSOFT_USER_INFO_URL string
-@secure()
-param OPENAI_API_KEY string
-@secure()
-param POSTGRES_DB string
-@secure()
-param POSTGRES_PASSWORD string
-@secure()
-param POSTGRES_USER string
-@secure()
-param POSTGRES_PORT string
-@secure()
-param REFRESH_TOKEN_SECRET string
-@secure()
-param STORAGE_ACCESS_KEY string
-@secure()
-param STORAGE_BUCKET string
-@secure()
-param STORAGE_ENDPOINT string
-@secure()
-param STORAGE_PORT string
-@secure()
-param STORAGE_REGION string
-@secure()
-param STORAGE_SECRET_KEY string
-@secure()
-param STORAGE_SKIP_BUCKET_CHECK string
-@secure()
-param STORAGE_URL string
-@secure()
-param STORAGE_USE_SSL string
-@secure()
-param WEBSITES_ENABLE_APP_SERVICE_STORAGE string
-@secure()
-param XDT_MicrosoftApplicationInsights_Mode string
+@description('Name of the existing Key Vault containing application secrets')
+param keyVaultName string
 
 param location string = resourceGroup().location
 param prefix string = 'ezcv'
@@ -96,8 +10,22 @@ param prefix string = 'ezcv'
 ])
 param dockerTag string = 'latest'
 
+@description('Container webapp resource name')
 param name string = '${prefix}-${dockerTag}-container-webapp'
 
+@description(' access_token_secret & refresh_token_secret, replace with a real token in the .bicepparam files')
+@secure()
+param ACCESS_TOKEN_SECRET string = 'access_token_secret'
+@secure()
+param REFRESH_TOKEN_SECRET string =   'refresh_token_secret'
+
+@description('chrome token and port, replace with a real token in the .bicepparam files, used for the chromio module and is needed in webapp')
+@secure()
+param CHROME_TOKEN string = 'chrome_token'
+param CHROME_PORT string = '8080' 
+param CHROME_URL string
+
+// App Service Plan
 resource serverFarm 'Microsoft.Web/serverfarms@2024-04-01' = {
   name: '${prefix}-ASP-${dockerTag}'
   location: location
@@ -115,6 +43,7 @@ resource serverFarm 'Microsoft.Web/serverfarms@2024-04-01' = {
   }
 }
 
+// Web App with system-assigned identity for Key Vault access
 resource sites 'Microsoft.Web/sites@2024-04-01' = {
   name: name
   location: location
@@ -136,7 +65,7 @@ resource sites 'Microsoft.Web/sites@2024-04-01' = {
     vnetContentShareEnabled: false
     siteConfig: {
       numberOfWorkers: 1
-      linuxFxVersion: 'DOCKER|mfknudsen/ez-cv:${dockerTag}'
+      linuxFxVersion: 'DOCKER|mfknudsen/ez-cv:${dockerTag}' 
       acrUseManagedIdentityCreds: false
       alwaysOn: false
       http20Enabled: false
@@ -163,6 +92,7 @@ resource sites 'Microsoft.Web/sites@2024-04-01' = {
   }
 }
 
+// Enable FTP and SCM publishing
 resource ftp 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2024-04-01' = {
   parent: sites
   name: 'ftp'
@@ -179,263 +109,54 @@ resource scm 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2024-04-01'
   }
 }
 
+// App settings with runtime Key Vault references for secrets
 resource dockerApp 'Microsoft.Web/sites/config@2024-04-01' = {
   parent: sites
   name: 'web'
   properties: {
     appSettings: [
-      {
-        name: 'ACCESS_TOKEN_SECRET'
-        value: ACCESS_TOKEN_SECRET
-      }
-      {
-      name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-      value: APPLICATIONINSIGHTS_CONNECTION_STRING 
-      }
-      {
-      name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
-      value: ApplicationInsightsAgent_EXTENSION_VERSION 
-      }
-      {
-      name: 'AZURE_ACCOUNT_KEY'
-      value: AZURE_ACCOUNT_KEY
-      }
-      {
-      name: 'AZURE_ACCOUNT_NAME'
-      value: AZURE_ACCOUNT_NAME
-      }
-      {
-      name: 'AZURE_STORAGE_CONTAINER'
-      value: AZURE_STORAGE_CONTAINER
-      }
-      {
-      name: 'CHROME_TOKEN'
-      value: CHROME_TOKEN
-      }
-      {
-      name: 'CHROME_PORT'
-      value: CHROME_PORT
-      }
-      {
-      name: 'CHROME_URL'
-      value: CHROME_URL
-      }
-      {
-      name: 'DATABASE_URL'
-      value: DATABASE_URL
-    }
-    {
-      name: 'DOCKER_ENABLE_CI'
-      value: DOCKER_ENABLE_CI
-    }
-    {
-      name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
-      value: DOCKER_REGISTRY_SERVER_PASSWORD
-    }
-    {
-       name: 'DOCKER_REGISTRY_SERVER_USERNAME'
-      value: DOCKER_REGISTRY_SERVER_USERNAME
-    }
-    {
-      name: 'DOCKER_REGISTRY_SERVER_URL'
-      value: DOCKER_REGISTRY_SERVER_URL
-    }
-    {
-      name: 'GITHUB_CALLBACK_URL'
-      value: GITHUB_CALLBACK_URL
-    }
-    {
-      name: 'GITHUB_CLIENT_ID'
-      value: GITHUB_CLIENT_ID
-    }
-    {
-      name: 'GITHUB_CLIENT_SECRET'
-      value: GITHUB_CLIENT_SECRET
-    }
-    {
-       name: 'GOOGLE_CALLBACK_URL'
-      value: GOOGLE_CALLBACK_URL
-    }
-    {
-      name: 'GOOGLE_CLIENT_ID'
-      value: GOOGLE_CLIENT_ID
-    }
-    {
-      name: 'GOOGLE_CLIENT_SECRET'
-      value: GOOGLE_CLIENT_SECRET
-    }
-    {
-      name: 'MICROSOFT_AUTHORIZATION_URL'
-      value: MICROSOFT_AUTHORIZATION_URL
-    }
-    {
-      name: 'MICROSOFT_CALLBACK_URL'
-      value: MICROSOFT_CALLBACK_URL
-    }
-    {
-      name: 'MICROSOFT_CLIENT_ID'
-      value: MICROSOFT_CLIENT_ID
-    }
-    {
-      name: 'MICROSOFT_CLIENT_SECRET'
-      value: MICROSOFT_CLIENT_SECRET
-    }
-    {
-      name: 'MICROSOFT_SCOPE'
-      value: MICROSOFT_SCOPE
-    }
-    {
-      name: 'MICROSOFT_TOKEN_URL'
-      value: MICROSOFT_TOKEN_URL
-    }
-    {
-      name: 'MICROSOFT_USER_INFO_URL'
-      value: MICROSOFT_USER_INFO_URL
-    }
-    {
-       name: 'OPENAI_API_KEY'
-      value: OPENAI_API_KEY
-    }
-    {
-      name: 'POSTGRES_DB'
-      value: POSTGRES_DB
-    }
-    {
-      name: 'POSTGRES_PASSWORD'
-      value: POSTGRES_PASSWORD
-    }
-    {
-      name: 'POSTGRES_USER'
-      value: POSTGRES_USER
-    }
-    {
-      name: 'POSTGRES_PORT'
-      value: POSTGRES_PORT
-    }
-    {
-      name: 'PUBLIC_URL'
-      value: 'https://${sites.properties.defaultHostName}'
-    }
-    {
-      name: 'REFRESH_TOKEN_SECRET'
-      value: REFRESH_TOKEN_SECRET
-    }
-    {
-      name: 'STORAGE_ACCESS_KEY'
-      value: STORAGE_ACCESS_KEY
-    }
-    {
-      name: 'STORAGE_BUCKET'
-      value: STORAGE_BUCKET
-    }
-    {
-      name: 'STORAGE_ENDPOINT'
-      value: STORAGE_ENDPOINT
-    }
-    {
-      name: 'STORAGE_PORT'
-      value: STORAGE_PORT
-    }
-    {
-      name: 'STORAGE_REGION'
-      value: STORAGE_REGION
-    }
-    {
-      name: 'STORAGE_SECRET_KEY'
-      value: STORAGE_SECRET_KEY
-    }
-    {
-      name: 'STORAGE_SKIP_BUCKET_CHECK'
-      value: STORAGE_SKIP_BUCKET_CHECK
-    }
-    {
-      name: 'STORAGE_URL'
-      value: STORAGE_URL
-    }
-    {
-      name: 'STORAGE_USE_SSL'
-      value: STORAGE_USE_SSL
-    }
-    {
-      name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
-      value: WEBSITES_ENABLE_APP_SERVICE_STORAGE
-    }
-    {
-      name: 'XDT_MicrosoftApplicationInsights_Mode'
-      value: XDT_MicrosoftApplicationInsights_Mode
-    }
+      // Runtime retrieval of secrets
+      { name: 'ACCESS_TOKEN_SECRET',                           value: ACCESS_TOKEN_SECRET }
+      { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING',         value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/APPLICATIONINSIGHTS-CONNECTION-STRING)' } 
+      { name: 'ApplicationInsightsAgent_EXTENSION_VERSION',    value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/ApplicationInsightsAgent-EXTENSION-VERSION)' } 
+      { name: 'AZURE_ACCOUNT_KEY',                             value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/AZURE-ACCOUNT-KEY)' } 
+      { name: 'AZURE_ACCOUNT_NAME',                            value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/AZURE-ACCOUNT-NAME)' } 
+      { name: 'AZURE_STORAGE_CONTAINER',                       value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/AZURE-STORAGE-CONTAINER)' } 
+      { name: 'CHROME_TOKEN',                                  value: CHROME_TOKEN }
+      { name: 'CHROME_PORT',                                   value: CHROME_PORT } 
+      { name: 'CHROME_URL',                                    value: CHROME_URL }
+      { name: 'DATABASE_URL',                                  value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/DATABASE_URL)' } 
+      { name: 'DOCKER_ENABLE_CI',                              value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/DOCKER-ENABLE-CI)' } 
+      { name: 'DOCKER_REGISTRY_SERVER_USERNAME',               value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/DOCKER-REGISTRY-SERVER-USERNAME)' } 
+      { name: 'DOCKER_REGISTRY_SERVER_PASSWORD',               value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/DOCKER-REGISTRY-SERVER-PASSWORD)' } 
+      { name: 'DOCKER_REGISTRY_SERVER_URL',                    value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/DOCKER-REGISTRY-SERVER-URL)' } 
+      { name: 'GITHUB_CALLBACK_URL',                           value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/GITHUB-CALLBACK-URL)' }
+      { name: 'GITHUB_CLIENT_ID',                              value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/GITHUB-CLIENT-ID)' }
+      { name: 'GITHUB_CLIENT_SECRET',                          value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/GITHUB-CLIENT-SECRET)' }
+      { name: 'GOOGLE_CALLBACK_URL',                           value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/GOOGLE-CALLBACK-URL)' }
+      { name: 'GOOGLE_CLIENT_ID',                              value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/GOOGLE-CLIENT-ID)' }
+      { name: 'GOOGLE_CLIENT_SECRET',                          value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/GOOGLE-CLIENT-SECRET)' }
+      { name: 'MICROSOFT_AUTHORIZATION_URL',                   value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/MICROSOFT-AUTHORIZATION-URL)' }
+      { name: 'MICROSOFT_CALLBACK_URL',                        value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/MICROSOFT-CALLBACK-URL)' }
+      { name: 'MICROSOFT_CLIENT_ID',                           value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/MICROSOFT-CLIENT-ID)' }
+      { name: 'MICROSOFT_CLIENT_SECRET',                       value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/MICROSOFT-CLIENT-SECRET)' }
+      { name: 'MICROSOFT_SCOPE',                               value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/MICROSOFT-SCOPE)' }
+      { name: 'MICROSOFT_TOKEN_URL',                           value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/MICROSOFT-TOKEN-URL)' }
+      { name: 'MICROSOFT_USER_INFO_URL',                       value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/MICROSOFT-USER-INFO-URL)' }
+      { name: 'AZURE_OPENAI_API_KEY',                          value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/AZURE-OPENAI-API-KEY)' }
+      { name: 'AZURE_OPENAI_ENDPOINT',                         value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/AZURE-OPENAI-ENDPOINT)' }
+      { name: 'OPENAI_MODEL',                                  value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/OPENAI_MODEL)' }
+      { name: 'POSTGRES_DB',                                   value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/POSTGRES-DB)' } 
+      { name: 'POSTGRES_USER',                                 value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/POSTGRES-USER)' } 
+      { name: 'POSTGRES_PASSWORD',                             value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/POSTGRES-PASSWORD)' } 
+      { name: 'POSTGRES_PORT',                                 value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/POSTGRES-PORT)' } 
+      { name: 'REFRESH_TOKEN_SECRET',                          value:  REFRESH_TOKEN_SECRET } 
+      { name: 'STORAGE_ACCESS_KEY',                            value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/STORAGE-ACCESS-KEY)' } 
+      { name: 'STORAGE_BUCKET',                                value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/STORAGE-BUCKET)' }   
+      { name: 'STORAGE_ENDPOINT',                              value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/STORAGE-ENDPOINT)' }   
+      { name: 'STORAGE_SECRET_KEY',                            value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/STORAGE-SECRET-KEY)' } 
+      { name: 'PUBLIC_URL',                                    value: 'https://${sites.properties.defaultHostName}' } 
     ]
-    numberOfWorkers: 1
-    defaultDocuments: [
-      'Default.htm'
-      'Default.html'
-      'Default.asp'
-      'index.htm'
-      'index.html'
-      'iisstart.htm'
-      'default.aspx'
-      'index.php'
-      'hostingstart.html'
-    ]
-    netFrameworkVersion: 'v4.0'
-    linuxFxVersion: 'DOCKER|mfknudsen/ez-cv:${dockerTag}'
-    requestTracingEnabled: false
-    remoteDebuggingEnabled: false
-    remoteDebuggingVersion: 'VS2022'
-    httpLoggingEnabled: true
-    acrUseManagedIdentityCreds: false
-    logsDirectorySizeLimit: 35
-    detailedErrorLoggingEnabled: false
-    publishingUsername: '$EzCV-container-webapp'
-    scmType: 'None'
-    use32BitWorkerProcess: true
-    webSocketsEnabled: false
-    alwaysOn: false
-    managedPipelineMode: 'Integrated'
-    virtualApplications: [
-      {
-        virtualPath: '/'
-        physicalPath: 'site\\wwwroot'
-        preloadEnabled: false
-      }
-    ]
-    loadBalancing: 'LeastRequests'
-    experiments: {
-      rampUpRules: []
-    }
-    autoHealEnabled: false
-    vnetRouteAllEnabled: false
-    vnetPrivatePortsCount: 0
-    publicNetworkAccess: 'Enabled'
-    localMySqlEnabled: false
-    ipSecurityRestrictions: [
-      {
-        ipAddress: 'Any'
-        action: 'Allow'
-        priority: 2147483647
-        name: 'Allow all'
-        description: 'Allow all access'
-      }
-    ]
-    scmIpSecurityRestrictions: [
-      {
-        ipAddress: 'Any'
-        action: 'Allow'
-        priority: 2147483647
-        name: 'Allow all'
-        description: 'Allow all access'
-      }
-    ]
-    scmIpSecurityRestrictionsUseMain: false
-    http20Enabled: false
-    minTlsVersion: '1.2'
-    scmMinTlsVersion: '1.2'
-    ftpsState: 'FtpsOnly'
-    preWarmedInstanceCount: 0
-    elasticWebAppScaleLimit: 0
-    functionsRuntimeScaleMonitoringEnabled: false
-    minimumElasticInstanceCount: 1
-    azureStorageAccounts: {}
   }
 }
 

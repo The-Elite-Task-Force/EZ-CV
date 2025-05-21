@@ -1,18 +1,10 @@
 @secure()
 param grafanaAdminPassword string
-//@secure()
-//param DOCKER_REGISTRY_SERVER_URL string 
 @secure()
 param DOCKER_REGISTRY_SERVER_PASSWORD string 
 @secure()
 param DOCKER_REGISTRY_SERVER_USERNAME string 
 
-@secure()
-param blobStorageContainerName string
-@secure()
-param blobStorageAccountName string
-@secure()
-param blobStorageAccountKey string
 
 param prefix string = 'ezcv'
 @allowed([
@@ -22,58 +14,56 @@ param prefix string = 'ezcv'
 ])
 param dockerTag string = 'latest'
 
-resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-07-01' = {
-  name: '${prefix}-${dockerTag}-grafana-container'
+
+// Load & patch Grafana provisioning files
+var rawDS = loadTextContent('../grafana/datasources/datasource.yml')
+var dsConfig = replace(rawDS, 'http://placeholder.url', 'dev.ezcv.thetechcollective.dev')
+
+var dbConfig = loadTextContent('../grafana/dashboards/dashboard.yml')
+
+resource cg 'Microsoft.ContainerInstance/containerGroups@2021-07-01' = {
+  name: '${prefix}-${dockerTag}-grafana'
   location: resourceGroup().location
   properties: {
+    osType: 'Linux'
+    restartPolicy: 'Always'
+    ipAddress: { type: 'Public'
+     ports: [
+      {
+         port: 3000
+         protocol: 'TCP' }
+        ]
+       }
     containers: [
       {
-        name: 'grafana-container'
+        name: 'grafana'
         properties: {
           image: 'grafana/grafana:latest'
-          ports: [
+          ports: [{ port: 3000 }]
+          volumeMounts: [
             {
-              port: 3000
+              name: 'grafana-datasources'
+              mountPath: '/etc/grafana/provisioning/datasources'
+            }
+            {
+              name: 'grafana-dashboards'
+              mountPath: '/etc/grafana/provisioning/dashboards'
             }
           ]
           environmentVariables: [
             {
               name: 'GF_SECURITY_ADMIN_PASSWORD'
-              value: grafanaAdminPassword
+              value: grafanaAdminPassword 
             }
           ]
-          resources: {
+          resources: { 
             requests: {
-              cpu: 1
-              memoryInGB: 1
+             cpu:1
+             memoryInGB:1 } 
             }
-          }
-          volumeMounts: [
-            {
-              name: 'grafana-config'
-              mountPath: '/etc/grafana/provisioning/datasources'
-              readOnly: true
-            }
-            {
-              name: 'grafana-config'
-              mountPath: '/etc/grafana/provisioning/dashboards'
-              readOnly: true
-            }
-          ] 
         }
       }
     ]
-    osType: 'Linux'
-    restartPolicy: 'Always'
-    ipAddress: {
-      type: 'Public'
-      ports: [
-        {
-          port: 3000
-          protocol: 'TCP'
-        }
-      ]
-    }
     imageRegistryCredentials: [
       {
         server: 'index.docker.io'
@@ -83,11 +73,15 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-07-01'
     ]
     volumes: [
       {
-        name: 'grafana-config'
-        azureFile: {
-          shareName: blobStorageContainerName
-          storageAccountName: blobStorageAccountName
-          storageAccountKey: blobStorageAccountKey
+        name: 'grafana-datasources'
+        secret: {
+          'datasource.yml': dsConfig
+        }
+      }
+      {
+        name: 'grafana-dashboards'
+        secret: {
+          'dashboard.yml': dbConfig
         }
       }
     ]
