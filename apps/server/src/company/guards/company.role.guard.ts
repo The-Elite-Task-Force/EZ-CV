@@ -17,7 +17,7 @@ export class CompanyRoleGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const allowedRoles = this.reflector.get<string[]>(ALLOWED_ROLES_KEY, context.getHandler());
-    if (!allowedRoles || allowedRoles.length === 0) {
+    if (allowedRoles.length === 0) {
       // If no roles specified, allow access
       return true;
     }

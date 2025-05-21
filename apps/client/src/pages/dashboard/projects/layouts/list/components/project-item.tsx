@@ -20,23 +20,22 @@ import {
   DropdownMenuTrigger,
 } from "@reactive-resume/ui";
 import dayjs from "dayjs";
-import { useNavigate } from "react-router";
 
 import { BaseListItem } from "@/client/pages/dashboard/resumes/_layouts/list/_components/base-item";
 import { useDialog } from "@/client/stores/dialog";
 
 type Props = {
   project: ProjectDto;
+  onOpenProject: (projectId: string) => void;
 };
 
-export const ProjectListItem = ({ project }: Props) => {
-  const navigate = useNavigate();
+export const ProjectListItem = ({ project, onOpenProject }: Props) => {
   const { open } = useDialog<ProjectDto>("project");
 
   const lastUpdated = dayjs().to(project.updatedAt);
 
   const onOpen = () => {
-    void navigate(`/projects/${project.id}`);
+    onOpenProject(project.id);
   };
 
   const onUpdate = () => {

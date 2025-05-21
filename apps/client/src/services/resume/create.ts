@@ -2,6 +2,7 @@ import type { CreateResumeDto, ResumeDto } from "@reactive-resume/dto";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 
+import { PUBLIC_RESUMES_KEY } from "@/client/constants/query-keys";
 import { axios } from "@/client/libs/axios";
 import { queryClient } from "@/client/libs/query-client";
 
@@ -21,9 +22,13 @@ export const useCreateResume = () => {
     mutateAsync: createResumeFn,
   } = useMutation({
     mutationFn: createResume,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      const userId = data.userId;
       queryClient.setQueryData<ResumeDto>(["resume", { id: data.id }], data);
 
+      await queryClient.invalidateQueries({
+        queryKey: [PUBLIC_RESUMES_KEY, userId],
+      });
       queryClient.setQueryData<ResumeDto[]>(["resumes"], (cache) => {
         if (!cache) return [data];
         return [...cache, data];

@@ -208,6 +208,7 @@ export const ResumeCard = ({ resume }: Props) => {
               <LocaleComboboxPopover
                 value={resumeLanguage}
                 onValueChange={(locale) => {
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                   setResumeLanguage(locale as LANGUAGE);
                 }}
               />

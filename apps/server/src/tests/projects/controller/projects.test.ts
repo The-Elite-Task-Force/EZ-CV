@@ -1,10 +1,10 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { ProjectController } from "@/server/project/project.controller";
 import type { ProjectService } from "@/server/project/project.service";
 
-import { ProjectController } from "../../project/project.controller";
-import { mockProjects } from "../mocks/projects";
+import { mockProjects } from "../../mocks/project";
 
 describe("ProjectController", () => {
   let controller: ProjectController;
@@ -12,7 +12,7 @@ describe("ProjectController", () => {
 
   beforeEach(() => {
     mockProjectService = {
-      getProjectsFromCompany: vi.fn(),
+      findProjectsFromCompany: vi.fn(),
     };
 
     controller = new ProjectController(mockProjectService as ProjectService);
@@ -24,25 +24,25 @@ describe("ProjectController", () => {
 
   describe("getProjectsFromCompany", () => {
     it("should get all projects from a specific company", async () => {
-      vi.mocked(mockProjectService.getProjectsFromCompany).mockResolvedValue(mockProjects);
+      vi.mocked(mockProjectService.findProjectsFromCompany).mockResolvedValue(mockProjects);
 
-      const result = await controller.getProjectsFromCompany("companyId");
+      const result = await controller.findProjectsFromCompany("companyId");
 
-      expect(mockProjectService.getProjectsFromCompany).toHaveBeenCalledWith("companyId");
+      expect(mockProjectService.findProjectsFromCompany).toHaveBeenCalledWith("companyId");
 
       expect(result).toEqual(mockProjects);
     });
 
     it("should throw an InternalServerErrorException if company id does not exists", async () => {
-      vi.mocked(mockProjectService.getProjectsFromCompany).mockRejectedValue(
+      vi.mocked(mockProjectService.findProjectsFromCompany).mockRejectedValue(
         new Error("Company with ID: wrongCompanyId - does not exist."),
       );
 
-      await expect(controller.getProjectsFromCompany("wrongCompanyId")).rejects.toThrow(
+      await expect(controller.findProjectsFromCompany("wrongCompanyId")).rejects.toThrow(
         InternalServerErrorException,
       );
 
-      expect(mockProjectService.getProjectsFromCompany).toHaveBeenCalledWith("wrongCompanyId");
+      expect(mockProjectService.findProjectsFromCompany).toHaveBeenCalledWith("wrongCompanyId");
     });
   });
 });

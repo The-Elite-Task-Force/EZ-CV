@@ -52,8 +52,7 @@ export const DropdownCompanyInviter = ({ invitedUserId }: Props) => {
           <DropdownMenuItem disabled>{t`Loading...`}</DropdownMenuItem>
         ) : error ? (
           <DropdownMenuItem disabled>Error loading companies</DropdownMenuItem>
-        ) : // eslint-disable-next-line unicorn/no-nested-ternary
-        companies?.length === 0 ? (
+        ) : companies?.length === 0 ? (
           <DropdownMenuItem disabled>No companies found</DropdownMenuItem>
         ) : (
           companies?.map((company) => (

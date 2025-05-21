@@ -9,9 +9,10 @@ import { ProjectListItem } from "./components/project-item";
 type ProjectListViewProps = {
   projects: ProjectDto[] | undefined;
   loading: boolean;
+  onOpenProject: (projectId: string) => void;
 };
 
-export const ProjectListView = ({ projects, loading }: ProjectListViewProps) => {
+export const ProjectListView = ({ projects, loading, onOpenProject }: ProjectListViewProps) => {
   return (
     <div className="grid gap-y-2">
       <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }}>
@@ -38,7 +39,7 @@ export const ProjectListView = ({ projects, loading }: ProjectListViewProps) => 
                 animate={{ opacity: 1, y: 0, transition: { delay: (index + 2) * 0.1 } }}
                 exit={{ opacity: 0, filter: "blur(8px)", transition: { duration: 0.5 } }}
               >
-                <ProjectListItem project={project} />
+                <ProjectListItem project={project} onOpenProject={onOpenProject} />
               </motion.div>
             ))}
         </AnimatePresence>

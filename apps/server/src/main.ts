@@ -41,7 +41,6 @@ async function bootstrap() {
     });
     next();
   };
-  
 
   MetricsService.register.registerMetric(httpRequestDuration);
   client.collectDefaultMetrics({ register: MetricsService.register });

@@ -82,8 +82,8 @@ export const Combobox = forwardRef(
                 props.value !== "" &&
                 props.options.find((option) => option.value === props.value)?.label}
 
-              {!props.value ||
-                (props.value.length === 0 && (props.selectPlaceholder ?? "Select an option"))}
+              {(!props.value || props.value.length === 0) &&
+                (props.selectPlaceholder ?? "Select an option")}
             </span>
             <CaretDown
               className={cn(
