@@ -86,7 +86,7 @@ resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
 // Save the Postgres password in Key Vault
 resource postgresPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: kv
-  name: 'POSTGRES_PASSWORD'
+  name: 'POSTGRES-PASSWORD'
   properties: {
     value: POSTGRES_PASSWORD
   }
@@ -98,7 +98,7 @@ resource postgresPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' =
 // Save the Postgres username in Key Vault
 resource postgresUsernameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: kv
-  name: 'POSTGRES_USER'
+  name: 'POSTGRES-USER'
   properties: {
     value: POSTGRES_USER
   }
@@ -111,7 +111,7 @@ resource postgresUsernameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' =
 // Save the Postgres database name in Key Vault
 resource postgresDatabaseNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: kv
-  name: 'POSTGRES_DB'
+  name: 'POSTGRES-DB'
   properties: {
     value: dbName
   }
@@ -124,7 +124,7 @@ resource postgresDatabaseNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-0
 // Save the Postgres port in Key Vault
 resource postgresPortSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: kv
-  name: 'POSTGRES_PORT'
+  name: 'POSTGRES-PORT'
   properties: {
     value: '5432'
   }
@@ -134,6 +134,6 @@ resource postgresPortSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   ]
 }
 
-// Save the postgres 
+
 
 

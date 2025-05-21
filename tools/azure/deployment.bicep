@@ -21,6 +21,10 @@ param CHROME_TOKEN string = 'chrome_token' //This should be replace with a real 
 @secure()
 param rgName string 
 
+@secure()
+param GrafanaAdminPassword string
+
+
 param subscriptionId string 
 param sku string = 'Standard'
 
@@ -113,40 +117,33 @@ module webApp './web-app.bicep' = {
 
 
 
-/*
-// Grafana
-module grafana './grafana.bicep' = {
-  name: '${prefix}-${dockerTag}-grafana'
-  params: {
-    prefix: prefix
-    dockerTag: dockerTag
-    grafanaAdminPassword: '<secret>'
-    DOCKER_REGISTRY_SERVER_PASSWORD: '<secret>'
-    DOCKER_REGISTRY_SERVER_USERNAME: '<secret>'
-    blobStorageContainerName: '<secret>'
-    blobStorageAccountName: '<secret>'
-    blobStorageAccountKey: '<secret>'
-  }
-  dependsOn: [
-    webApp
-    blobStorage
 
-    ]
-}
 
-// Prometheus
-module prometheus './prometheus.bicep' = {
+module prometheus 'prometheus.bicep' = {
   name: '${prefix}-${dockerTag}-prometheus'
+  scope: rg
   params: {
     prefix: prefix
     dockerTag: dockerTag
     webAppUrl: webApp.outputs.webAppURL
-    DOCKER_REGISTRY_SERVER_PASSWORD: '<secret>'
-    DOCKER_REGISTRY_SERVER_USERNAME: '<secret>'
-    blobStorageContainerName: '<secret>'
-    blobStorageAccountName: '<secret>'
-    blobStorageAccountKey: '<secret>'
+    keyVaultName: kv.name
+    DOCKER_REGISTRY_SERVER_USERNAME: DOCKER_REGISTRY_SERVER_USERNAME
+    DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   }
-
 }
-*/
+
+module grafana 'grafana.bicep' = {
+  name: '${prefix}-${dockerTag}-grafana'
+  scope: rg
+  params: {
+    prefix: prefix
+    dockerTag: dockerTag
+    grafanaAdminPassword: GrafanaAdminPassword
+    DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+    DOCKER_REGISTRY_SERVER_USERNAME: DOCKER_REGISTRY_SERVER_USERNAME
+    keyVaultName: kv.name
+  }
+  dependsOn: [
+    prometheus
+  ]
+}

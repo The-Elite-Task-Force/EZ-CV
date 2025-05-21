@@ -12,3 +12,5 @@ param CHROME_TOKEN = 'chrome_token'
 
 param DOCKER_REGISTRY_SERVER_USERNAME = 'myUsername'
 param DOCKER_REGISTRY_SERVER_PASSWORD = 'myPassword'
+
+param GrafanaAdminPassword = 'GrafanaAdminPassword'

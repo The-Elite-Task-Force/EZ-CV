@@ -26,7 +26,8 @@ param CHROME_TOKEN string = 'chrome_token'
 param DOCKER_REGISTRY_SERVER_USERNAME string
 @secure()
 param DOCKER_REGISTRY_SERVER_PASSWORD string
-
+@secure()
+param GrafanaAdminPassword string
 
 
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
@@ -48,6 +49,7 @@ module infra 'deployment.bicep' = {
     POSTGRES_PASSWORD: POSTGRES_PASSWORD
     sku: sku
     CHROME_TOKEN: CHROME_TOKEN
+    GrafanaAdminPassword: GrafanaAdminPassword
   }
 }
 

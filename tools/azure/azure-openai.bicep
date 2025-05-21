@@ -64,7 +64,7 @@ resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10
 //Save the OpenAI key in Key Vault
 resource openAIKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: kv
-  name: 'AZURE_OPENAI_API_KEY'
+  name: 'AZURE-OPENAI-API-KEY'
   properties: {
     value: openAIAccount.listKeys().key1
   }
@@ -72,7 +72,7 @@ resource openAIKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
 //Save The OpenAI endpoint in Key Vault
 resource openAIEndpointSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: kv
-  name: 'AZURE_OPENAI_ENDPOINT'
+  name: 'AZURE-OPENAI-ENDPOINT'
   properties: {
     value: openAIAccount.properties.endpoint
   }
@@ -84,7 +84,7 @@ resource openAIEndpointSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
 // Save the OpenAI deployment name in Key Vault
 resource openAIDeploymentNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: kv
-  name: 'OPENAI_MODEL'
+  name: 'OPENAI-MODEL'
   properties: {
     value: gptDeployment.name
   }
