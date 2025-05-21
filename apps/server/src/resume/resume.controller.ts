@@ -93,6 +93,17 @@ export class ResumeController {
     }
   }
 
+  @Get("public/all/:userId")
+  @UseGuards(TwoFactorGuard)
+  async findAllWithVariantsByUserId(@Param("userId") userId: string) {
+    try {
+      return await this.resumeService.findallResumesAndVariants(userId);
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
   @Get(":id")
   @UseGuards(TwoFactorGuard, ResumeGuard)
   findOne(@Resume() resume: ResumeDto) {
@@ -105,7 +116,7 @@ export class ResumeController {
     return this.resumeService.findOneStatistics(id);
   }
 
-  @Get("/publicpage/:username/:slug")
+  @Get("/public/:username/:slug")
   @UseGuards(OptionalGuard)
   findOneByUsernameSlug(
     @Param("username") username: string,

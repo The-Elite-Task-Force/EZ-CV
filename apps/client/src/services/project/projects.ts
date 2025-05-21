@@ -29,3 +29,10 @@ export const useOwnProjectsByCompanyId = (companyId: string) => {
 
   return { projects, loading, error };
 };
+
+export const fetchProjectsFromCompany = async (companyId: string) => {
+  const response = await axios.get<ProjectDto[], AxiosResponse<ProjectDto[]>>(
+    `/project/company/${companyId}`,
+  );
+  return response.data;
+};

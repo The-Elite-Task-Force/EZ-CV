@@ -21,6 +21,7 @@ import { MailModule } from "./mail/mail.module";
 import { MetricsModule } from "./metrics/metrics.module";
 import { PrinterModule } from "./printer/printer.module";
 import { ProjectModule } from "./project/project.module";
+import { ProjectMappingModule } from "./projectMapping/project-mapping.module";
 import { ResumeModule } from "./resume/resume.module";
 import { SearchModule } from "./search/search.module";
 import { SectionItemModule } from "./sectionItem/section-item.module";
@@ -51,6 +52,7 @@ import { VariantModule } from "./variant/variant.module";
     SearchModule,
     CompanyModule,
     ProjectModule,
+    ProjectMappingModule,
     VariantModule,
     MetricsModule,
     VariantModule,

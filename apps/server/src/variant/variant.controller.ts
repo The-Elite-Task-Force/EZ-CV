@@ -44,6 +44,7 @@ export class VariantController {
     return this.variantService.remove(user.id, id);
   }
 
+  // I will consider adding a guard to check if the user is the owner or is a bidmanager of their company
   @Patch(":id")
   @UseGuards(TwoFactorGuard)
   update(
@@ -51,7 +52,10 @@ export class VariantController {
     @Param("id") id: string,
     @Body() updateResumeDto: UpdateVariantDto,
   ) {
-    return this.variantService.update(user.id, id, updateResumeDto);
+    if (!updateResumeDto.userId) {
+      throw new InternalServerErrorException("userId is required");
+    }
+    return this.variantService.update(updateResumeDto.userId, id, updateResumeDto);
   }
 
   @Get(":id")

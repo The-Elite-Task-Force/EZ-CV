@@ -10,7 +10,7 @@ export class ProjectService {
       data: {
         name: createProjectDto.name,
         userId: id,
-        description: "",
+        description: null,
         companyId: createProjectDto.companyId,
       },
     });
@@ -18,7 +18,15 @@ export class ProjectService {
     return project;
   }
 
-  async getProjectsFromCompany(companyId: string): Promise<ProjectDto[]> {
+  async findOneByProjectId(projectId: string): Promise<ProjectDto> {
+    const project = await this.prisma.project.findUniqueOrThrow({
+      where: { id: projectId },
+    });
+
+    return project;
+  }
+
+  async findProjectsFromCompany(companyId: string): Promise<ProjectDto[]> {
     const company = await this.prisma.company.findUnique({
       where: { id: companyId },
     });
@@ -34,7 +42,7 @@ export class ProjectService {
     return mappings;
   }
 
-  async getUserProjectsByCompanyId(userId: string, companyId: string) {
+  async findUserProjectsByCompanyId(userId: string, companyId: string) {
     const projects = await this.prisma.project.findMany({
       where: {
         userId,

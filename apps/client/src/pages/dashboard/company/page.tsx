@@ -6,7 +6,7 @@ import { useLoaderData } from "react-router";
 import { EMPLOYEES_KEY, PROJECTS_KEY } from "@/client/constants/query-keys";
 import { DetailsForm } from "@/client/pages/dashboard/company/_dialogs/details-form";
 import { fetchEmployees } from "@/client/services/company/company";
-import { fetchProjectsFromCompany } from "@/client/services/project/project";
+import { fetchProjectsFromCompany } from "@/client/services/project/projects";
 
 import ProjectList from "../projects/layouts/project-list";
 import InviteUserForm from "./_dialogs/InviteUserForm";

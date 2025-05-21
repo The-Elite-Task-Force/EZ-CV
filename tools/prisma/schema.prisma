@@ -39,7 +39,7 @@ model User {
   variants        ResumeVariant[] @relation("OwnerRelation")
   variantsCreated ResumeVariant[] @relation("CreatorRelation")
 
-  ProjectsMapping ProjectsMapping[]
+  ProjectMapping ProjectMapping[]
   CompanyMapping  CompanyMapping[]
 
   profileResumeId String?
@@ -110,6 +110,7 @@ model Resume {
   ResumeCustomItemMapping        ResumeCustomItemMapping[]
 
   variants ResumeVariant[] @relation("ResumeToVariants")
+  projects   ProjectMapping[]
 
   @@unique([userId, id])
   @@unique([userId, slug])
@@ -132,7 +133,6 @@ model ResumeVariant {
   language   String            @default("en-US")
   resumeId   String
   resume     Resume            @relation("ResumeToVariants", fields: [resumeId], references: [id], onDelete: Cascade)
-  projects   ProjectsMapping[]
 
   @@unique([userId, id])
   @@unique([userId, slug])
@@ -162,19 +162,19 @@ model Project {
   company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   updatedAt   DateTime @updatedAt
 
-  ProjectsMapping ProjectsMapping[]
+  ProjectMapping ProjectMapping[]
 
   @@unique([name, userId])
 }
 
-model ProjectsMapping {
+model ProjectMapping {
   id        String         @id @default(cuid())
   projectId String
   project   Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
   userId    String
   user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   resumeId  String?
-  resume    ResumeVariant? @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  resume    Resume? @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   @@unique([projectId, userId])
 }

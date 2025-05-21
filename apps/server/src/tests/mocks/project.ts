@@ -5,13 +5,15 @@ import { mockUserWithoutPRI } from "./mocks";
 
 export const mockCompanyId = "company-456";
 
+export const mockProjectId = "project-123";
+
 export const mockCreateProjectDto: CreateProjectDto = {
   name: "My Project",
   companyId: mockCompanyId,
 };
 
 export const mockProject: Project = {
-  id: "project-999",
+  id: mockProjectId,
   name: mockCreateProjectDto.name,
   companyId: mockCreateProjectDto.companyId,
   updatedAt: new Date(),

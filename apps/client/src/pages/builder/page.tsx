@@ -17,7 +17,6 @@ import { useSectionMappingStore } from "@/client/stores/section-mapping";
 
 export const mapSections = (sections: Sections, mapping: SectionMappingDto) => {
   const result = JSON.parse(JSON.stringify(sections));
-
   for (const [key, section] of Object.entries(sections)) {
     if (key === "basics") continue;
     if (key === "custom" && typeof section === "object") {

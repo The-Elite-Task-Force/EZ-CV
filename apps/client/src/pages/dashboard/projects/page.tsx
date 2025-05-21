@@ -13,7 +13,7 @@ import {
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 import { SearchBar } from "@/client/components/searchbar";
 import { projectFilterKeys } from "@/client/constants/search-filter-keys";
@@ -30,6 +30,7 @@ export const ProjectsPage = () => {
   const [layout, setLayout] = useState<Layout>("grid");
   const [company, setCompany] = useState<string | undefined>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const { user } = useAuthStore();
 
@@ -46,23 +47,29 @@ export const ProjectsPage = () => {
   }, [projects]);
 
   useEffect(() => {
-    if (company) {
+    const param = searchParams.get("company");
+    if (param && param !== company) {
+      setCompany(param);
+    } else if (!param && !company && companies && companies.length > 0) {
+      const defaultCompany = companies[0].id;
+      setCompany(defaultCompany);
+      // Set the param only once here, when there's truly no param
       setSearchParams((prev) => {
         const newParams = new URLSearchParams(prev);
-        newParams.set("company", company);
+        newParams.set("company", defaultCompany);
         return newParams;
       });
     }
-  }, [company, setSearchParams]);
+  }, [searchParams, company, companies, setSearchParams]);
 
-  useEffect(() => {
-    const param = searchParams.get("company");
-    if (param) {
-      setCompany(param);
-    } else if (!company && companies && companies.length > 0) {
-      setCompany(companies[0].id);
-    }
-  }, [companies, searchParams]);
+  const handleOpenProject = (projectId: string) => {
+    setSearchParams({});
+
+    void navigate({
+      pathname: `/dashboard/projects/${projectId}`,
+      search: "",
+    });
+  };
 
   if (!user || loading || loadingProjects) return;
 
@@ -96,7 +103,14 @@ export const ProjectsPage = () => {
                   value: c.id,
                 })) ?? []
               }
-              onValueChange={setCompany}
+              onValueChange={(value) => {
+                setCompany(value);
+                setSearchParams((prev) => {
+                  const newParams = new URLSearchParams(prev);
+                  newParams.set("company", value);
+                  return newParams;
+                });
+              }}
             />
           </div>
 
@@ -125,10 +139,18 @@ export const ProjectsPage = () => {
           className="h-[calc(100vh-140px)] overflow-visible lg:h-[calc(100vh-88px)]"
         >
           <TabsContent value="grid">
-            <ProjectsGridView projects={filteredItems} loading={loadingProjects} />
+            <ProjectsGridView
+              projects={filteredItems}
+              loading={loadingProjects}
+              onOpenProject={handleOpenProject}
+            />
           </TabsContent>
           <TabsContent value="list">
-            <ProjectListView projects={filteredItems} loading={loadingProjects} />
+            <ProjectListView
+              projects={filteredItems}
+              loading={loadingProjects}
+              onOpenProject={handleOpenProject}
+            />
           </TabsContent>
         </ScrollArea>
       </Tabs>

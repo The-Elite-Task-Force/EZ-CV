@@ -5,6 +5,7 @@ export * from "./company/types/roles";
 export * from "./contributors";
 export * from "./feature";
 export * from "./project";
+export * from "./project-mapping";
 export * from "./resume";
 export * from "./secrets";
 export * from "./section";
