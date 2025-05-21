@@ -115,10 +115,6 @@ module webApp './web-app.bicep' = {
   ]
 }
 
-
-
-
-
 module prometheus 'prometheus.bicep' = {
   name: '${prefix}-${dockerTag}-prometheus'
   scope: rg
@@ -141,7 +137,6 @@ module grafana 'grafana.bicep' = {
     grafanaAdminPassword: GrafanaAdminPassword
     DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
     DOCKER_REGISTRY_SERVER_USERNAME: DOCKER_REGISTRY_SERVER_USERNAME
-    keyVaultName: kv.name
   }
   dependsOn: [
     prometheus
