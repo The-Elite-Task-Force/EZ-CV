@@ -1,11 +1,14 @@
 import path from "node:path";
 
 import { HttpException, Module } from "@nestjs/common";
-import { APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core";
+import {
+  APP_INTERCEPTOR,
+  //, APP_PIPE
+} from "@nestjs/core";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { RavenInterceptor, RavenModule } from "nest-raven";
-import { ZodValidationPipe } from "nestjs-zod";
 
+//import { ZodValidationPipe } from "nestjs-zod";
 import { CompanyModule } from "@/server/company/company.module";
 
 import { AuthModule } from "./auth/auth.module";
@@ -17,12 +20,15 @@ import { HealthModule } from "./health/health.module";
 import { MailModule } from "./mail/mail.module";
 import { MetricsModule } from "./metrics/metrics.module";
 import { PrinterModule } from "./printer/printer.module";
+import { ProjectModule } from "./project/project.module";
+import { ProjectMappingModule } from "./projectMapping/project-mapping.module";
 import { ResumeModule } from "./resume/resume.module";
 import { SearchModule } from "./search/search.module";
 import { SectionItemModule } from "./sectionItem/section-item.module";
 import { StorageModule } from "./storage/storage.module";
 import { TranslationModule } from "./translation/translation.module";
 import { UserModule } from "./user/user.module";
+import { VariantModule } from "./variant/variant.module";
 
 @Module({
   imports: [
@@ -45,8 +51,11 @@ import { UserModule } from "./user/user.module";
     SectionItemModule,
     SearchModule,
     CompanyModule,
+    ProjectModule,
+    ProjectMappingModule,
+    VariantModule,
     MetricsModule,
-
+    VariantModule,
     // Static Assets
     ServeStaticModule.forRoot({
       serveRoot: "/artboard",

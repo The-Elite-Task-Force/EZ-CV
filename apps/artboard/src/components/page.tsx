@@ -7,11 +7,12 @@ type Props = {
   mode?: "preview" | "builder";
   pageNumber: number;
   children: React.ReactNode;
+  fixedSize?: boolean;
 };
 
 export const MM_TO_PX = 3.78;
 
-export const Page = ({ mode = "preview", pageNumber, children }: Props) => {
+export const Page = ({ mode = "preview", pageNumber, children, fixedSize }: Props) => {
   const { isDarkMode } = useTheme();
 
   const page = useArtboardStore((state) => state.resume.metadata.page);
@@ -24,7 +25,9 @@ export const Page = ({ mode = "preview", pageNumber, children }: Props) => {
       style={{
         fontFamily,
         width: `${pageSizeMap[page.format].width * MM_TO_PX}px`,
+        ...(fixedSize && { maxWidth: `${pageSizeMap[page.format].width * MM_TO_PX}px` }),
         minHeight: `${pageSizeMap[page.format].height * MM_TO_PX}px`,
+        ...(fixedSize && { maxHeight: `${pageSizeMap[page.format].height * MM_TO_PX}px` }),
       }}
     >
       {mode === "builder" && page.options.pageNumbers && (

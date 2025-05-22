@@ -82,6 +82,28 @@ export class ResumeController {
     return this.resumeService.findAll(user.id);
   }
 
+  @Get("all")
+  @UseGuards(TwoFactorGuard)
+  async findAllWithVariants(@User() user: UserEntity) {
+    try {
+      return await this.resumeService.findallResumesAndVariants(user.id);
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @Get("public/all/:userId")
+  @UseGuards(TwoFactorGuard)
+  async findAllWithVariantsByUserId(@Param("userId") userId: string) {
+    try {
+      return await this.resumeService.findallResumesAndVariants(userId);
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
   @Get(":id")
   @UseGuards(TwoFactorGuard, ResumeGuard)
   findOne(@Resume() resume: ResumeDto) {
@@ -94,7 +116,7 @@ export class ResumeController {
     return this.resumeService.findOneStatistics(id);
   }
 
-  @Get("/publicpage/:username/:slug")
+  @Get("/public/:username/:slug")
   @UseGuards(OptionalGuard)
   findOneByUsernameSlug(
     @Param("username") username: string,
@@ -134,6 +156,8 @@ export class ResumeController {
   @Delete(":id")
   @UseGuards(TwoFactorGuard)
   remove(@User() user: UserEntity, @Param("id") id: string) {
+    Logger.log("Deleting resume", id, user.id);
+    Logger.log("user", user.id);
     return this.resumeService.remove(user.id, id);
   }
 

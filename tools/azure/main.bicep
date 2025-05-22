@@ -110,6 +110,16 @@ module postgres './postgres.bicep' = {
   }
 }
 
+module azureOpenAI './azure-openai.bicep' = {
+  name: '${prefix}-${dockerTag}-openai-deploy'
+  scope: rg
+  params: {
+    prefix: prefix
+    dockerTag: dockerTag
+  }
+}
+
+
 module grafana 'grafana.bicep' = {
   name: '${prefix}-${dockerTag}-grafana'
   scope: rg
@@ -119,7 +129,7 @@ module grafana 'grafana.bicep' = {
     grafanaAdminPassword: kv.getSecret('GRAFANA-ADMIN-PASSWORD')
     DOCKER_REGISTRY_SERVER_PASSWORD: kv.getSecret('DOCKER-REGISTRY-SERVER-PASSWORD')
     DOCKER_REGISTRY_SERVER_USERNAME: kv.getSecret('DOCKER-REGISTRY-SERVER-USERNAME')
-    blobSttorageContainerName: kv.getSecret('SHARE-NAME')
+    blobStorageContainerName: kv.getSecret('SHARE-NAME')
     blobStorageAccountName: kv.getSecret('STORAGE-ACCOUNT-NAME')
     blobStorageAccountKey: kv.getSecret('STORAGE-ACCOUNT-KEY')
   }
@@ -134,8 +144,9 @@ module prometheus 'prometheus.bicep' = {
     webAppUrl: webApp.outputs.webAppURL
     DOCKER_REGISTRY_SERVER_PASSWORD: kv.getSecret('DOCKER-REGISTRY-SERVER-PASSWORD')
     DOCKER_REGISTRY_SERVER_USERNAME: kv.getSecret('DOCKER-REGISTRY-SERVER-USERNAME')
-    blobSttorageContainerName: kv.getSecret('SHARE-NAME')
+    blobStorageContainerName: kv.getSecret('SHARE-NAME')
     blobStorageAccountName: kv.getSecret('STORAGE-ACCOUNT-NAME')
     blobStorageAccountKey: kv.getSecret('STORAGE-ACCOUNT-KEY')
   }
 }
+

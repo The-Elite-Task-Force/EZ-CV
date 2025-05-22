@@ -11,6 +11,7 @@ export class SearchService {
   constructor(private readonly prisma: PrismaService) {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
+      dangerouslyAllowBrowser: true,
     });
   }
 

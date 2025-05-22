@@ -1,5 +1,4 @@
 /* eslint-disable lingui/no-unlocalized-strings */
-import { t } from "@lingui/macro";
 import { Plus } from "@phosphor-icons/react";
 import { KeyboardShortcut } from "@reactive-resume/ui";
 import { cn } from "@reactive-resume/utils";

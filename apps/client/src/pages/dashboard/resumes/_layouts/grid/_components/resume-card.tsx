@@ -17,7 +17,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import type { ResumeDto } from "@reactive-resume/dto";
+import type { ResumeDto, VariantDto } from "@reactive-resume/dto";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,7 +42,7 @@ import { useDialog } from "@/client/stores/dialog";
 import { BaseCard } from "./base-card";
 
 type Props = {
-  resume: ResumeDto;
+  resume: ResumeDto | VariantDto;
 };
 
 export const ResumeCard = ({ resume }: Props) => {
@@ -53,7 +53,6 @@ export const ResumeCard = ({ resume }: Props) => {
   const queryClient = useQueryClient();
 
   const [resumeLanguage, setResumeLanguage] = useState<LANGUAGE>(resume.language);
-
   useEffect(() => {
     const update = async () => {
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
@@ -74,6 +73,10 @@ export const ResumeCard = ({ resume }: Props) => {
     open("update", { id: "resume", item: resume });
   };
 
+  const onCreateVariant = () => {
+    open("duplicateAsVariant", { id: "resume", item: resume });
+  };
+
   const onSetDefault = async (setDefaultProfile: boolean) => {
     if (!user) return;
     await (setDefaultProfile
@@ -84,6 +87,10 @@ export const ResumeCard = ({ resume }: Props) => {
 
   const onDuplicate = () => {
     open("duplicate", { id: "resume", item: resume });
+  };
+
+  const onTranslate = (locale: LANGUAGE) => {
+    open("translate", { id: "resume", item: resume });
   };
 
   const onLockChange = () => {
@@ -156,6 +163,11 @@ export const ResumeCard = ({ resume }: Props) => {
             <CopySimple size={14} className="mr-2" />
             {t`Duplicate`}
           </DropdownMenuItem>
+
+          <DropdownMenuItem onClick={onCreateVariant}>
+            <CopySimple size={14} className="mr-2" />
+            {`Create as variant`}
+          </DropdownMenuItem>
           {resume.id === user?.profileResumeId ? (
             <DropdownMenuItem onClick={() => onSetDefault(false)}>
               <FolderOpen size={14} className="mr-2" />
@@ -167,6 +179,14 @@ export const ResumeCard = ({ resume }: Props) => {
               Set as profile
             </DropdownMenuItem>
           )}
+          <DropdownMenuItem
+            onClick={() => {
+              onTranslate(resumeLanguage);
+            }}
+          >
+            <Translate size={14} className="mr-2" />
+            {t`Translate`}
+          </DropdownMenuItem>
           {resume.locked ? (
             <DropdownMenuItem onClick={onLockChange}>
               <LockOpen size={14} className="mr-2" />
@@ -188,6 +208,7 @@ export const ResumeCard = ({ resume }: Props) => {
               <LocaleComboboxPopover
                 value={resumeLanguage}
                 onValueChange={(locale) => {
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                   setResumeLanguage(locale as LANGUAGE);
                 }}
               />
