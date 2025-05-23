@@ -15,6 +15,19 @@ export const importResume = async (data: ImportResumeDto) => {
   return response.data;
 };
 
+export const importResumeWithFile = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await axios.post<ResumeDto>("/resume/import/file", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};
+
 export const useImportResume = () => {
   const {
     error,

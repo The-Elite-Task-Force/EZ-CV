@@ -37,13 +37,14 @@ import { useForm } from "react-hook-form";
 import { z, ZodError } from "zod";
 
 import { useToast } from "@/client/hooks/use-toast";
-import { useImportResume } from "@/client/services/resume/import";
+import { importResumeWithFile, useImportResume } from "@/client/services/resume/import";
 import { importSections } from "@/client/services/section/import";
 import { useDialog } from "@/client/stores/dialog";
 
 enum ImportType {
   "json" = "json",
   "linkedin-data-export-zip" = "linkedin-data-export-zip",
+  "pdf" = "pdf",
 }
 
 const formSchema = z.object({
@@ -61,7 +62,7 @@ type ValidationResult =
   | {
       isValid: true;
       type: ImportType;
-      result: ResumeData | ReactiveResumeV3 | LinkedIn | JsonResume;
+      result: ResumeData | ReactiveResumeV3 | LinkedIn | JsonResume | File;
     };
 
 export const ImportDialog = () => {
@@ -115,6 +116,25 @@ export const ImportDialog = () => {
 
         setValidationResult({ isValid: true, type, result });
       }
+
+      if (type === ImportType["pdf"]) {
+        //Check if the file ends with .pdf, , pptx, docx, or doc
+        console.log(type);
+        if (
+          !file.name.endsWith(".pdf") &&
+          !file.name.endsWith(".pptx") &&
+          !file.name.endsWith(".docx") &&
+          !file.name.endsWith(".doc")
+        ) {
+          setValidationResult({
+            isValid: false,
+            errors: t`Invalid file type. Please upload a PDF file.`,
+          });
+          return;
+        }
+
+        setValidationResult({ isValid: true, type, result: file });
+      }
     } catch (error) {
       if (error instanceof ZodError) {
         setValidationResult({
@@ -149,7 +169,11 @@ export const ImportDialog = () => {
 
         await importSections({ data, createResume, resumeTitle });
       }
+      if (type === ImportType["pdf"]) {
+        const file = validationResult.result as File;
 
+        await importResumeWithFile(file);
+      }
       close();
     } catch (error: unknown) {
       toast({
@@ -197,10 +221,10 @@ export const ImportDialog = () => {
                       <SelectContent>
                         {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
                         <SelectItem value="json">EzCV (.json)</SelectItem>
-
                         <SelectItem value="linkedin-data-export-zip">
                           LinkedIn Data Export (.zip)
                         </SelectItem>
+                        <SelectItem value="pdf"> PDF (.pdf)</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

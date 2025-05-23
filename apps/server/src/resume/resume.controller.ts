@@ -11,6 +11,8 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { UploadedFile, UseInterceptors } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiTags } from "@nestjs/swagger";
 import { User as UserEntity } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
@@ -32,7 +34,6 @@ import { SearchService } from "../search/search.service";
 import { Resume } from "./decorators/resume.decorator";
 import { ResumeGuard } from "./guards/resume.guard";
 import { ResumeService } from "./resume.service";
-
 @ApiTags("Resume")
 @Controller("resume")
 export class ResumeController {
@@ -181,6 +182,18 @@ export class ResumeController {
       const url = await this.resumeService.printPreview(resume);
 
       return { url };
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @Post("import/file")
+  @UseGuards(TwoFactorGuard)
+  @UseInterceptors(FileInterceptor("file"))
+  async importResumeWithFile(@User() user: UserEntity, @UploadedFile() file: Express.Multer.File) {
+    try {
+      return await this.resumeService.importResumeWithFile(user.id, file);
     } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException(error);

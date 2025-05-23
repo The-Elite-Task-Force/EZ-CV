@@ -377,4 +377,9 @@ export class ResumeService {
           data: { profileResumeId: null },
         }));
   }
+
+  async importResumeWithFile(userId: string, file: Express.Multer.File) {
+    console.log("Importing resume with file", file);
+    return true;
+  }
 }
