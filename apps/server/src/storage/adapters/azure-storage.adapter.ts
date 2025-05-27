@@ -54,7 +54,15 @@ export class AzureBlobStorageAdapter implements IStorageProvider {
   async deleteObject(userId: string, type: string, filename: string): Promise<void> {
     const ext = type === "resumes" ? "pdf" : "jpg";
     const path = `${userId}/${type}/${filename}.${ext}`;
-    await this.containerClient.deleteBlob(path);
+
+    try {
+      const blobClient = this.containerClient.getBlockBlobClient(path);
+      await blobClient.deleteIfExists();
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error while deleting blob: ${(error as Error).message}`,
+      );
+    }
   }
 
   async deleteFolder(prefix: string): Promise<void> {
@@ -62,7 +70,13 @@ export class AzureBlobStorageAdapter implements IStorageProvider {
     for await (const blob of this.containerClient.listBlobsFlat({ prefix })) {
       deletes.push(this.containerClient.deleteBlob(blob.name));
     }
-    await Promise.all(deletes);
+    try {
+      await Promise.all(deletes);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error while deleting folder: ${(error as Error).message}`,
+      );
+    }
   }
 
   async containerExists(): Promise<boolean> {
