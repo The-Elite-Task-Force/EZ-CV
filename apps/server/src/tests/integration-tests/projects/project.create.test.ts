@@ -1,30 +1,23 @@
-import type { PrismaClient } from "@prisma/client";
+import { setupIntegrationTestSuite } from "../../setup-integration-suite";
+import { createMockProject } from "./utils/create-project";
 
-import { mockCreateProject } from "../../mocks/project";
-import { setupTestDatabase, teardownTestDatabase } from "../../setup-test-db";
-
-let prisma: PrismaClient;
-
-beforeAll(async () => {
-  const setup = await setupTestDatabase();
-  prisma = setup.prisma;
-});
-
-afterAll(async () => {
-  await teardownTestDatabase();
-});
+const { getPrisma } = setupIntegrationTestSuite();
 
 describe("Project integration", () => {
   it("should create and fetch a project", async () => {
-    const created = createMockProject()
+    const prisma = getPrisma();
+
+    const { project } = await createMockProject(prisma);
 
     const fetched = await prisma.project.findUnique({
-      where: { id: created.id },
+      where: { id: project.id },
     });
 
     expect(fetched).toMatchObject({
-      id: created.id,
-      ...mockCreateProject,
+      id: project.id,
+      name: "My Project",
+      userId: project.userId,
+      companyId: project.companyId,
     });
   });
 });
