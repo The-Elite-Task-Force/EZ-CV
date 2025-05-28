@@ -1,11 +1,11 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { ResumeService } from "../../resume/resume.service";
-import { VariantController } from "../../variant/variant.controller";
-import type { VariantService } from "../../variant/variant.service";
-import { mockUserWithoutPRI } from "../mocks/mocks";
-import { mockResume, mockSavedVariant, mockTranslatedData } from "../mocks/resumeMocks";
+import type { ResumeService } from "../../../resume/resume.service";
+import { VariantController } from "../../../variant/variant.controller";
+import type { VariantService } from "../../../variant/variant.service";
+import { mockUserWithoutPRI } from "../../mocks/mocks";
+import { mockResume, mockSavedVariant, mockTranslatedData } from "../../mocks/resumeMocks";
 
 describe("VariantController", () => {
   let controller: VariantController;

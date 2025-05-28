@@ -4,8 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ProjectMappingController } from "@/server/projectMapping/project-mapping.controller";
 import type { ProjectMappingService } from "@/server/projectMapping/project-mapping.service";
 
-import { mockProjectId } from "../../mocks/project";
-import { mockProjectMappingList } from "../../mocks/project-mapping";
+import { mockProjectId } from "../../../mocks/project";
+import { mockProjectMappingList } from "../../../mocks/project-mapping";
 
 describe("ProjectMappingController - findByProjectId", () => {
   let controller: ProjectMappingController;

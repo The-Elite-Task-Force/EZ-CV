@@ -12,6 +12,12 @@ export const mockCreateProjectDto: CreateProjectDto = {
   companyId: mockCompanyId,
 };
 
+export const mockCreateProject = {
+  name: "My Project",
+  companyId: mockCompanyId,
+  userId: mockUserWithoutPRI.id,
+};
+
 export const mockProject: Project = {
   id: mockProjectId,
   name: mockCreateProjectDto.name,
