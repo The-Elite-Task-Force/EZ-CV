@@ -24,6 +24,8 @@ export const setupTestDatabase = async () => {
 
   process.env.DATABASE_URL = url;
 
+  console.log(process.env.DATABASE_URL);
+
   execSync(`npx prisma db push`, {
     env: { ...process.env, DATABASE_URL: url },
   });
