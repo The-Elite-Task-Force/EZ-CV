@@ -9,6 +9,7 @@ let container: StartedTestContainer;
 let prisma: TestPrismaService;
 
 export const setupTestDatabase = async () => {
+  console.log("1");
   container = await new GenericContainer("postgres")
     .withEnvironment({
       POSTGRES_USER: "test",
@@ -17,6 +18,8 @@ export const setupTestDatabase = async () => {
     })
     .withExposedPorts(5432)
     .start();
+
+    console.log("2");
 
   const host = container.getHost();
   const port = container.getMappedPort(5432);
