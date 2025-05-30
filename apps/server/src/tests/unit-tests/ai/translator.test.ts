@@ -4,7 +4,7 @@ import { translateSummarySection } from "../../../ai/translator";
 import { mockResponse, mockSummary } from "../../mocks/resumeMocks";
 
 // Mock `getChatClient` before importing `translator`
-vi.mock("../../ai/chat-client-factory", () => ({
+vi.mock("../../../ai/chat-client-factory", () => ({
   getChatClient: () => ({
     chatCompletion: vi.fn(),
   }),
