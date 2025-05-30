@@ -11,13 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:20.10.16-dind
-        options: >-
-          --privileged
-        ports:
-          - 5432:5432
 
     steps:
       - name: Checkout repository
@@ -38,7 +31,7 @@ jobs:
         run: |
           docker --version
           docker ps
-      
+
       - name: Generate Prisma client
         run: pnpm prisma generate
 
