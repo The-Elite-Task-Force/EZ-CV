@@ -1,4 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
+import { Visibility } from "@prisma/client";
 import type { ResumeDto, VariantDto } from "@reactive-resume/dto";
 
 // Mock Resume
@@ -385,10 +386,18 @@ export const mockResume: ResumeDto = {
   id: "uzptmhp7pho7tbqs9204974u",
   language: "da-DK",
   userId: "",
+  basicsItemId: null,
   updatedAt: new Date(),
-  visibility: "private",
+  visibility: Visibility.private,
   locked: false,
   createdAt: new Date(),
+};
+
+export const mockCreateResume = {
+  // eslint-disable-next-line @typescript-eslint/no-misused-spread
+  ...mockResume,
+  basicsItemId: undefined,
+  user: undefined,
 };
 
 export enum Provider {
@@ -399,7 +408,6 @@ export enum Provider {
   Microsoft = "microsoft",
 }
 
-// Mock User
 export const mockUser = {
   id: "userId",
   updatedAt: new Date(),

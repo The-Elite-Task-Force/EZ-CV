@@ -1,11 +1,12 @@
 import { execSync } from "node:child_process";
 
-import { PrismaClient } from "@prisma/client";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer } from "testcontainers";
 
+import { TestPrismaService } from "./integration-tests/test-prisma-service";
+
 let container: StartedTestContainer;
-let prisma: PrismaClient;
+let prisma: TestPrismaService;
 
 export const setupTestDatabase = async () => {
   container = await new GenericContainer("postgres")
@@ -23,13 +24,12 @@ export const setupTestDatabase = async () => {
 
   process.env.DATABASE_URL = url;
 
-  // Push the Prisma schema to the container DB
   execSync(`npx prisma db push`, {
     env: { ...process.env, DATABASE_URL: url },
   });
 
-  prisma = new PrismaClient();
-  await prisma.$connect();
+  prisma = new TestPrismaService(url);
+  await prisma.onModuleInit();
 
   return {
     prisma,
@@ -39,6 +39,6 @@ export const setupTestDatabase = async () => {
 };
 
 export const teardownTestDatabase = async () => {
-  await prisma.$disconnect();
+  await prisma.onModuleDestroy();
   await container.stop();
 };

@@ -31,17 +31,12 @@ export class VariantService {
   async createVariant(createVariantDto: DuplicateAsVariantDto) {
     const { resumeId, userId, creatorId } = createVariantDto;
     try {
-      const resume = await this.prisma.resume.findFirst({
+      const resume = await this.prisma.resume.findFirstOrThrow({
         where: {
           id: resumeId,
           userId: userId,
         },
       });
-
-      if (!resume) {
-        Logger.error("Resume not found", { resumeId, userId });
-        throw new BadRequestException("Resume not found");
-      }
 
       // Validate the entire resume object
       const validatedResume = resumeSchema.safeParse(resume);

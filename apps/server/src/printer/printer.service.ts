@@ -21,7 +21,7 @@ export class PrinterService {
   constructor(
     private readonly configService: ConfigService<Config>,
     private readonly storageService: StorageService,
-    private readonly httpService: HttpService,
+    private readonly httpService?: HttpService,
   ) {
     const chromeUrl = this.configService.getOrThrow<string>("CHROME_URL");
     const chromeToken = this.configService.getOrThrow<string>("CHROME_TOKEN");

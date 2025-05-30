@@ -9,7 +9,7 @@ import { VariantController } from "../../../variant/variant.controller";
 import type { VariantService } from "../../../variant/variant.service";
 import { mockSavedVariant, mockUser } from "../../mocks/resumeMocks";
 
-describe("ProjectController", () => {
+describe("VariantController", () => {
   let controller: VariantController;
   let service: Pick<
     VariantService,
@@ -60,9 +60,7 @@ describe("ProjectController", () => {
   it("should throw InternalServerErrorException on unknown error", async () => {
     vi.mocked(service.createVariant).mockRejectedValue(new Error("Something went wrong"));
 
-    await expect(controller.create(mockSavedVariant)).rejects.toThrow(
-      InternalServerErrorException,
-    );
+    await expect(controller.create(mockSavedVariant)).rejects.toThrow(InternalServerErrorException);
   });
 
   it("should call service.remove and return result", async () => {
