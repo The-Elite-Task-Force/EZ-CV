@@ -9,7 +9,6 @@ let container: StartedTestContainer;
 let prisma: TestPrismaService;
 
 export const setupTestDatabase = async () => {
-  console.log("1");
   container = await new GenericContainer("postgres")
     .withEnvironment({
       POSTGRES_USER: "test",
@@ -19,7 +18,7 @@ export const setupTestDatabase = async () => {
     .withExposedPorts(5432)
     .start();
 
-    console.log("2");
+  console.log("container:", container);
 
   const host = container.getHost();
   const port = container.getMappedPort(5432);
@@ -27,14 +26,16 @@ export const setupTestDatabase = async () => {
 
   process.env.DATABASE_URL = url;
 
-  console.log(process.env.DATABASE_URL);
-
-  execSync(`npx prisma db push`, {
+  execSync(`pnpm prisma db push`, {
     env: { ...process.env, DATABASE_URL: url },
   });
 
+  console.log("Database schema pushed successfully");
+
   prisma = new TestPrismaService(url);
   await prisma.onModuleInit();
+
+  console.log("Prisma client initialized");
 
   return {
     prisma,
