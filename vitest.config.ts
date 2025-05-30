@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 export default defineConfig({
   // @ts-ignore
   test: {
-    setupFiles: ['./test-environment.ts'],
     globals: true,
     coverage: {
       reporters: ["html"],
