@@ -1,5 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { resumeSchema } from "@reactive-resume/dto";
+import { vi } from "vitest";
 
 import { PrinterService } from "@/server/printer/printer.service";
 import { StorageService } from "@/server/storage/storage.service";
@@ -12,6 +13,11 @@ import { mockCreateResume } from "../../mocks/resumeMocks";
 const { getPrisma } = setupIntegrationTestSuite();
 
 describe("VariantService Integration", () => {
+  vi.mock("../../../ai/chat-client-factory", () => ({
+    getChatClient: () => ({
+      chatCompletion: vi.fn(),
+    }),
+  }));
   let variantService: VariantService;
   let storageService: StorageService;
   let printerService: PrinterService;
