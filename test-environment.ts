@@ -1,0 +1,1 @@
+process.env.TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = 'tcp://localhost:2375';
