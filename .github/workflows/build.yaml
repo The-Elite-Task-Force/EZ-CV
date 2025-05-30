@@ -15,10 +15,9 @@ jobs:
       docker:
         image: docker:20.10.16-dind
         options: >-
-           -p 2375:2375
-
-    env:
-      DOCKER_HOST: tcp://localhost:2375
+          --privileged
+        ports:
+          - 5432:5432
 
     steps:
       - name: Checkout repository
