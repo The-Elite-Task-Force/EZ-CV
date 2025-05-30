@@ -36,7 +36,7 @@ jobs:
         run: pnpm prisma generate
 
       - name: Run tests with debug logs
-        run: DEBUG=testcontainers* pnpm vitest --config ./vitest.config.ts run
+        run: pnpm vitest --config ./vitest.config.ts run --reporter verbose
 
       - name: Run build
         run: pnpm run build
