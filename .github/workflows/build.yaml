@@ -15,7 +15,6 @@ jobs:
       docker:
         image: docker:20.10.16-dind
         options: >-
-          --privileged
            -p 2375:2375
 
     env:
