@@ -35,8 +35,8 @@ jobs:
       - name: Generate Prisma client
         run: pnpm prisma generate
 
-      - name: Test
-        run: pnpm vitest --config ./vitest.config.ts run
+      - name: Run tests with debug logs
+        run: DEBUG=testcontainers* pnpm vitest --config ./vitest.config.ts run
 
       - name: Run build
         run: pnpm run build

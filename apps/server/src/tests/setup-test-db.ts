@@ -9,25 +9,14 @@ let container: StartedTestContainer;
 let prisma: TestPrismaService;
 
 export const setupTestDatabase = async () => {
-  let container;
-  try {
-    container = await new GenericContainer("postgres")
-      .withEnvironment({
-        POSTGRES_USER: "test",
-        POSTGRES_PASSWORD: "test",
-        POSTGRES_DB: "test",
-      })
-      .withExposedPorts(5432)
-      .start();
-  } catch (error) {
-    if (container) {
-      const logs = await container.logs();
-      for await (const line of logs) {
-        console.log(line.toString());
-      }
-    }
-    throw error;
-  }
+  container = await new GenericContainer("postgres")
+    .withEnvironment({
+      POSTGRES_USER: "test",
+      POSTGRES_PASSWORD: "test",
+      POSTGRES_DB: "test",
+    })
+    .withExposedPorts(5432)
+    .start();
 
   const host = container.getHost();
   const port = container.getMappedPort(5432);
