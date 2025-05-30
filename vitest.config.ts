@@ -6,7 +6,7 @@ export default defineConfig({
   // @ts-ignore
   test: {
     globals: true,
-    hookTimeout: 120_000,
+    hookTimeout: 90_000,
     coverage: {
       reporters: ["html"],
       provider: "v8",
