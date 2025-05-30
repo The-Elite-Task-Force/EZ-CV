@@ -16,6 +16,7 @@ export const setupTestDatabase = async () => {
       POSTGRES_DB: "test",
     })
     .withExposedPorts(5432)
+    .withStartupTimeout(60_000)
     .start();
 
   const host = container.getHost();
