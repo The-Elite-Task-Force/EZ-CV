@@ -1,7 +1,8 @@
-@description('Name of the existing Key Vault containing application secrets')
+@description('keyVaultName is the name of the Key Vault where secrets will be stored and retrieved.')
+@secure()
 param keyVaultName string
+@secure()
 
-param location string = resourceGroup().location
 param prefix string = 'ezcv'
 @allowed([
   'latest'
@@ -10,19 +11,21 @@ param prefix string = 'ezcv'
 ])
 param dockerTag string = 'latest'
 
+param location string = resourceGroup().location
+
 @description('Container webapp resource name')
 param name string = '${prefix}-${dockerTag}-container-webapp'
 
 @description(' access_token_secret & refresh_token_secret, replace with a real token in the .bicepparam files')
 @secure()
-param ACCESS_TOKEN_SECRET string = 'access_token_secret'
+param ACCESS_TOKEN_SECRET string 
 @secure()
-param REFRESH_TOKEN_SECRET string =   'refresh_token_secret'
+param REFRESH_TOKEN_SECRET string 
 
 @description('chrome token and port, replace with a real token in the .bicepparam files, used for the chromio module and is needed in webapp')
 @secure()
-param CHROME_TOKEN string = 'chrome_token'
-param CHROME_PORT string = '8080' 
+param CHROME_TOKEN string 
+param CHROME_PORT string = '8080'
 param CHROME_URL string
 
 // App Service Plan
@@ -160,5 +163,18 @@ resource dockerApp 'Microsoft.Web/sites/config@2024-04-01' = {
   }
 }
 
+resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
+  name: keyVaultName
+}
+
+resource webAppUrlSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'WEB-APP-URL'
+  properties: {
+    value: 'https://${sites.properties.defaultHostName}'
+  }
+}
+
 output webAppURL string = sites.properties.defaultHostName
 output serverFarmId string = serverFarm.id
+

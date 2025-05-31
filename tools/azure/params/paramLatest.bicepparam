@@ -14,3 +14,5 @@ param DOCKER_REGISTRY_SERVER_USERNAME = 'myUsername'
 param DOCKER_REGISTRY_SERVER_PASSWORD = 'myPassword'
 
 param GrafanaAdminPassword = 'GrafanaAdminPassword'
+param ACCESS_TOKEN_SECRET = 'my_access_token_secret'
+param REFRESH_TOKEN_SECRET = 'my_refresh_token_secret'

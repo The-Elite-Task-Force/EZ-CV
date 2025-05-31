@@ -24,6 +24,10 @@ param rgName string
 @secure()
 param GrafanaAdminPassword string
 
+@secure()
+param ACCESS_TOKEN string
+@secure()
+param REFRESH_TOKEN string
 
 param subscriptionId string 
 param sku string = 'Standard'
@@ -104,6 +108,8 @@ module webApp './web-app.bicep' = {
     prefix: prefix
     location: rg.location
     dockerTag: dockerTag
+    ACCESS_TOKEN_SECRET: ACCESS_TOKEN
+    REFRESH_TOKEN_SECRET: REFRESH_TOKEN
     CHROME_URL: chromio.outputs.ip
     CHROME_TOKEN: CHROME_TOKEN
     keyVaultName: kv.name
@@ -121,10 +127,10 @@ module prometheus 'prometheus.bicep' = {
   params: {
     prefix: prefix
     dockerTag: dockerTag
-    webAppUrl: webApp.outputs.webAppURL
     keyVaultName: kv.name
     DOCKER_REGISTRY_SERVER_USERNAME: DOCKER_REGISTRY_SERVER_USERNAME
     DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+    webAppUrl: webApp.outputs.webAppURL
   }
 }
 

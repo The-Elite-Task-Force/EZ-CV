@@ -1,9 +1,10 @@
+@description('keyVaultName is the name of the Key Vault where secrets will be stored and retrieved.')
+@secure()
+param keyVaultName string
 @secure()
 param DOCKER_REGISTRY_SERVER_PASSWORD string 
 @secure()
 param DOCKER_REGISTRY_SERVER_USERNAME string 
-
-param webAppUrl string 
 
 param prefix string = 'ezcv'
 @allowed([
@@ -12,18 +13,21 @@ param prefix string = 'ezcv'
   'prod'
 ])
 param dockerTag string = 'latest'
-param keyVaultName string
+
+param location string = resourceGroup().location
+
+@secure()
+@description('WEB_APP_URL is the URL of the web application to be monitored by Prometheus.')
+param webAppUrl string 
 
 // Load & patch the Prometheus config
 var rawPromConfig = loadTextContent('../prometheus/prometheus.yml')
 var promConfig = replace(rawPromConfig, 'dev.ezcv.thetechcollective.dev', webAppUrl)
 
 
-
-
 resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-07-01' = {
   name: '${prefix}-${dockerTag}-prometheus-container'
-  location: resourceGroup().location
+  location: location
   properties: {
     containers: [
       {

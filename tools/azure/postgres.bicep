@@ -1,14 +1,8 @@
+@description('keyVaultName is the name of the Key Vault where secrets will be stored and retrieved.')
 @secure()
-param POSTGRES_USER string
+param keyVaultName string
 @secure()
-param POSTGRES_PASSWORD string
-param dbName string = 'ezcv-db'
 param prefix string = 'ezcv'
-param sku object = {
-  name: 'Standard_B1ms'
-  tier: 'Burstable'
-}
-param postgresVersion string = '16'
 @allowed([
   'latest'
   'beta'
@@ -16,7 +10,19 @@ param postgresVersion string = '16'
 ])
 param dockerTag string = 'latest'
 
-param keyVaultName string = 'ez-cv-keyVault'
+param location string = resourceGroup().location
+
+@secure()
+param POSTGRES_USER string
+@secure()
+param POSTGRES_PASSWORD string
+param dbName string = 'ezcv-db'
+
+param sku object = {
+  name: 'Standard_B1ms'
+  tier: 'Burstable'
+}
+param postgresVersion string = '16'
 
 
 
@@ -83,6 +89,18 @@ resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: keyVaultName
 }
 
+// Save connection string in Key Vault
+resource postgresUrlSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'DATABASE-URL'
+  properties: {
+    value: 'Server=${flexibleServers.name}.postgres.database.azure.com;Database=${dbName};User Id=${POSTGRES_USER}@${flexibleServers.name};Password=${POSTGRES_PASSWORD};Ssl Mode=Require;'
+  }
+  dependsOn: [
+    kv
+  ]
+}
+
 // Save the Postgres password in Key Vault
 resource postgresPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: kv
@@ -133,6 +151,10 @@ resource postgresPortSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
     flexibleServers
   ]
 }
+
+output connectionString string = 'Server=${flexibleServers.name}.postgres.database.azure.com;Database=${dbName};User Id=${POSTGRES_USER}@${flexibleServers.name};Password=${POSTGRES_PASSWORD};Ssl Mode=Require;'
+
+
 
 
 
