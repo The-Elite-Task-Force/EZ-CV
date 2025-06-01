@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-misused-spread */
 import { BadRequestException, InternalServerErrorException } from "@nestjs/common";
+import { createId } from "@paralleldrive/cuid2";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import type { UpdateVariantDto, VariantDto } from "@reactive-resume/dto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { VariantController } from "../../variant/variant.controller";
-import type { VariantService } from "../../variant/variant.service";
-import { mockSavedVariant, mockUser } from "../mocks/resumeMocks";
-import { VariantDto, UpdateVariantDto } from "@reactive-resume/dto";
-import { create } from "node:domain";
-import { createId } from "@paralleldrive/cuid2";
+import { VariantController } from "../../../variant/variant.controller";
+import type { VariantService } from "../../../variant/variant.service";
+import { mockSavedVariant, mockUser } from "../../mocks/resumeMocks";
 
-describe("ProjectController", () => {
+describe("VariantController", () => {
   let controller: VariantController;
   let service: Pick<
     VariantService,
@@ -40,7 +39,7 @@ describe("ProjectController", () => {
 
     vi.mocked(service.createVariant).mockResolvedValue(expectedResult);
 
-    const result = await controller.create(mockSavedVariant, mockUser);
+    const result = await controller.create(mockSavedVariant);
 
     expect(service.createVariant).toHaveBeenCalledWith(mockSavedVariant);
     expect(result).toEqual(expectedResult);
@@ -53,7 +52,7 @@ describe("ProjectController", () => {
     });
     vi.mocked(service.createVariant).mockRejectedValue(prismaError);
 
-    await expect(controller.create(mockSavedVariant, mockUser)).rejects.toThrow(prismaError);
+    await expect(controller.create(mockSavedVariant)).rejects.toThrow(prismaError);
     expect(service.createVariant).toHaveBeenCalledWith(mockSavedVariant);
     expect(service.createVariant).toHaveBeenCalledTimes(1);
   });
@@ -61,9 +60,7 @@ describe("ProjectController", () => {
   it("should throw InternalServerErrorException on unknown error", async () => {
     vi.mocked(service.createVariant).mockRejectedValue(new Error("Something went wrong"));
 
-    await expect(controller.create(mockSavedVariant, mockUser)).rejects.toThrow(
-      InternalServerErrorException,
-    );
+    await expect(controller.create(mockSavedVariant)).rejects.toThrow(InternalServerErrorException);
   });
 
   it("should call service.remove and return result", async () => {

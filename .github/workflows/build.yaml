@@ -8,9 +8,6 @@ on:
     branches:
       - main
 
-env:
-  VITE_POSTGRES_PORT: ${{ secrets.VITE_POSTGRES_PORT }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "18" # Update to Node.js v18
+          node-version: "18"
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -30,8 +27,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Test
-        run: pnpm vitest --config ./vitest.config.ts run
+      - name: Ensure Docker is ready
+        run: |
+          docker --version
+          docker ps
+
+      - name: Generate Prisma client
+        run: pnpm prisma generate
+
+      - name: Run tests with debug logs
+        run: pnpm vitest --config ./vitest.config.ts run --reporter verbose
 
       - name: Run build
         run: pnpm run build

@@ -1,16 +1,10 @@
+@description('keyVaultName is the name of the Key Vault where secrets will be stored and retrieved.')
+@secure()
+param keyVaultName string
 @secure()
 param DOCKER_REGISTRY_SERVER_PASSWORD string 
 @secure()
 param DOCKER_REGISTRY_SERVER_USERNAME string 
-
-@secure()
-param blobStorageContainerName string
-@secure()
-param blobStorageAccountName string
-@secure()
-param blobStorageAccountKey string
-
-param webAppUrl string 
 
 param prefix string = 'ezcv'
 @allowed([
@@ -20,9 +14,20 @@ param prefix string = 'ezcv'
 ])
 param dockerTag string = 'latest'
 
+param location string = resourceGroup().location
+
+@secure()
+@description('WEB_APP_URL is the URL of the web application to be monitored by Prometheus.')
+param webAppUrl string 
+
+// Load & patch the Prometheus config
+var rawPromConfig = loadTextContent('../prometheus/prometheus.yml')
+var promConfig = replace(rawPromConfig, 'dev.ezcv.thetechcollective.dev', webAppUrl)
+
+
 resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-07-01' = {
   name: '${prefix}-${dockerTag}-prometheus-container'
-  location: resourceGroup().location
+  location: location
   properties: {
     containers: [
       {
@@ -77,15 +82,29 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-07-01'
     volumes: [
       {
         name: 'prometheus-config'
-        azureFile: {
-          shareName: blobStorageContainerName
-          storageAccountName: blobStorageAccountName
-          storageAccountKey: blobStorageAccountKey
-          readOnly: true
+        secret: {
+          'prometheus.yml': promConfig
         }
       }
     ]
   }
 }
+
+resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
+  name: keyVaultName
+}
+
+// Save prometheus url in Key Vault
+resource prometheusUrlSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: kv
+  name: 'PROMETHEUS-URL'
+  properties: {
+    value: containerGroup.properties.ipAddress.ip
+  }
+  dependsOn: [
+    kv
+  ]
+}
+
 
 output ip string = containerGroup.properties.ipAddress.ip

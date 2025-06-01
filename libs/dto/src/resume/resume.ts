@@ -16,7 +16,7 @@ export const resumeSchema = z.object({
   user: userSchema.optional(),
   createdAt: dateSchema,
   updatedAt: dateSchema,
-  basicsItemId: idSchema.optional(),
+  basicsItemId: idSchema.nullable(),
   language: languageEnum.default("en-US"),
 });
 

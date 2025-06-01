@@ -6,6 +6,7 @@ export default defineConfig({
   // @ts-ignore
   test: {
     globals: true,
+    hookTimeout: 90_000,
     coverage: {
       reporters: ["html"],
       provider: "v8",
@@ -17,14 +18,15 @@ export default defineConfig({
         "**/tools/**",
         "**/dist/**",
         "**/apps/artboard/**",
-        "**/libs/hooks/**",
+        "**/libs/**",
         "**/.nx/**",
         "**/*.config.*",
         "**/*.config.ts",
         "**/*.config.js",
         "**/*.preset.js",
         "**/ui/**",
-        "**/libs/utils/src/namespaces/**",
+        "**/tests/**",
+        "**/coverage/**",
       ],
     },
     environment: "jsdom",

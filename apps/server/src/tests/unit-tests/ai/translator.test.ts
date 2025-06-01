@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { translateSummarySection } from "../../ai/translator";
-import { mockResponse, mockSummary } from "../mocks/resumeMocks";
+import { translateSummarySection } from "../../../ai/translator";
+import { mockResponse, mockSummary } from "../../mocks/resumeMocks";
 
 // Mock `getChatClient` before importing `translator`
-vi.mock("../../ai/chat-client-factory", () => ({
+vi.mock("../../../ai/chat-client-factory", () => ({
   getChatClient: () => ({
     chatCompletion: vi.fn(),
   }),
@@ -12,7 +12,7 @@ vi.mock("../../ai/chat-client-factory", () => ({
 
 describe("translateSummarySection", async () => {
   let mockChatClient: { chatCompletion: ReturnType<typeof vi.fn> };
-  const { getChatClient } = await import("../../ai/chat-client-factory");
+  const { getChatClient } = await import("../../../ai/chat-client-factory");
   beforeEach(() => {
     mockChatClient = vi.mocked(getChatClient());
     mockChatClient.chatCompletion.mockResolvedValue(mockResponse);
