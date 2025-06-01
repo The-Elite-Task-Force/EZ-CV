@@ -14,11 +14,11 @@ param prefix string = 'ezcv'
 param dockerTag string = 'latest'
 
 @secure()
-param promethuesUrl string 
+param prometheusUrl  string 
 
 // Load & patch Grafana provisioning files
 var rawDS = loadTextContent('../grafana/datasources/datasource.yml')
-var dsConfig = replace(rawDS, 'dev.ezcv.thetechcollective.dev','${promethuesUrl}:9000' )
+var dsConfig = replace(rawDS, 'http://ezcv-promethus.azurewebsites.net',prometheusUrl )
 
 var dbConfig = loadTextContent('../grafana/dashboards/dashboard.yml')
 
