@@ -18,7 +18,8 @@ param promethuesUrl string
 
 // Load & patch Grafana provisioning files
 var rawDS = loadTextContent('../grafana/datasources/datasource.yml')
-var dsConfig = replace(rawDS, 'dev.ezcv.thetechcollective.dev', promethuesUrl)
+var dsConfig = replace(rawDS, 'dev.ezcv.thetechcollective.dev','${promethuesUrl}:9000' )
+
 var dbConfig = loadTextContent('../grafana/dashboards/dashboard.yml')
 
 resource cg 'Microsoft.ContainerInstance/containerGroups@2021-07-01' = {
