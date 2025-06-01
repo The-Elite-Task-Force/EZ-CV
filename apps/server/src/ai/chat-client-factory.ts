@@ -14,6 +14,8 @@ export function getChatClient(): ChatClient {
     return chatClientInstance;
   }
 
+  const model = process.env.OPENAI_MODEL ?? "gpt-4";
+
   if (process.env.USE_AZURE === "true") {
     const azureApiKey = process.env.AZURE_OPENAI_API_KEY;
     const azureEndpoint = process.env.AZURE_OPENAI_ENDPOINT;
@@ -22,7 +24,7 @@ export function getChatClient(): ChatClient {
         "AZURE_API_KEY or AZURE_ENDPOINT is not defined in the environment variables.",
       );
     }
-    chatClientInstance = new AzureOpenAIClient(azureApiKey, azureEndpoint);
+    chatClientInstance = new AzureOpenAIClient(azureApiKey, azureEndpoint, model);
     return chatClientInstance;
   }
 
@@ -30,6 +32,6 @@ export function getChatClient(): ChatClient {
   if (!apiKey) {
     throw new Error("OPENAI_API_KEY is not defined in the environment variables.");
   }
-  chatClientInstance = new OpenAIClient(apiKey);
+  chatClientInstance = new OpenAIClient(apiKey, model);
   return chatClientInstance;
 }
