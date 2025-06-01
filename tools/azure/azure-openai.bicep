@@ -3,8 +3,6 @@
 @description('Prefix for all resources')
 param prefix string
 
-
-
 @description('Model Version, eg chatgpt-4o-mini, gpt-4, gpt-4o, it is also used as the deployment name for the Model to be deployed')
 param model string = 'gpt-4o-mini'
 

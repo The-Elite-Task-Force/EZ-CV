@@ -141,10 +141,8 @@ module grafana 'grafana.bicep' = {
     prefix: prefix
     dockerTag: dockerTag
     grafanaAdminPassword: GrafanaAdminPassword
+    promethuesUrl: prometheus.outputs.ip
     DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
     DOCKER_REGISTRY_SERVER_USERNAME: DOCKER_REGISTRY_SERVER_USERNAME
   }
-  dependsOn: [
-    prometheus
-  ]
 }
