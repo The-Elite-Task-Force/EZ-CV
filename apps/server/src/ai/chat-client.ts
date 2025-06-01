@@ -8,6 +8,13 @@ export type ChatCompletionParams = {
   messages: ChatCompletionMessage[];
   temperature?: number;
   stream?: boolean;
+  tools?: {
+    function: {
+      name: string;
+      description: string;
+      parameters: Record<string, unknown>;
+    };
+  };
 };
 
 export type ChatCompletionChoice = {

@@ -8,8 +8,9 @@ import type { ChatClient, ChatCompletionParams, ChatCompletionResponse } from ".
 
 export class AzureOpenAIClient implements ChatClient {
   private client: OpenAI;
+  private model: string;
 
-  constructor(apiKey: string, endpoint: string) {
+  constructor(apiKey: string, endpoint: string, model: string) {
     this.client = new OpenAI({
       apiKey,
       baseURL: endpoint,
@@ -17,15 +18,31 @@ export class AzureOpenAIClient implements ChatClient {
         "api-key": apiKey,
       },
     });
+    this.model = model;
   }
 
-  async chatCompletion(params: ChatCompletionParams): Promise<ChatCompletionResponse> {
-    const response = await this.client.chat.completions.create({
-      model: params.model, // For Azure, `model` is your Deployment Name
-      messages: params.messages,
-      temperature: params.temperature,
-      stream: params.stream,
-    });
+  async chatCompletion(
+    params: Omit<ChatCompletionParams, "model">,
+  ): Promise<ChatCompletionResponse> {
+    const response = await (params.tools
+      ? this.client.chat.completions.create({
+          model: this.model,
+          messages: params.messages,
+          temperature: params.temperature,
+          stream: params.stream,
+          functions: params.tools.map((tool) => ({
+            name: tool.function.name,
+            description: tool.function.description,
+            parameters: tool.function.parameters,
+          })),
+        })
+      : this.client.chat.completions.create({
+          model: this.model,
+          messages: params.messages,
+          temperature: params.temperature,
+          stream: params.stream,
+        }));
+
     if ("choices" in response) {
       return response as ChatCompletionResponse;
     }
