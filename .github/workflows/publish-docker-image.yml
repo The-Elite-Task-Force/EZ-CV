@@ -39,7 +39,7 @@ jobs:
       - name: Disable pnpm side-effects cache (project-wide)
         run: pnpm config set side-effects-cache false --location project
 
-      - name: Install all dependencies
+      - name: Allow cypress build
         run: pnpm --allow-build=cypress add --save-dev cypress
 
       - name: Install all dependencies
