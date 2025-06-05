@@ -2,10 +2,10 @@ import { BadRequestException, InternalServerErrorException } from "@nestjs/commo
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ProjectController } from "../../../project/project.controller";
-import type { ProjectService } from "../../../project/project.service";
-import { mockUserWithoutPRI } from "../../mocks/mocks";
-import { mockCreateProjectDto, mockProject } from "../../mocks/project";
+import { ProjectController } from "../../../../project/project.controller";
+import type { ProjectService } from "../../../../project/project.service";
+import { mockUserWithoutPRI } from "../../../mocks/mocks";
+import { mockCreateProjectDto, mockProject } from "../../../mocks/project";
 
 describe("ProjectController - create", () => {
   let controller: ProjectController;

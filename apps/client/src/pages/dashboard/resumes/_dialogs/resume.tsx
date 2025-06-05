@@ -40,14 +40,14 @@ import { cn, generateRandomName, languages } from "@reactive-resume/utils";
 import slugify from "@sindresorhus/slugify";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { date, z } from "zod";
+import { z } from "zod";
 
 import { toast } from "@/client/hooks/use-toast";
 import { useCreateResume, useDeleteResume, useUpdateResume } from "@/client/services/resume";
 import { useImportResume } from "@/client/services/resume/import";
+import { useTranslateResume } from "@/client/services/resume/translate";
 import { useDeleteVariant, useUpdateVariant } from "@/client/services/variant";
 import { useCreateVariantFromResume } from "@/client/services/variant/create";
-import { useTranslateResume } from "@/client/services/resume/translate";
 import { useDialog } from "@/client/stores/dialog";
 
 const formSchema = createResumeSchema.extend({
@@ -160,6 +160,7 @@ export const ResumeDialog = () => {
           updatedAt: new Date(Date.now()),
           locked: false,
           createdAt: new Date(Date.now()),
+          basicsItemId: payload.item.basicsItemId ?? null,
         });
       }
 

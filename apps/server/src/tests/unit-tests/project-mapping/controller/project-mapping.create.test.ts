@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ProjectMappingController } from "@/server/projectMapping/project-mapping.controller";
 import type { ProjectMappingService } from "@/server/projectMapping/project-mapping.service";
 
-import { mockCreateProjectMapping, mockProjectMapping } from "../../mocks/project-mapping";
+import { mockCreateProjectMapping, mockProjectMapping } from "../../../mocks/project-mapping";
 
 describe("ProjectMappingController - create", () => {
   let controller: ProjectMappingController;
