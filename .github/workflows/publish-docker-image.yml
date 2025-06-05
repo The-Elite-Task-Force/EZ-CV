@@ -39,6 +39,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Install cypress
+        run: pnpm cypress install
+
       - name: Test
         run: pnpm vitest --config ./vitest.config.ts run
 
