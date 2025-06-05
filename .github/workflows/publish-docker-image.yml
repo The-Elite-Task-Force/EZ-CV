@@ -41,7 +41,10 @@ jobs:
 
       - name: Test
         run: pnpm vitest --config ./vitest.config.ts run
-  
+
+      - name: Run cypress test
+        run: npx cypress run --config video=false --browser chrome --spec "cypress/e2e/**/*.cy.js"
+
   build:
     runs-on: ubuntu-latest
     needs: 
