@@ -39,6 +39,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Ensure Docker is ready
+        run: |
+          docker --version
+          docker ps
+
+      - name: Generate Prisma client
+        run: pnpm prisma generate
+
       - name: Test
         run: pnpm vitest --config ./vitest.config.ts run
   
