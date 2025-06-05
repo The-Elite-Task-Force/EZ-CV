@@ -62,7 +62,7 @@ export const VerifyEmailPage = () => {
         </AlertDescription>
       </Alert>
 
-      <Button asChild disabled={loading}>
+      <Button asChild disabled={loading} data-cy="go-to-dashboard">
         <Link to="/dashboard">
           {t`Go to Dashboard`}
           <ArrowRight className="ml-2" />
