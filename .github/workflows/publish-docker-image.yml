@@ -39,19 +39,11 @@ jobs:
       - name: Disable pnpm side-effects cache (project-wide)
         run: pnpm config set side-effects-cache false --location project
 
-      - name: Install all dependencies with Cypress build allowed
-        run: pnpm install --allow-build=cypress
+      - name: Install all dependencies
+        run: pnpm --allow-build=cypress add --save-dev cypress
 
-      - name: Cache Cypress binary
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/Cypress
-          key: cypress-cache-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            cypress-cache-${{ runner.os }}-
-
-      - name: Ensure Cypress binary is installed
-        run: npx cypress install --force
+      - name: Install all dependencies
+        run: pnpm install
 
       - name: Test
         run: pnpm vitest --config ./vitest.config.ts run
