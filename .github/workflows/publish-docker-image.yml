@@ -47,8 +47,8 @@ jobs:
           restore-keys: |
             cypress-cache-${{ runner.os }}-
 
-      - name: Install cypress
-        run: npx cypress install
+      - name: Install Cypress binary
+        run: npx cypress install --force
 
       - name: Test
         run: pnpm vitest --config ./vitest.config.ts run
