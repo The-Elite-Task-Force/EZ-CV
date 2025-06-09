@@ -77,6 +77,7 @@ export const UserCard: React.FC<UserCardProps> = ({
         </button>
         {handleAddUser ? (
           <button
+            data-cy="add-user-button"
             className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             onClick={() => {
               handleAddUser(user.id, resumeId);

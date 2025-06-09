@@ -36,7 +36,13 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Install dependencies
+      - name: Disable pnpm side-effects cache (project-wide)
+        run: pnpm config set side-effects-cache false --location project
+
+      - name: Allow cypress build
+        run: pnpm --allow-build=cypress add --save-dev cypress
+
+      - name: Install all dependencies
         run: pnpm install
 
       - name: Ensure Docker is ready
@@ -49,10 +55,13 @@ jobs:
 
       - name: Test
         run: pnpm vitest --config ./vitest.config.ts run
-  
+
+      - name: Run Cypress e2e tests
+        run: npx cypress run --config video=false --browser chrome --spec "cypress/e2e/**/*.cy.js"
+
   build:
     runs-on: ubuntu-latest
-    needs: 
+    needs:
       - test
 
     outputs:

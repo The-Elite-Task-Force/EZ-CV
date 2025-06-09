@@ -38,5 +38,8 @@ jobs:
       - name: Run tests with debug logs
         run: pnpm vitest --config ./vitest.config.ts run --reporter verbose
 
+      - name: Run cypress test
+        run: npx cypress run --config video=false --browser chrome --spec "cypress/e2e/**/*.cy.js"
+
       - name: Run build
         run: pnpm run build

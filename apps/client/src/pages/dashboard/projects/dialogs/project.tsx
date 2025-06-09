@@ -115,6 +115,7 @@ export const ProjectDialog = () => {
             <DialogFooter>
               <div className="flex items-center">
                 <Button
+                  data-cy="CreateProjectButton"
                   type="submit"
                   disabled={loading}
                   className={cn(isCreate && "rounded-r-none")}
